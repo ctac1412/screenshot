@@ -1,0 +1,6 @@
+# db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
+# db.execute("CREATE TABLE screenshots (id SERIAL PRIMARY KEY, "
+#                "image_path CHAR(64), screen_area CHAR(2), created_at TIMESTAMP DEFAULT NOW())")
+# db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
+# db.execute("CREATE TABLE screen_coordinates (id SERIAL PRIMARY KEY, "
+#                        "x_coordinate smallint,y_coordinate smallint,width smallint,height smallint, screen_area smallint, created_at TIMESTAMP DEFAULT NOW())")
