@@ -1,36 +1,42 @@
-from tkinter import *
+import threading, tkinter, time
 import screen
-import subprocess
 
-root = Tk()
-root.title("Tk dropdown example")
-root.geometry('200x200')
+class Window(tkinter.Tk, threading.Thread):
+    images_folder = "images/"
+    def __init__(self):
+        tkinter.Tk.__init__(self)
+        threading.Thread.__init__(self)
+        self.wait = 1
+        self.setDaemon(True)
+        self.start()
+        self.geometry('200x200')
 
-# Add a grid
-mainframe = Frame(root)
-mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        tkinter.Button(text="start", command=self.Start,width=10).grid(row = 1, column = 1)
+        tkinter.Button(text="stop", command=self.Stop).grid(row = 1, column = 2)
+        def destroy():
+            self.wait = -1
+            time.sleep(1)
+            self.destroy()
+        self.protocol("WM_DELETE_WINDOW", destroy)
 
+    def Stop(self): self.wait = 1
+    def Start(self): self.wait = 0
+    def run(self):
+        print('thread.start')
+        while self.wait >= 0:
+            if self.wait: time.sleep(self.wait)
+            else:
+                self._target = self.work
+                self._args = ()
+                self._kwargs = {}
+                super().run()
+        print('thread.stop')
 
+    def work(self):
+        screen.checkIsFolderExist()
+        while not self.wait:
+            screen.start()
+        print('выход')
 
-
-# Create a Tkinter variable
-tkvar = StringVar(root)
-
-# Dictionary with options
-choices = {1,2,3,4}
-tkvar.set('1')  # set the default option
-Button(root, text = 'Start', command=lambda: screen.start(),width=10).grid(row = 1, column = 1)
-Button(root, text = 'Stop', command=lambda: root.destroy()).grid(row = 1, column = 2)
-# popupMenu = OptionMenu(mainframe, tkvar, *choices).grid(row = 2, column = 1)
-
-
-
-# on change dropdown value
-# def change_dropdown(*args):
-#     print(tkvar.get())
-#
-#
-# # link function to change dropdown
-# tkvar.trace('w', change_dropdown)
-
-root.mainloop()
+if __name__ == '__main__':
+    Window().mainloop()
