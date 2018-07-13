@@ -4,3 +4,13 @@
 # db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
 # db.execute("CREATE TABLE screen_coordinates (id SERIAL PRIMARY KEY, "
 #                        "x_coordinate smallint,y_coordinate smallint,width smallint,height smallint, screen_area smallint, created_at TIMESTAMP DEFAULT NOW())")
+
+проверяем, если поле current_action(последней строки, соответсвующая область экрана) is not null
+ищем на скрине свои карты
+определяем ценность руки
+ищем кнопку
+совершаем действие
+вставляем в таблицу текущу руку и действие, которое совершили
+
+todo
+получить миниатюры всех(52) карт
