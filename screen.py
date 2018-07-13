@@ -9,8 +9,7 @@ import pyautogui
 images_folder = "images/"
 
 def start():
-    # time.sleep(5)
-    # pyautogui.click(100, 150)
+    time.sleep(5)
     folder_name = images_folder + str(datetime.datetime.now().date())
     time.sleep(3)
     for item in getScreenData():
@@ -23,12 +22,12 @@ def start():
 
 
 def insertImagePathIntoDb(image_path,screen_area):
-    db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
+    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
     insert = db.prepare("INSERT INTO screenshots (image_path,screen_area) VALUES ($1,$2)")
     insert(image_path,screen_area)
 
 def getScreenData():
-    db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
+    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
     data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates")
     return data
 
@@ -36,7 +35,7 @@ def checkIsFolderExist():
     folder_name = images_folder + str(datetime.datetime.now().date())
     if not os.path.exists(str(folder_name)):
         os.makedirs(str(folder_name))
-    db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
+    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
     data = db.query("select screen_area from screen_coordinates")
     for value in data:
         if not os.path.exists(str(folder_name) + "/" + str(value['screen_area'])):
