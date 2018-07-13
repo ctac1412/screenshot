@@ -9,9 +9,9 @@ import pyautogui
 images_folder = "images/"
 
 def start():
-    time.sleep(5)
+    #time.sleep(5)
     folder_name = images_folder + str(datetime.datetime.now().date())
-    time.sleep(3)
+    time.sleep(2)
     for item in getScreenData():
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
