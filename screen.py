@@ -43,3 +43,8 @@ def getCards():
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
     data = db.query("select trim(image_path) as image_path,card,suit,trim(alias) as alias from cards")
     return data
+
+def getLastScreen(screen_area):
+    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " + screen_area + " order by id desc limit 1")
+    return data

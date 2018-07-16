@@ -2,3 +2,5 @@
 .idea
 /cards
 /cards1
+/venv
+/__pycache__
