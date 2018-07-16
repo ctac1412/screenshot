@@ -4,12 +4,10 @@ import datetime
 import os
 import math
 import postgresql
-import pyautogui
 
 images_folder = "images/"
 
 def start():
-    #time.sleep(5)
     folder_name = images_folder + str(datetime.datetime.now().date())
     time.sleep(2)
     for item in getScreenData():
@@ -23,7 +21,7 @@ def start():
 
 def insertImagePathIntoDb(image_path,screen_area):
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    insert = db.prepare("INSERT INTO screenshots (image_path,screen_area) VALUES ($1,$2)")
+    insert = db.prepare("insert into screenshots (image_path,screen_area) values($1,$2)")
     insert(image_path,screen_area)
 
 def getScreenData():
@@ -41,3 +39,7 @@ def checkIsFolderExist():
         if not os.path.exists(str(folder_name) + "/" + str(value['screen_area'])):
             os.makedirs(str(folder_name) + "/" + str(value['screen_area']))
 
+def getCards():
+    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    data = db.query("select trim(image_path) as image_path,card,suit,trim(alias) as alias from cards")
+    return data
