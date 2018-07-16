@@ -2,10 +2,32 @@ import cv2
 import numpy as np
 import screen
 import postgresql
+import image_processing
 
-db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
-data = db.query("select * from screen_coordinates where screen_area = 6")
-print(data[0])
+for item in image_processing.getScreenData():
+    # image_name = str(math.floor(time.time()))
+    # image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
+    # # # Делаем скрин указанной области экрана
+    # image = ImageGrab.grab(bbox=(item['x_coordinate'], item['y_coordinate'], item['width'], item['height']))
+    # # Сохраняем изображение на жестком диске
+    # image.save(image_path, "PNG")
+    # # Сохраняем инфо в бд
+    # image_processing.insertImagePathIntoDb(image_path, str(item['screen_area']))
+
+    # Если последняя строка для текущей области имеет статус отличный от null
+    print(item['screen_area'])
+    hand = image_processing.searchPlayerHand(item['screen_area'])
+    # if image_processing.getLastScreen(item['screen_area'] is not None):
+
+    # Если рука обнаружена на скрине
+    # if hand != '':
+    #     session_log.insertIntoLogSession(str(item['screen_area']), hand)
+    print(hand)
+
+# print(image_processing.getLastScreen(4)[0]['image_path'])
+# db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
+# data = db.query("select * from screen_coordinates where screen_area = 6")
+# print(data[0])
 # img_rgb = cv2.imread('ace.png')
 # img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
 # template = cv2.imread('cards/ace_dimonds.png',0)
