@@ -1,6 +1,11 @@
 import cv2
 import numpy as np
 import screen
+import postgresql
+
+db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
+data = db.query("select * from screen_coordinates where screen_area = 6")
+print(data[0])
 # img_rgb = cv2.imread('ace.png')
 # img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
 # template = cv2.imread('cards/ace_dimonds.png',0)
@@ -11,26 +16,26 @@ import screen
 # loc = np.where(res >= threshold)
 # if (len(loc[0]) != 0):
 #     print('test')
-hand = ''
-for value in screen.getCards():
-    try:
-        img_rgb = cv2.imread('1531641212.png', 0)
-        # img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-        template = cv2.imread(str(value['image_path']), 0)
-        # w, h = template.shape[::-1]
-
-        res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-        threshold = 0.98
-        loc = np.where(res >= threshold)
-
-        if (len(loc[0]) != 0):
-            hand += value['alias']
-            # for pt in zip(*loc[::-1]):
-            # print(value['card'] + value['alias'])
-
-    except Exception as e:
-        print(str(value['image_path']))
-print(hand)
+# hand = ''
+# for value in screen.getCards():
+#     try:
+#         img_rgb = cv2.imread('1531641212.png', 0)
+#         # img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+#         template = cv2.imread(str(value['image_path']), 0)
+#         # w, h = template.shape[::-1]
+#
+#         res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+#         threshold = 0.98
+#         loc = np.where(res >= threshold)
+#
+#         if (len(loc[0]) != 0):
+#             hand += value['alias']
+#             # for pt in zip(*loc[::-1]):
+#             # print(value['card'] + value['alias'])
+#
+#     except Exception as e:
+#         print(str(value['image_path']))
+# print(hand)
 
 
 

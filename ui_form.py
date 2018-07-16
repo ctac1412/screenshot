@@ -1,5 +1,6 @@
 import threading, tkinter, time
 import screen
+import image_processing
 
 class Window(tkinter.Tk, threading.Thread):
     images_folder = "images/"
@@ -33,7 +34,7 @@ class Window(tkinter.Tk, threading.Thread):
         print('thread.stop')
 
     def work(self):
-        screen.checkIsFolderExist()
+        image_processing.checkIsFolderExist()
         while not self.wait:
             screen.start()
         print('выход')
