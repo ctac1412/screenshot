@@ -25,5 +25,6 @@ def start():
             hand = image_processing.searchPlayerHand(str(item['screen_area']))
             #Если рука обнаружена на скрине
             if hand != '':
+                #Вставляем новую запись в session_log
                 session_log.insertIntoLogSession(str(item['screen_area']), hand)
 
