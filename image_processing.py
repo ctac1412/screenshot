@@ -9,7 +9,9 @@ def searchPlayerHand(screen_area):
     hand = ''
     for value in getCards():
         try:
-            img_rgb = cv2.imread(getLastScreen(screen_area), 0)
+            path = getLastScreen(screen_area)
+            path = path[0]['image_path']
+            img_rgb = cv2.imread(path, 0)
             template = cv2.imread(str(value['image_path']), 0)
 
             res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
@@ -20,7 +22,7 @@ def searchPlayerHand(screen_area):
                 hand += value['alias']
 
         except Exception as e:
-            print(str(value['image_path']))
+            print('error')
     return hand
 
 images_folder = "images/"
@@ -34,7 +36,7 @@ def insertImagePathIntoDb(image_path,screen_area):
 #Получение информации об области экрана, на которой будет делаться скриншот
 def getScreenData():
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates")
+    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates where active = 1")
     return data
 
 #Проверка на существование папок
@@ -57,5 +59,5 @@ def getCards():
 #Получение последнего скрина для текущей области экрана
 def getLastScreen(screen_area):
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " + screen_area + " order by id desc limit 1")
+    data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " + str(screen_area) + " order by id desc limit 1")
     return data
