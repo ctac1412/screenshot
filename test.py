@@ -3,8 +3,29 @@ import numpy as np
 import screen
 import postgresql
 import image_processing
+import time
+import pyautogui
+hand = ''
+for value in image_processing.getCards():
+    try:
+        img_rgb = cv2.imread('1531852180.png', 0)
+        template = cv2.imread(str(value['image_path']), 0)
 
-for item in image_processing.getScreenData():
+        res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+        threshold = 0.98
+        loc = np.where(res >= threshold)
+
+        if (len(loc[0]) != 0):
+            hand += value['alias']
+
+    except Exception as e:
+        print('error')
+print(hand)
+
+# for item in range(5):
+#     pyautogui.press('q')
+#     time.sleep(2)
+# for item in image_processing.getScreenData():
     # image_name = str(math.floor(time.time()))
     # image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
     # # # Делаем скрин указанной области экрана
@@ -15,14 +36,14 @@ for item in image_processing.getScreenData():
     # image_processing.insertImagePathIntoDb(image_path, str(item['screen_area']))
 
     # Если последняя строка для текущей области имеет статус отличный от null
-    print(item['screen_area'])
-    hand = image_processing.searchPlayerHand(item['screen_area'])
+    # print(item['screen_area'])
+    # hand = image_processing.searchPlayerHand(item['screen_area'])
     # if image_processing.getLastScreen(item['screen_area'] is not None):
 
     # Если рука обнаружена на скрине
     # if hand != '':
     #     session_log.insertIntoLogSession(str(item['screen_area']), hand)
-    print(hand)
+    # print(hand)
 
 # print(image_processing.getLastScreen(4)[0]['image_path'])
 # db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')
