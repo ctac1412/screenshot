@@ -22,7 +22,6 @@ def start():
         image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
 
         # Если последняя строка для текущей области имеет статус отличный от null
-<<<<<<< HEAD
         if session_log.getLastRowActionFromLogSession(str(item['screen_area']))[0]['action'] is not None:
             hand = image_processing.searchPlayerHand(str(item['screen_area']))
             #Если рука обнаружена на скрине
@@ -30,25 +29,9 @@ def start():
                 #Вставляем новую запись в session_log
                 session_log.insertIntoLogSession(str(item['screen_area']), hand)
                 print(hand)
-                session_log.insertIntoLogSession(item['screen_area'], hand)
+        # Если статус null
         else:
-            #Получаем руку из последней записи и ищем, затем нажимаем соответствующую кнопку. Обновляем action
-
+            #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
             # Получаем руку из последней записи
             print(session_log.getLastHandFromLogSession(str(item['screen_area']))[0]['hand'])
-            # print('none')
-=======
-        # if session_log.getLastRowActionFromLogSession(str(item['screen_area']))[0]['action'] is not None:
-        #     hand = image_processing.searchPlayerHand(str(item['screen_area']))
-        #     #Если рука обнаружена на скрине
-        #     if hand != '':
-        #         print(hand)
-        #         session_log.insertIntoLogSession(item['screen_area'], hand)
-        # else:
-        #     #Получаем руку из последней записи и ищем, затем нажимаем соответствующую кнопку. Обновляем action
-        #
-        #     # Получаем руку из последней записи
-        #     print(session_log.getLastHandFromLogSession(str(item['screen_area']))[0]['hand'])
-        #     # print('none')
->>>>>>> f4f0d97d23f9fb47538f797d724a351541ff788e
 

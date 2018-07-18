@@ -1,45 +1,49 @@
-<<<<<<< HEAD
 # import cv2
 # import numpy as np
 # import screen
 # import image_processing
+import random
 
-for item in range(10):
-    print(item)
-    while(item < 5):
-        exit()
-    print('done')
+# def errorLog(module_name,error_message):
+#     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+#     insert = db.prepare("insert into error_log (module_name,error_message) values($1,$2)")
+#     insert(module_name, error_message)
 
-=======
-import cv2
-import numpy as np
-import screen
-import postgresql
-import image_processing
-import time
-import pyautogui
-hand = ''
-for value in image_processing.getCards():
-    try:
-        img_rgb = cv2.imread('1531852180.png', 0)
-        template = cv2.imread(str(value['image_path']), 0)
-
-        res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-        threshold = 0.98
-        loc = np.where(res >= threshold)
-
-        if (len(loc[0]) != 0):
-            hand += value['alias']
-
-    except Exception as e:
-        print('error')
-print(hand)
+# print(round(random.uniform(0.2, 0.7),2))
+# for item in range(10):
+#     print(item)
+#     while(item < 5):
+#         exit()
+#     print('done')
+#
+# import cv2
+# import numpy as np
+# import screen
+# import postgresql
+# import image_processing
+# import time
+# import pyautogui
+# hand = ''
+# for value in image_processing.getCards():
+#     try:
+#         img_rgb = cv2.imread('1531852180.png', 0)
+#         template = cv2.imread(str(value['image_path']), 0)
+#
+#         res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+#         threshold = 0.98
+#         loc = np.where(res >= threshold)
+#
+#         if (len(loc[0]) != 0):
+#             hand += value['alias']
+#
+#     except Exception as e:
+#         print('error')
+# print(hand)
 
 # for item in range(5):
 #     pyautogui.press('q')
 #     time.sleep(2)
 # for item in image_processing.getScreenData():
->>>>>>> f4f0d97d23f9fb47538f797d724a351541ff788e
     # image_name = str(math.floor(time.time()))
     # image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
     # # # Делаем скрин указанной области экрана

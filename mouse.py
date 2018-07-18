@@ -1,4 +1,7 @@
 import pyautogui
+import random
+import time
 
-#random duration?
-pyautogui.moveTo(100,100,duration=0.5)
+def moveMouse(x,y):
+    pyautogui.moveTo(x,y,duration=round(random.uniform(0.2, 0.7),2))
+
