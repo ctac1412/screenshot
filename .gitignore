@@ -1,7 +1,6 @@
 /images
 .idea
-/.idea
 /cards
 /cards1
 /venv
-/__pycache__
+__pycache__

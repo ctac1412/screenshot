@@ -1,10 +1,14 @@
-import cv2
-import numpy as np
-import screen
-import postgresql
-import image_processing
+# import cv2
+# import numpy as np
+# import screen
+# import image_processing
 
-for item in image_processing.getScreenData():
+for item in range(10):
+    print(item)
+    while(item < 5):
+        exit()
+    print('done')
+
     # image_name = str(math.floor(time.time()))
     # image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
     # # # Делаем скрин указанной области экрана
@@ -15,14 +19,14 @@ for item in image_processing.getScreenData():
     # image_processing.insertImagePathIntoDb(image_path, str(item['screen_area']))
 
     # Если последняя строка для текущей области имеет статус отличный от null
-    print(item['screen_area'])
-    hand = image_processing.searchPlayerHand(item['screen_area'])
+    # print(item['screen_area'])
+    # hand = image_processing.searchPlayerHand(item['screen_area'])
     # if image_processing.getLastScreen(item['screen_area'] is not None):
 
     # Если рука обнаружена на скрине
     # if hand != '':
     #     session_log.insertIntoLogSession(str(item['screen_area']), hand)
-    print(hand)
+    # print(hand)
 
 # print(image_processing.getLastScreen(4)[0]['image_path'])
 # db = postgresql.open('pq://postgres:postgres@localhost:5432/postgres')

@@ -25,10 +25,8 @@ def start():
             hand = image_processing.searchPlayerHand(str(item['screen_area']))
             #Если рука обнаружена на скрине
             if hand != '':
-<<<<<<< HEAD
                 #Вставляем новую запись в session_log
                 session_log.insertIntoLogSession(str(item['screen_area']), hand)
-=======
                 print(hand)
                 session_log.insertIntoLogSession(item['screen_area'], hand)
         else:
@@ -37,5 +35,4 @@ def start():
             # Получаем руку из последней записи
             print(session_log.getLastHandFromLogSession(str(item['screen_area']))[0]['hand'])
             # print('none')
->>>>>>> d817d4aa8a9744f289231262828d742501931902
 
