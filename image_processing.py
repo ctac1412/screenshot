@@ -36,7 +36,7 @@ def insertImagePathIntoDb(image_path,screen_area):
 #Получение информации об области экрана, на которой будет делаться скриншот
 def getScreenData():
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates where active = 1")
+    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates where active = 1")
     return data
 
 #Проверка на существование папок
