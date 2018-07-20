@@ -3,41 +3,53 @@ import numpy as np
 import postgresql
 import os
 import datetime
-
-#Поиск карт игрока на скрине
-def searchPlayerHand(screen_area):
-    hand = ''
-    for value in getCards():
-        try:
-            path = getLastScreen(screen_area)
-            path = path[0]['image_path']
-            img_rgb = cv2.imread(path, 0)
-            template = cv2.imread(str(value['image_path']), 0)
-
-            res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-            threshold = 0.98
-            loc = np.where(res >= threshold)
-
-            if (len(loc[0]) != 0):
-                hand += value['alias']
-
-        except Exception as e:
-            print('error')
-    return hand
+import error_log
 
 images_folder = "images/"
 
+#Поиск карт игрока на скрине
+def searchPlayerHand(screen_area):
+    try:
+        hand = ''
+        for value in getCards():
+            try:
+                path = getLastScreen(screen_area)
+                path = path[0]['image_path']
+                img_rgb = cv2.imread(path, 0)
+                template = cv2.imread(str(value['image_path']), 0)
+
+                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+                threshold = 0.98
+                loc = np.where(res >= threshold)
+
+                if (len(loc[0]) != 0):
+                    hand += value['alias']
+
+            except Exception as e:
+                print('error')
+        return hand
+    except Exception as e:
+        error_log.errorLog('searchPlayerHand',e)
+
+
 #Вставка пути к изображению в бд
 def insertImagePathIntoDb(image_path,screen_area):
-    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    insert = db.prepare("insert into screenshots (image_path,screen_area) values($1,$2)")
-    insert(image_path,screen_area)
+    try:
+        db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+        insert = db.prepare("insert into screenshots (image_path,screen_area) values($1,$2)")
+        insert(image_path, screen_area)
+    except Exception as e:
+        error_log.errorLog('insertImagePathIntoDb',e)
+
 
 #Получение информации об области экрана, на которой будет делаться скриншот
 def getScreenData():
-    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates where active = 1")
-    return data
+    try:
+        db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+        data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates where active = 1")
+        return data
+    except Exception as e:
+        error_log.errorLog('getScreenData',e)
 
 #Проверка на существование папок
 def checkIsFolderExist():

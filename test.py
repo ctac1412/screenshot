@@ -6,45 +6,10 @@ import random
 
 
 
-def getDecision(hand):
-    if pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
-        return 1
-    else:
-        return 0
-
-
-def pocketBroadway(hand):
-    val = ''
-    broadway = ['A', 'K', 'Q', 'J', 'T']
-    for value in hand:
-        if value.isupper():
-            val += value
-    try:
-        if val[0] in broadway and val[1] in broadway:
-            return 1
-        else:
-            return 0
-    except:
-        return 0
-def pocketPair(hand):
-    val = ''
-    for c in hand:
-        if c.isupper() or c.isdigit():
-            val += c
-    if val[0] == val[1]:
-        return 1
-    else:
-        return 0
-
-def anyAce(hand):
-    val = ''
-    for c in hand:
-        if c.isupper() or c.isdigit():
-            val += c
-    if val[0] == 'A' or val[1] == 'A':
-        return 1
-    else:
-        return 0
+try:
+    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+except Exception as e:
+    print(e)
 # def errorLog(module_name,error_message):
 #     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
 #     insert = db.prepare("insert into error_log (module_name,error_message) values($1,$2)")
@@ -62,10 +27,10 @@ def anyAce(hand):
 # import screen
 # import postgresql
 # import image_processing
-import time
-import pyautogui
-time.sleep(3)
-pyautogui.moveTo(1000,600,duration=round(random.uniform(0.2, 0.7),2))
+# import time
+# import pyautogui
+# time.sleep(3)
+# pyautogui.moveTo(1000,600,duration=round(random.uniform(0.2, 0.7),2))
 # hand = ''
 # for value in image_processing.getCards():
 #     try:

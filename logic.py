@@ -1,8 +1,13 @@
+import error_log
+
 def getDecision(hand):
-    if pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
-        return 1
-    else:
-        return 0
+    try:
+        if pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
+            return 1
+        else:
+            return 0
+    except Exception as e:
+        error_log.errorLog('getDecision',e)
 
 
 def pocketBroadway(hand):
