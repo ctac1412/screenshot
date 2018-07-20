@@ -5,6 +5,9 @@ import math
 import image_processing
 import session_log
 import pyautogui
+import logic
+import keyboard
+import mouse
 
 images_folder = "images/"
 
@@ -21,17 +24,34 @@ def start():
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
 
+        #перемещаем курсор на рабочую область
+        mouse.moveMouse(item['x_mouse'],item['y_mouse'])
+
         # Если последняя строка для текущей области имеет статус отличный от null
         if session_log.getLastRowActionFromLogSession(str(item['screen_area']))[0]['action'] is not None:
             hand = image_processing.searchPlayerHand(str(item['screen_area']))
             #Если рука обнаружена на скрине
             if hand != '':
                 #Вставляем новую запись в session_log
-                session_log.insertIntoLogSession(str(item['screen_area']), hand)
-                print(hand)
+                session_log.insertIntoLogSession((item['screen_area']), hand)
+                # print(hand)
+                time.sleep(2)
+                hand = (session_log.getLastHandFromLogSession(str(item['screen_area']))[0]['hand'])
+                if logic.getDecision(hand) == 1:
+                    keyboard.push()
+                    session_log.updateActionLogSession('push', str(item['screen_area']))
+                else:
+                    keyboard.checkFold()
+                    session_log.updateActionLogSession('fold', str(item['screen_area']))
         # Если статус null
-        else:
-            #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
-            # Получаем руку из последней записи
-            print(session_log.getLastHandFromLogSession(str(item['screen_area']))[0]['hand'])
+        # else:
+        #     #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
+        #     # Получаем руку из последней записи
+        #     hand = (session_log.getLastHandFromLogSession(str(item['screen_area']))[0]['hand'])
+        #     if logic.getDecision(hand) == 1:
+        #         keyboard.push()
+        #         session_log.updateActionLogSession('push', str(item['screen_area']))
+        #     else:
+        #         keyboard.checkFold()
+        #         session_log.updateActionLogSession('fold', str(item['screen_area']))
 

@@ -62,8 +62,10 @@ def anyAce(hand):
 # import screen
 # import postgresql
 # import image_processing
-# import time
-# import pyautogui
+import time
+import pyautogui
+time.sleep(3)
+pyautogui.moveTo(1000,600,duration=round(random.uniform(0.2, 0.7),2))
 # hand = ''
 # for value in image_processing.getCards():
 #     try:
