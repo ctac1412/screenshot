@@ -1,4 +1,5 @@
 import error_log
+import postgresql
 
 def getDecision(hand):
     try:
@@ -43,3 +44,12 @@ def anyAce(hand):
         return 1
     else:
         return 0
+
+def getIterationTimer():
+    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    data = db.query("select round(extract(epoch from now() - created_at)) as second_left from iteration_timer")
+    return data[0]['second_left']
+
+def updateIterationTimer():
+    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    db.query("UPDATE iteration_timer SET created_at = now()")

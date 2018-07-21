@@ -41,3 +41,6 @@ class Window(tkinter.Tk, threading.Thread):
 
 if __name__ == '__main__':
     Window().mainloop()
+
+def keydown(e):
+    print('down', e.char)
