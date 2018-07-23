@@ -11,6 +11,8 @@ class Window(tkinter.Tk, threading.Thread):
         self.setDaemon(True)
         self.start()
         self.geometry('200x200')
+        self.title('robot')
+        self.columnconfigure(1, pad=5)
 
         tkinter.Button(text="start", command=self.Start,width=10).grid(row = 1, column = 1)
         tkinter.Button(text="stop", command=self.Stop).grid(row = 1, column = 2)
