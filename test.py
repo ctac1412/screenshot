@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # import cv2
 # import numpy as np
 # import screen
@@ -140,3 +141,5 @@ print(hand)
 #     cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
 #
 # cv2.imwrite('res.png',img_rgb)
+=======
+>>>>>>> dd919b2a0c903e223fffc3276aa076be072de9d8

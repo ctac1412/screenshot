@@ -81,18 +81,18 @@ def getLastScreen(screen_area):
     data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " + str(screen_area) + " order by id desc limit 1")
     return data
 
-def getRegisterButtonData():
+def getUIButtonData(alias):
     try:
         db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
         data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates "
-                        "where active = 1 and alias = 'register_button'")
+                        "where active = 1 and alias = " + alias)
         return data
     except Exception as e:
         error_log.errorLog('getScreenData',e)
 
 def checkIsGameEnd():
     folder_name = images_folder + str(datetime.datetime.now().date())
-    for item in getRegisterButtonData():
+    for item in getUIButtonData("register_button"):
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
         # Делаем скрин указанной области экрана
@@ -107,7 +107,7 @@ def checkIsGameEnd():
             mouse.leftClick()
             mouse.moveMouse(1150, 650)
             keyboard.doubleSpace()
-    logic.updateIterationTimer()
+    logic.updateIterationTimer("register_button")
 
 def searchRegisterButton(screen_area):
     path = getLastScreen(screen_area)
@@ -122,3 +122,34 @@ def searchRegisterButton(screen_area):
     if (len(loc[0]) != 0):
         return 1
     else: return 0
+
+def searchSitoutButton(screen_area):
+    path = getLastScreen(screen_area)
+    path = path[0]['image_path']
+    img_rgb = cv2.imread(path, 0)
+    template = cv2.imread('sitout_button/sitout_button.png', 0)
+
+    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.98
+    loc = np.where(res >= threshold)
+
+    if (len(loc[0]) != 0):
+        return 1
+    else: return 0
+
+def checkIsSitout():
+    folder_name = images_folder + str(datetime.datetime.now().date())
+    for item in getUIButtonData("sitout_button"):
+        image_name = str(math.floor(time.time()))
+        image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
+        # Делаем скрин указанной области экрана
+        image = ImageGrab.grab(bbox=(item['x_coordinate'], item['y_coordinate'], item['width'], item['height']))
+        # Сохраняем изображение на жестком диске
+        image.save(image_path, "PNG")
+        # Сохраняем инфо в бд
+        insertImagePathIntoDb(image_path, (item['screen_area']))
+
+        if searchSitoutButton(str(item['screen_area'])) == 1:
+            mouse.moveMouse(item['x_mouse'], item['y_mouse'])
+            mouse.leftClick()
+    logic.updateIterationTimer("sitout_button")
