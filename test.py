@@ -31,8 +31,22 @@ import image_processing
 import datetime
 import error_log
 import logic
+import cv2
+import numpy
+hand = ''
+for value in image_processing.getCards():
+     path = '1532253402.png'
+     img_rgb = cv2.imread(path, 0)
+     template = cv2.imread(str(value['image_path']), 0)
 
-print(logic.iterationTimer())
+     res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+     threshold = 0.98
+     loc = numpy.where(res >= threshold)
+     if (len(loc[0]) != 0):
+          hand += value['alias']
+
+print(hand)
+# print(logic.iterationTimer())
 # hand = ''
 # for value in image_processing.getCards():
 #     try:
