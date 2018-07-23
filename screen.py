@@ -14,8 +14,10 @@ def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
     # time.sleep(1)
     for item in image_processing.getScreenData():
-        if logic.getIterationTimer('register_button') >= 40:
+        if logic.getIterationTimer("register_button") >= 40:
             image_processing.checkIsGameEnd()
+        # if logic.getIterationTimer("sitout_button") >= 30:
+        #     image_processing.checkIsSitout()
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
         # Делаем скрин указанной области экрана
