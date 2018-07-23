@@ -6,10 +6,10 @@ import random
 
 
 
-try:
-    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-except Exception as e:
-    print(e)
+# try:
+#     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+# except Exception as e:
+#     print(e)
 # def errorLog(module_name,error_message):
 #     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
 #     insert = db.prepare("insert into error_log (module_name,error_message) values($1,$2)")
@@ -27,10 +27,12 @@ except Exception as e:
 # import screen
 # import postgresql
 # import image_processing
-# import time
-# import pyautogui
-# time.sleep(3)
-# pyautogui.moveTo(1000,600,duration=round(random.uniform(0.2, 0.7),2))
+import image_processing
+import datetime
+import error_log
+import logic
+
+print(logic.iterationTimer())
 # hand = ''
 # for value in image_processing.getCards():
 #     try:

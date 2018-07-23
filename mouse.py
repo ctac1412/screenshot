@@ -8,3 +8,6 @@ def moveMouse(x,y):
     except Exception as e:
         error_log.errorLog('moveMouse',e)
 
+def leftClick():
+    pyautogui.click()
+

@@ -8,3 +8,6 @@ def check():
 
 def checkFold():
     pyautogui.press('f')
+
+def doubleSpace():
+    pyautogui.press('space', 2, 1)
