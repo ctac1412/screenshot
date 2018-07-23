@@ -45,11 +45,15 @@ def anyAce(hand):
     else:
         return 0
 
-def getIterationTimer():
-    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    data = db.query("select round(extract(epoch from now() - created_at)) as second_left from iteration_timer")
-    return data[0]['second_left']
+def suitedConnectors(hand):
+    return 1
 
-def updateIterationTimer():
+
+def getIterationTimer(ui_element):
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    db.query("UPDATE iteration_timer SET created_at = now()")
+    data = db.query("select round(extract(epoch from now() - created_at)) as seconds_left from iteration_timer where ui_element = " + ui_element)
+    return data[0]['seconds_left']
+
+def updateIterationTimer(ui_element):
+    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    db.query("UPDATE iteration_timer SET created_at = now() where ui_element = " + ui_element)

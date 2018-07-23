@@ -17,12 +17,17 @@ class Window(tkinter.Tk, threading.Thread):
         tkinter.Button(text="start", command=self.Start,width=10).grid(row = 1, column = 1)
         tkinter.Button(text="stop", command=self.Stop).grid(row = 1, column = 2)
         tkinter.Button(text='Exit', command=lambda: self.destroy()).grid(row=2, column=1)
+        self.bind("<Key>", self.keydown)
+
         def destroy():
             self.wait = -1
             time.sleep(1)
             self.destroy()
         self.protocol("WM_DELETE_WINDOW", destroy)
 
+    def keydown(self,e):
+        if e.char == 'x':
+            self.destroy()
     def Stop(self): self.wait = 1
     def Start(self): self.wait = 0
     def run(self):

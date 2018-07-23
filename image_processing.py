@@ -107,7 +107,7 @@ def checkIsGameEnd():
             mouse.leftClick()
             mouse.moveMouse(1150, 650)
             keyboard.doubleSpace()
-    logic.updateIterationTimer()
+    logic.updateIterationTimer("register_button")
 
 def searchRegisterButton(screen_area):
     path = getLastScreen(screen_area)
@@ -161,4 +161,4 @@ def checkIsSitout():
         if searchSitoutButton(str(item['screen_area'])) == 1:
             mouse.moveMouse(item['x_mouse'], item['y_mouse'])
             mouse.leftClick()
-    logic.updateIterationTimer()
+    logic.updateIterationTimer("sitout_button")
