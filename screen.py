@@ -37,7 +37,7 @@ def start():
                 #Вставляем новую запись в session_log
                 session_log.insertIntoLogSession((item['screen_area']), hand)
                 # print(hand)
-                time.sleep(0.5)
+                # time.sleep(0.5)
                 hand = (session_log.getLastHandFromLogSession(str(item['screen_area']))[0]['hand'])
                 if logic.getDecision(hand) == 1:
                     keyboard.push()

@@ -99,7 +99,7 @@ def checkIsGameEnd():
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
         # Делаем скрин указанной области экрана
         image = ImageGrab.grab(bbox=(item['x_coordinate'], item['y_coordinate'], item['width'], item['height']))
-        # Сохраняем изображение на жестком диске
+        # Сохраняем изображение на  жестком диске
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         insertImagePathIntoDb(image_path, (item['screen_area']))
