@@ -85,7 +85,7 @@ def getUIButtonData(alias):
     try:
         db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
         data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates "
-                        "where active = 1 and alias = " + alias)
+                        "where active = 1 and alias = '" + alias + "'")
         return data
     except Exception as e:
         error_log.errorLog('getScreenData',e)
@@ -105,7 +105,7 @@ def checkIsGameEnd():
         if searchRegisterButton(str(item['screen_area'])) == 1:
             mouse.moveMouse(item['x_mouse'], item['y_mouse'])
             mouse.leftClick()
-            mouse.moveMouse(1150, 650)
+            mouse.moveMouse(1240, 730)
             keyboard.doubleSpace()
     logic.updateIterationTimer("register_button")
 

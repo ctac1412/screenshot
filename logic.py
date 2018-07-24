@@ -51,9 +51,9 @@ def suitedConnectors(hand):
 
 def getIterationTimer(ui_element):
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    data = db.query("select round(extract(epoch from now() - created_at)) as seconds_left from iteration_timer where ui_element = " + ui_element)
+    data = db.query("select round(extract(epoch from now() - created_at)) as seconds_left from iteration_timer where ui_element = '" + ui_element + "'")
     return data[0]['seconds_left']
 
 def updateIterationTimer(ui_element):
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-    db.query("UPDATE iteration_timer SET created_at = now() where ui_element = " + ui_element)
+    db.query("UPDATE iteration_timer SET created_at = now() where ui_element = '" + ui_element + "'")
