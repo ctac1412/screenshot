@@ -46,7 +46,10 @@ def anyAce(hand):
         return 0
 
 def suitedConnectors(hand):
-    return 1
+    arr = ['J', 'T', '9', '8', '7']
+    if hand[1] == hand[3]:
+        if hand[0] in arr and hand[2] in arr:
+            return 1
 
 
 def getIterationTimer(ui_element):

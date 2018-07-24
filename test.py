@@ -140,3 +140,7 @@ print(hand)
 #     cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
 #
 # cv2.imwrite('res.png',img_rgb)
+import requests
+
+r = requests.get('https://z-monitor.ru/api/v2/profile/?sessionID=ua69d201edk6pk49eu7qditt82&device=android')
+print(r.json()['data']['email'])
