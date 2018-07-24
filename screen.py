@@ -12,7 +12,6 @@ images_folder = "images/"
 
 def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
-    # time.sleep(1)
     for item in image_processing.getScreenData():
         if logic.getIterationTimer("register_button") >= 40:
             image_processing.checkIsGameEnd()
@@ -37,8 +36,6 @@ def start():
             if hand != '':
                 #Вставляем новую запись в session_log
                 session_log.insertIntoLogSession((item['screen_area']), hand)
-                # print(hand)
-                time.sleep(1)
                 hand = (session_log.getLastHandFromLogSession(str(item['screen_area']))[0]['hand'])
                 if logic.getDecision(hand) == 1:
                     keyboard.push()

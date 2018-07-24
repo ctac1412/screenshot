@@ -81,6 +81,7 @@ def getLastScreen(screen_area):
     data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " + str(screen_area) + " order by id desc limit 1")
     return data
 
+#Получение инфа для поиска элемента на изображении
 def getUIButtonData(alias):
     try:
         db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
@@ -90,6 +91,7 @@ def getUIButtonData(alias):
     except Exception as e:
         error_log.errorLog('getScreenData',e)
 
+#Проверка, завершилась ли игра
 def checkIsGameEnd():
     folder_name = images_folder + str(datetime.datetime.now().date())
     for item in getUIButtonData("register_button"):
@@ -109,6 +111,7 @@ def checkIsGameEnd():
             keyboard.doubleSpace()
     logic.updateIterationTimer("register_button")
 
+#Поиск кнопки register
 def searchRegisterButton(screen_area):
     path = getLastScreen(screen_area)
     path = path[0]['image_path']
@@ -123,6 +126,7 @@ def searchRegisterButton(screen_area):
         return 1
     else: return 0
 
+#Поиск кнопки sitout
 def searchSitoutButton(screen_area):
     path = getLastScreen(screen_area)
     path = path[0]['image_path']
@@ -137,6 +141,7 @@ def searchSitoutButton(screen_area):
         return 1
     else: return 0
 
+#Проверка, ушло ли окно в sitout
 def checkIsSitout():
     folder_name = images_folder + str(datetime.datetime.now().date())
     for item in getUIButtonData("sitout_button"):

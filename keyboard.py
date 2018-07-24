@@ -10,4 +10,4 @@ def checkFold():
     pyautogui.press('f')
 
 def doubleSpace():
-    pyautogui.press('space', 2, 1)
+    pyautogui.press('space', 2, 1.5 )
