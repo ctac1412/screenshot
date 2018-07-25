@@ -1,8 +1,4 @@
-import mouse
-import time
-import pyautogui
-import keyboard
+import requests
 
-time.sleep(5)
-mouse.leftClick()
-keyboard.doubleSpace()
+r = requests.get('https://z-monitor.ru/api/v2/profile/?sessionID=ua69d201edk6pk49eu7qditt82&device=android')
+print(r.json())
