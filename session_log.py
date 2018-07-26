@@ -23,7 +23,7 @@ def getLastRowActionFromLogSession(screen_area):
 def updateActionLogSession(action, screen_area):
     try:
         db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
-        data = db.query("UPDATE session_log SET action=yourvalue FROM "
+        db.query("UPDATE session_log SET action=yourvalue FROM "
                         "(SELECT id, '" + action + "' AS yourvalue FROM session_log where screen_area = " + screen_area + " ORDER BY id desc limit 1) AS t1 "
                                                                                                                           "WHERE session_log.id=t1.id ")
     except Exception as e:
