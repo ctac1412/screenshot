@@ -1,5 +1,6 @@
 import error_log
 import postgresql
+import db_conf
 
 def getDecision(hand):
     try:
@@ -52,10 +53,10 @@ def suitedConnectors(hand):
             return 1
 
 def getIterationTimer(ui_element):
-    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    db = postgresql.open(db_conf.connectionString())
     data = db.query("select round(extract(epoch from now() - created_at)) as seconds_left from iteration_timer where ui_element = '" + ui_element + "'")
     return data[0]['seconds_left']
 
 def updateIterationTimer(ui_element):
-    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    db = postgresql.open(db_conf.connectionString())
     db.query("UPDATE iteration_timer SET created_at = now() where ui_element = '" + ui_element + "'")
