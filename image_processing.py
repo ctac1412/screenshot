@@ -86,7 +86,7 @@ def getUIButtonData(alias):
     try:
         db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
         data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates "
-                        "where active = 1 and alias = " + alias)
+                        "where active = 1 and alias = 'register_button'")
         return data
     except Exception as e:
         error_log.errorLog('getScreenData',e)
