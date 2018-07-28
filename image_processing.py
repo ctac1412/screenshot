@@ -10,6 +10,7 @@ import time
 import mouse
 import keyboard
 import logic
+import db_conf
 
 images_folder = "images/"
 
@@ -41,7 +42,7 @@ def searchPlayerHand(screen_area):
 #Вставка пути к изображению в бд
 def insertImagePathIntoDb(image_path,screen_area):
     try:
-        db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+        db = postgresql.open(db_conf.connectionString())
         insert = db.prepare("insert into screenshots (image_path,screen_area) values($1,$2)")
         insert(image_path, screen_area)
     except Exception as e:
@@ -51,7 +52,7 @@ def insertImagePathIntoDb(image_path,screen_area):
 #Получение информации об области экрана, на которой будет делаться скриншот
 def getScreenData():
     try:
-        db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+        db = postgresql.open(db_conf.connectionString())
         data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates "
                         "where active = 1 and alias = 'workspace'")
         return data
@@ -63,7 +64,7 @@ def checkIsFolderExist():
     folder_name = images_folder + str(datetime.datetime.now().date())
     if not os.path.exists(str(folder_name)):
         os.makedirs(str(folder_name))
-    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    db = postgresql.open(db_conf.connectionString())
     data = db.query("select screen_area from screen_coordinates")
     for value in data:
         if not os.path.exists(str(folder_name) + "/" + str(value['screen_area'])):
@@ -71,22 +72,23 @@ def checkIsFolderExist():
 
 #Получение путей к изображениям шаблонов карт
 def getCards():
-    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path) as image_path,card,suit,trim(alias) as alias from cards")
     return data
 
 #Получение последнего скрина для текущей области экрана
 def getLastScreen(screen_area):
-    db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+    db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " + str(screen_area) + " order by id desc limit 1")
     return data
 
 #Получение инфа для поиска элемента на изображении
 def getUIButtonData(alias):
     try:
-        db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
+        db = postgresql.open(db_conf.connectionString())
         data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates "
                         "where active = 1 and alias = 'register_button'")
+                        "where active = 1 and alias = '" + alias + "'")
         return data
     except Exception as e:
         error_log.errorLog('getScreenData',e)
@@ -99,7 +101,7 @@ def checkIsGameEnd():
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
         # Делаем скрин указанной области экрана
         image = ImageGrab.grab(bbox=(item['x_coordinate'], item['y_coordinate'], item['width'], item['height']))
-        # Сохраняем изображение на жестком диске
+        # Сохраняем изображение на  жестком диске
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         insertImagePathIntoDb(image_path, (item['screen_area']))
@@ -107,7 +109,7 @@ def checkIsGameEnd():
         if searchRegisterButton(str(item['screen_area'])) == 1:
             mouse.moveMouse(item['x_mouse'], item['y_mouse'])
             mouse.leftClick()
-            mouse.moveMouse(1150, 650)
+            mouse.moveMouse(1240, 730)
             keyboard.doubleSpace()
     logic.updateIterationTimer("register_button")
 

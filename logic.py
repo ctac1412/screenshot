@@ -1,9 +1,10 @@
 import error_log
 import postgresql
+import db_conf
 
 def getDecision(hand):
     try:
-        if pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
+        if pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1 or suitedConnectors == 1:
             return 1
         else:
             return 0
@@ -46,13 +47,11 @@ def anyAce(hand):
         return 0
 
 def suitedConnectors(hand):
-    arr = ['J', 'T', '9', '8', '7']
+    arr = ['K', 'Q', 'J', 'T', '9', '8', '7']
     if hand[1] == hand[3]:
         if hand[0] in arr and hand[2] in arr:
             return 1
 
-
-def getIterationTimer(ui_element):
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
     data = db.query("select round(extract(epoch from now() - created_at)) as seconds_left from iteration_timer where ui_element = " + "'" + ui_element + "'")
     return data[0]['seconds_left']
@@ -60,3 +59,10 @@ def getIterationTimer(ui_element):
 def updateIterationTimer(ui_element):
     db = postgresql.open('pq://postgres:postgres@localhost:5433/postgres')
     db.query("UPDATE iteration_timer SET created_at = now() where ui_element = " + "'" + ui_element + "'")
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select round(extract(epoch from now() - created_at)) as seconds_left from iteration_timer where ui_element = '" + ui_element + "'")
+    return data[0]['seconds_left']
+
+def updateIterationTimer(ui_element):
+    db = postgresql.open(db_conf.connectionString())
+    db.query("UPDATE iteration_timer SET created_at = now() where ui_element = '" + ui_element + "'")
