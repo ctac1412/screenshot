@@ -6,4 +6,4 @@
 /cards1
 venv/
 __pycache__/
-/db_conf
+/db_conf.py
