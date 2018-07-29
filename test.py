@@ -1,3 +1,3 @@
-import error_log
+import logic
 
-error_log.errorLog('test','tesssf')
+print(logic.suitedConnectors('Qs9s'))

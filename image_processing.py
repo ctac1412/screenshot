@@ -41,12 +41,12 @@ def searchPlayerHand(screen_area):
 
 #Вставка пути к изображению в бд
 def insertImagePathIntoDb(image_path,screen_area):
-    try:
+    # try:
         db = postgresql.open(db_conf.connectionString())
         insert = db.prepare("insert into screenshots (image_path,screen_area) values($1,$2)")
         insert(image_path, screen_area)
-    except Exception as e:
-        error_log.errorLog('insertImagePathIntoDb',e)
+    # except Exception as e:
+    #     error_log.errorLog('insertImagePathIntoDb',e)
 
 
 #Получение информации об области экрана, на которой будет делаться скриншот

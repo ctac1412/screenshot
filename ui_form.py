@@ -10,8 +10,8 @@ class Window(tkinter.Tk, threading.Thread):
         self.wait = 1
         self.setDaemon(True)
         self.start()
-        self.geometry('200x200')
-        self.title('robot')
+        self.geometry('150x150')
+        self.title('Calculator')
         self.columnconfigure(1, pad=5)
 
         tkinter.Button(text="start", command=self.Start,width=10).grid(row = 1, column = 1)

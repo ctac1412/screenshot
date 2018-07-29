@@ -25,6 +25,7 @@ def start():
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
+        # time.sleep(3)
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
 
