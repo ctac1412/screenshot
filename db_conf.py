@@ -1,3 +1,3 @@
 
 def connectionString():
-    return 'pq://postgres:postgres@localhost:5433/postgres'
+    return 'pq://postgres:postgres@localhost:5432/postgres'
