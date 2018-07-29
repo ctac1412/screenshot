@@ -48,8 +48,9 @@ def anyAce(hand):
 
 def suitedConnectors(hand):
     arr = ['K', 'Q', 'J', 'T', '9', '8', '7']
-    if hand[1] == hand[3] and hand[0] in arr and hand[2] in arr:
-        return 1
+    if hand[1] == hand[3]:
+        if hand[0] in arr and hand[2] in arr:
+            return 1
 
 def getIterationTimer(ui_element):
     db = postgresql.open(db_conf.connectionString())
