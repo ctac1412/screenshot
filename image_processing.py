@@ -31,6 +31,8 @@ def searchPlayerHand(screen_area):
 
                 if (len(loc[0]) != 0):
                     hand += value['alias']
+                if len(hand) == 4:
+                    return hand
 
             except Exception as e:
                 error_log.errorLog('searchPlayerHand', e)
