@@ -9,6 +9,7 @@ import keyboard
 import mouse
 import end_game
 import sitout
+import determine_position
 
 images_folder = "images/"
 
@@ -27,7 +28,6 @@ def start():
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
-        # time.sleep(3)
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
 
@@ -37,9 +37,7 @@ def start():
             #Если рука обнаружена на скрине
             if hand != '':
                 #Вставляем новую запись в session_log
-                session_log.insertIntoLogSession((item['screen_area']), hand)
-                # print(hand)
-                # time.sleep(0.5)
+                session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips((item['screen_area'])))
                 hand = (session_log.getLastHandFromLogSession(str(item['screen_area']))[0]['hand'])
                 if logic.getDecision(hand) == 1:
                     keyboard.push()
