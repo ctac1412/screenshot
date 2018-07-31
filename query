@@ -30,3 +30,6 @@ for pt in zip(*loc[::-1]):
     cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,255,0), 2)
 
 cv2.imwrite('res.png',img_rgb)
+
+
+CREATE TABLE stack (id SERIAL PRIMARY KEY, image_path CHAR(64), stack_value int2, created_at TIMESTAMP DEFAULT NOW())
