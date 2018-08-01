@@ -4,6 +4,7 @@ import image_processing
 import cv2
 import numpy as np
 
+#Определение текущего стека
 def searchCurrentStack(screen_area):
     current_stack = ''
     for value in getStackData():
