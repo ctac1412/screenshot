@@ -27,3 +27,11 @@ def getBlindArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select blind_area from screen_coordinates where screen_area = " + "'" + str(screen_area) + "'")
     return data[0]['blind_area']
+    data = db.query("select blind_area from screen_coordinates where screen_area = " + screen_area)
+    return data[0]['blind_area']
+
+def getBlindData(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select x_coordinate,y_coordinate,width,height from screen_coordinates "
+                    "where screen_area = " + screen_area)
+    return data

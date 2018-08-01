@@ -16,7 +16,7 @@ def getLastRowActionFromLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
         data = db.query("select trim(action) as action from session_log where screen_area = " + screen_area + " order by id desc limit 1")
-        return data
+        return data[0]['action']
     except Exception as e:
         error_log.errorLog('getLastRowActionFromLogSession',e)
 
@@ -36,6 +36,6 @@ def getLastHandFromLogSession(screen_area):
         db = postgresql.open(db_conf.connectionString())
         data = db.query(
             "select trim(hand) as hand from session_log where screen_area = " + screen_area + " order by id desc limit 1")
-        return data
+        return data[0]['hand']
     except Exception as e:
         error_log.errorLog('getLastHandFromLogSession',e)
