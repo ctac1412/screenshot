@@ -42,7 +42,7 @@ def start():
             #Если рука обнаружена на скрине
             if hand != '':
                 #Вставляем новую запись в session_log
-                session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips(str(item['screen_area'])))
+                session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips(str(item['screen_area'])), current_stack.searchCurrentStack(str(item['screen_area'])))
                 hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
                 if logic.getDecision(hand) == 1:
                     keyboard.push()
