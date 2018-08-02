@@ -10,6 +10,7 @@ import mouse
 import end_game
 import sitout
 import determine_position
+import current_stack
 
 images_folder = "images/"
 
@@ -29,14 +30,9 @@ def start():
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, item['screen_area'])
         #Сохраняем скрин блайндов для текущего окна
-        for value in determine_position.getBlindData(str(determine_position.getBlindArea(str(item['screen_area'])))):
-            image_path = folder_name + "/" + str(determine_position.getBlindArea(str(item['screen_area']))) + "/" + image_name + ".png"
-            # Делаем скрин указанной области экрана
-            image = ImageGrab.grab(bbox=(value['x_coordinate'], value['y_coordinate'], value['width'], value['height']))
-            # Сохраняем изображение на жестком диске
-            image.save(image_path, "PNG")
-            # Сохраняем инфо в бд
-            image_processing.insertImagePathIntoDb(image_path, value['screen_area'])
+        determine_position.saveBlindImage(str(item['screen_area']),image_name,folder_name)
+        # Сохраняем скрин стека для текущего окна
+        current_stack.saveStackImage(str(item['screen_area']),image_name,folder_name)
 
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])

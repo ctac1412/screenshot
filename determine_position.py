@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import postgresql
 import db_conf
+from PIL import Image, ImageGrab
 
 #Поиск блайндов и соответственно определение позиции за столом
 def seacrhBlindChips(screen_area):
@@ -35,3 +36,13 @@ def getBlindData(screen_area):
     data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
                     "where screen_area = "  + screen_area)
     return data
+
+def saveBlindImage(screen_area,image_name,folder_name):
+    for value in getBlindData(str(getBlindArea(str(screen_area)))):
+        image_path = folder_name + "/" + str(getBlindArea(str(screen_area))) + "/" + image_name + ".png"
+        # Делаем скрин указанной области экрана
+        image = ImageGrab.grab(bbox=(value['x_coordinate'], value['y_coordinate'], value['width'], value['height']))
+        # Сохраняем изображение на жестком диске
+        image.save(image_path, "PNG")
+        # Сохраняем инфо в бд
+        image_processing.insertImagePathIntoDb(image_path, value['screen_area'])
