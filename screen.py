@@ -28,27 +28,25 @@ def start():
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, item['screen_area'])
-
         #Сохраняем скрин блайндов для текущего окна
-        for value in determine_position.getBlindData(determine_position.getBlindArea(item['screen_area'])):
-            image_path = folder_name + "/" + str(determine_position.getBlindArea(item['screen_area'])) + "/" + image_name + ".png"
+        for value in determine_position.getBlindData(str(determine_position.getBlindArea(str(item['screen_area'])))):
+            image_path = folder_name + "/" + str(determine_position.getBlindArea(str(item['screen_area']))) + "/" + image_name + ".png"
             # Делаем скрин указанной области экрана
             image = ImageGrab.grab(bbox=(value['x_coordinate'], value['y_coordinate'], value['width'], value['height']))
             # Сохраняем изображение на жестком диске
             image.save(image_path, "PNG")
             # Сохраняем инфо в бд
-            image_processing.insertImagePathIntoDb(image_path, item['screen_area'])
+            image_processing.insertImagePathIntoDb(image_path, value['screen_area'])
 
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
-
         # Если последняя строка для текущей области имеет статус отличный от null
         if session_log.getLastRowActionFromLogSession(str(item['screen_area'])) is not None:
             hand = image_processing.searchPlayerHand(str(item['screen_area']))
             #Если рука обнаружена на скрине
             if hand != '':
                 #Вставляем новую запись в session_log
-                session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips(determine_position.getBlindArea(str(item['screen_area']))))
+                session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips(str(item['screen_area'])))
                 hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
                 if logic.getDecision(hand) == 1:
                     keyboard.push()

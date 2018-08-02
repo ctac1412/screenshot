@@ -8,7 +8,9 @@ import db_conf
 def seacrhBlindChips(screen_area):
     blinds = ['big_blind','small_blind']
     for blind in blinds:
-        path = image_processing.getLastScreen(str(getBlindArea(screen_area)))
+        # print((screen_area))
+        # print(getBlindArea(str(screen_area)))
+        path = image_processing.getLastScreen(getBlindArea(str(screen_area)))
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
         template = cv2.imread('blinds/' + blind + '.png', 0)
@@ -25,13 +27,11 @@ def seacrhBlindChips(screen_area):
 #Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getBlindArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select blind_area from screen_coordinates where screen_area = " + "'" + str(screen_area) + "'")
-    return data[0]['blind_area']
-    data = db.query("select blind_area from screen_coordinates where screen_area = " + screen_area)
+    data = db.query("select blind_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
     return data[0]['blind_area']
 
 def getBlindData(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select x_coordinate,y_coordinate,width,height from screen_coordinates "
-                    "where screen_area = " + screen_area)
+    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
+                    "where screen_area = "  + screen_area)
     return data
