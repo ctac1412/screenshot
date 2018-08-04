@@ -19,9 +19,9 @@ def searchCurrentStack(screen_area):
         loc = np.where(res >= threshold)
 
         if (len(loc[0]) != 0):
-            current_stack += value['stack_value']
+            current_stack += str(value['stack_value'])
         if len(current_stack) > 0:
-            return current_stack
+            return str(current_stack)
     return 0
 
 #Получаем номер области экрана, на которой нужно искать элемент для текущего стола
@@ -43,7 +43,7 @@ def getStackData(screen_area):
     return data
 
 def saveStackImage(screen_area,image_name,folder_name):
-    for val in getStackData(str(getStackArea(screen_area))):
+    for val in getStackData(str(getStackArea(str(screen_area)))):
         image_path = folder_name + "/" + str(getStackArea(str(screen_area))) + "/" + image_name + ".png"
         # Делаем скрин указанной области экрана
         image = ImageGrab.grab(bbox=(val['x_coordinate'], val['y_coordinate'], val['width'], val['height']))
