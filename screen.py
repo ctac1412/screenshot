@@ -17,10 +17,11 @@ images_folder = "images/"
 def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
     for item in image_processing.getScreenData():
-        if logic.getIterationTimer("register_button") >= 40:
-            end_game.checkIsGameEnd()
-        if logic.getIterationTimer("sitout_button") >= 30:
-            sitout.checkIsSitout()
+        hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
+        # if logic.getIterationTimer("register_button") >= 40:
+        #     end_game.checkIsGameEnd()
+        # if logic.getIterationTimer("sitout_button") >= 30:
+        #     sitout.checkIsSitout()
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
         # Делаем скрин указанной области экрана
@@ -41,9 +42,9 @@ def start():
             #Если рука обнаружена на скрине
             if hand != '':
                 #Вставляем новую запись в session_log
-                session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips(str(item['screen_area'])), str(current_stack.searchCurrentStack(item['screen_area'])))
-                hand = session_log.getLastHandFromLogSession(item['screen_area'])
-                if logic.getDecision(hand[0]['hand'],hand[0]['stack_value']) == 1:
+                session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips(str(item['screen_area'])), str(current_stack.searchCurrentStack(str(item['screen_area']))))
+                hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
+                if logic.getDecision(hand[0]['hand'],hand[0]['current_stack']) == 1:
                     keyboard.push()
                     session_log.updateActionLogSession('push', str(item['screen_area']))
                 else:
@@ -53,8 +54,8 @@ def start():
         else:
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
             # Получаем руку из последней записи
-            hand = session_log.getLastHandFromLogSession(item['screen_area'])
-            if logic.getDecision(hand[0]['hand'], hand[0]['stack_value']) == 1:
+            hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
+            if logic.getDecision(hand[0]['hand'],hand[0]['current_stack']) == 1:
                 keyboard.push()
                 session_log.updateActionLogSession('push', str(item['screen_area']))
             else:
