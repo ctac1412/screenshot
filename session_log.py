@@ -35,7 +35,7 @@ def getLastHandFromLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
         data = db.query(
-            "select trim(hand) as hand from session_log where screen_area = " + screen_area + " order by id desc limit 1")
-        return data[0]['hand']
+            "select trim(hand) as hand,trim(stack_value) as stack_value from session_log where screen_area = " + screen_area + " order by id desc limit 1")
+        return data
     except Exception as e:
         error_log.errorLog('getLastHandFromLogSession',e)

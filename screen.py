@@ -33,7 +33,6 @@ def start():
         determine_position.saveBlindImage(str(item['screen_area']),image_name,folder_name)
         # Сохраняем скрин стека для текущего окна
         current_stack.saveStackImage(str(item['screen_area']),image_name,folder_name)
-        time.sleep(3)
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
         # Если последняя строка для текущей области имеет статус отличный от null
@@ -43,8 +42,8 @@ def start():
             if hand != '':
                 #Вставляем новую запись в session_log
                 session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips(str(item['screen_area'])), str(current_stack.searchCurrentStack(item['screen_area'])))
-                hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
-                if logic.getDecision(hand) == 1:
+                hand = session_log.getLastHandFromLogSession(item['screen_area'])
+                if logic.getDecision(hand[0]['hand'],hand[0]['stack_value']) == 1:
                     keyboard.push()
                     session_log.updateActionLogSession('push', str(item['screen_area']))
                 else:
@@ -54,8 +53,8 @@ def start():
         else:
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
             # Получаем руку из последней записи
-            hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
-            if logic.getDecision(hand) == 1:
+            hand = session_log.getLastHandFromLogSession(item['screen_area'])
+            if logic.getDecision(hand[0]['hand'], hand[0]['stack_value']) == 1:
                 keyboard.push()
                 session_log.updateActionLogSession('push', str(item['screen_area']))
             else:

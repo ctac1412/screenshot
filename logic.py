@@ -2,9 +2,13 @@ import error_log
 import postgresql
 import db_conf
 
-def getDecision(hand):
+def getDecision(hand,stack_value):
     try:
-        if pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1 or suitedConnectors(hand) == 1:
+        if stack_value == 0 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
+            return 1
+        elif stack_value <= 15 and stack_value > 7 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1 or suitedConnectors(hand) == 1:
+            return 1
+        elif stack_value <= 7:
             return 1
         else:
             return 0
