@@ -2,7 +2,7 @@ import error_log
 import postgresql
 import db_conf
 
-def getDecision(hand,current_stack):
+def getDecision(hand,current_stack,current_position):
     try:
         if current_stack == 0 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
             return 1
