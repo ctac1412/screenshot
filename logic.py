@@ -4,14 +4,16 @@ import db_conf
 
 def getDecision(hand,current_stack,current_position):
     try:
-        if current_stack == 0 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
-            return 1
+        if current_position == 'btn' and current_stack == 0 and openRange(hand) == 1:
+            return 'open'
+        elif current_stack == 0 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
+            return 'push'
         elif current_stack <= 15 and current_stack > 7 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1 or suitedConnectors(hand) == 1:
-            return 1
+            return 'push'
         elif current_stack <= 7:
-            return 1
+            return 'push'
         else:
-            return 0
+            return 'fold'
     except Exception as e:
         error_log.errorLog('getDecision',e)
 
@@ -64,3 +66,6 @@ def getIterationTimer(ui_element):
 def updateIterationTimer(ui_element):
     db = postgresql.open(db_conf.connectionString())
     db.query("UPDATE iteration_timer SET created_at = now() where ui_element = '" + ui_element + "'")
+
+def openRange(hand):
+    return 0

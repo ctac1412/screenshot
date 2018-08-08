@@ -36,16 +36,23 @@ def start():
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
         # Если последняя строка для текущей области имеет конечный статус
-        if session_log.getLastRowActionFromLogSession(str(item['screen_area'])) in ['push', 'fold']:
+        if session_log.getLastRowActionFromLogSession(str(item['screen_area'])) in ['push', 'fold', 'end']:
             hand = image_processing.searchPlayerHand(str(item['screen_area']))
             #Если рука обнаружена на скрине
             if hand != '':
                 #Вставляем новую запись в session_log
                 session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips(str(item['screen_area'])), str(current_stack.searchCurrentStack(str(item['screen_area']))))
                 hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
-                if logic.getDecision(hand[0]['hand'],hand[0]['current_stack'],hand[0]['current_position']) == 1:
+                decision = logic.getDecision(hand[0]['hand'],hand[0]['current_stack'],hand[0]['current_position'])
+                if decision == 'push':
                     keyboard.push()
                     session_log.updateActionLogSession('push', str(item['screen_area']))
+                elif decision == 'fold':
+                    keyboard.checkFold()
+                    session_log.updateActionLogSession('fold', str(item['screen_area']))
+                elif decision == 'open':
+                    keyboard.open()
+                    session_log.updateActionLogSession('open', str(item['screen_area']))
                 else:
                     keyboard.checkFold()
                     session_log.updateActionLogSession('fold', str(item['screen_area']))
@@ -54,9 +61,16 @@ def start():
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
             # Получаем руку из последней записи
             hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
-            if logic.getDecision(hand[0]['hand'],hand[0]['current_stack'],hand[0]['current_position']) == 1:
+            decision = logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'])
+            if decision == 'push':
                 keyboard.push()
                 session_log.updateActionLogSession('push', str(item['screen_area']))
+            elif decision == 'fold':
+                keyboard.checkFold()
+                session_log.updateActionLogSession('fold', str(item['screen_area']))
+            elif decision == 'open':
+                keyboard.open()
+                session_log.updateActionLogSession('open', str(item['screen_area']))
             else:
                 keyboard.checkFold()
                 session_log.updateActionLogSession('fold', str(item['screen_area']))

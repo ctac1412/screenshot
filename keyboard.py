@@ -11,3 +11,6 @@ def checkFold():
 
 def doubleSpace():
     pyautogui.press('space', 2, 1.7)
+
+def open():
+    pyautogui.press('o')
