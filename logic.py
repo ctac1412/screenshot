@@ -6,7 +6,7 @@ import keyboard
 def getDecision(hand,current_stack,current_position):
     try:
         if current_position == 'btn' and current_stack == 0 and openRange(hand) == 1:
-            keyboard.push()
+            keyboard.open()
         elif current_stack == 0 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
             keyboard.push()
         elif current_stack <= 15 and current_stack > 7 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1 or suitedConnectors(hand) == 1:
@@ -69,4 +69,5 @@ def updateIterationTimer(ui_element):
     db.query("UPDATE iteration_timer SET created_at = now() where ui_element = '" + ui_element + "'")
 
 def openRange(hand):
+    suitedConnectors(hand)
     return 0
