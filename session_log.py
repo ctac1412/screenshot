@@ -1,6 +1,8 @@
 import postgresql
 import error_log
 import db_conf
+import current_stack
+import determine_position
 
 #Создание новой записи в таблицу session_log
 def insertIntoLogSession(screen_area, hand, current_position=0, current_stack=0):
@@ -39,3 +41,13 @@ def getLastHandFromLogSession(screen_area):
         return data
     except Exception as e:
         error_log.errorLog('getLastHandFromLogSession',e)
+
+
+def checkConditionsBeforeInsert(hand, screen_area):
+    session = getLastHandFromLogSession(screen_area)
+    if hand != '' and hand != session[0]['hand'] and session[0]['current_stack'] != current_stack.searchCurrentStack(screen_area):
+        insertIntoLogSession(screen_area,hand,determine_position.seacrhBlindChips(screen_area),current_stack.searchCurrentStack(screen_area))
+        session = getLastHandFromLogSession(screen_area)
+        return session
+    else:
+        return False
