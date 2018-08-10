@@ -2,19 +2,28 @@ import error_log
 import postgresql
 import db_conf
 import keyboard
+import session_log
 
-def getDecision(hand,current_stack,current_position):
+def getDecision(hand,current_stack,current_position,screen_area):
     try:
         if current_position == 'btn' and current_stack == 0 and openRange(hand) == 1:
             keyboard.open()
-        elif current_stack == 0 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
+            action = 'open'
+        elif int(current_stack) == 0 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
             keyboard.push()
-        elif current_stack <= 15 and current_stack > 7 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1 or suitedConnectors(hand) == 1:
+            action = 'push'
+            print(1)
+        elif int(current_stack) <= 15 and int(current_stack) > 7 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1 or suitedConnectors(hand) == 1:
             keyboard.push()
-        elif current_stack <= 7:
+            action = 'push'
+            print(2)
+        elif int(current_stack) <= 7:
             keyboard.push()
+            action = 'push'
         else:
             keyboard.checkFold()
+            action = 'fold'
+        session_log.updateActionLogSession(action, screen_area)
     except Exception as e:
         error_log.errorLog('getDecision',e)
 

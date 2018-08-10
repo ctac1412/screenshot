@@ -19,10 +19,10 @@ def searchCurrentStack(screen_area):
         loc = np.where(res >= threshold)
 
         if (len(loc[0]) != 0):
-            current_stack += str(value['stack_value'])
+            current_stack = str(value['stack_value'])
         if len(current_stack) > 0:
             return str(current_stack)
-    return 0
+    return 16
 
 #Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getStackArea(screen_area):

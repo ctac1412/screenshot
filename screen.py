@@ -43,11 +43,11 @@ def start():
                 #Вставляем новую запись в session_log
                 session_log.insertIntoLogSession((item['screen_area']), hand, determine_position.seacrhBlindChips(str(item['screen_area'])), str(current_stack.searchCurrentStack(str(item['screen_area']))))
                 hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
-                logic.getDecision(hand[0]['hand'],hand[0]['current_stack'],hand[0]['current_position'])
+                logic.getDecision(hand[0]['hand'],hand[0]['current_stack'],hand[0]['current_position'],str(item['screen_area']))
         # Если статус null или не конечный
         else:
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
             # Получаем руку из последней записи
             hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
-            logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'])
+            logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'],str(item['screen_area']))
 
