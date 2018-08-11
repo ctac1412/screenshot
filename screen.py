@@ -56,8 +56,18 @@ def start():
                 else:
                     keyboard.checkFold()
                     session_log.updateActionLogSession('fold', str(item['screen_area']))
+            condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
+            if condition != False:
+                print(condition)
+                print(condition[0]['current_position'])
+                logic.getDecision(condition[0]['hand'], condition[0]['current_stack'],condition[0]['current_position'], item['screen_area'])
+        # Если Если последняя строка для текущей области имеет статус open
+        elif session_log.getLastRowActionFromLogSession(str(item['screen_area'])) == 'open':
+            current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
+            current_stack.searchCurrentStack(str(item['screen_area']))
         # Если статус null или не конечный
         else:
+            print('else')
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
             # Получаем руку из последней записи
             hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
@@ -74,4 +84,5 @@ def start():
             else:
                 keyboard.checkFold()
                 session_log.updateActionLogSession('fold', str(item['screen_area']))
+            logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'],item['screen_area'])
 
