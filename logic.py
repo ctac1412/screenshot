@@ -6,7 +6,7 @@ import session_log
 
 def getDecision(hand,current_stack,current_position,screen_area):
     try:
-        if current_position == 'btn' and current_stack == 0 and openRange(hand) == 1:
+        if current_position == 'btn' and current_stack == 16 and openRange(hand) == 1:
             keyboard.open()
             action = 'open'
             print(0)
