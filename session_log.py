@@ -32,6 +32,13 @@ def updateActionLogSession(action, screen_area):
     except Exception as e:
         error_log.errorLog('updateActionLogSession',e)
 
+#Обновление значения поля current_stack
+def updateCurrentStackLogSession(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    db.query("UPDATE session_log SET current_stack=yourvalue FROM "
+                        "(SELECT id, current_stack - 3 AS yourvalue FROM session_log where screen_area = " + screen_area + " ORDER BY id desc limit 1) AS t1 "
+                                                                                                                          "WHERE session_log.id=t1.id ")
+
 #Получаем руку последней записи для текущей области экрана
 def getLastHandFromLogSession(screen_area):
     try:

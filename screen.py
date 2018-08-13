@@ -11,6 +11,7 @@ import end_game
 import sitout
 import determine_position
 import current_stack
+import btn_open
 
 images_folder = "images/"
 
@@ -45,8 +46,10 @@ def start():
                 logic.getDecision(condition[0]['hand'], condition[0]['current_stack'],condition[0]['current_position'], item['screen_area'])
         # Если Если последняя строка для текущей области имеет статус open
         elif session_log.getLastRowActionFromLogSession(str(item['screen_area'])) == 'open':
-            current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
-            current_stack.searchCurrentStack(str(item['screen_area']))
+            btn_open.actionAfterOpen(str(item['screen_area']), image_name, folder_name)
+        # Если Если последняя строка для текущей области имеет статус flop
+        elif session_log.getLastRowActionFromLogSession(str(item['screen_area'])) == 'flop':
+            return
         # Если статус null или не конечный
         else:
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action

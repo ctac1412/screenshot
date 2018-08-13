@@ -34,6 +34,23 @@ def searchPlayerHand(screen_area):
     except Exception as e:
         error_log.errorLog('searchPlayerHand',e)
 
+#Поиск карт на флопе
+def searchFlopCard(screen_area):
+    hand = ''
+    for value in getCards():
+        path = getLastScreen(screen_area)
+        path = path[0]['image_path']
+        img_rgb = cv2.imread(path, 0)
+        template = cv2.imread(str(value['image_path']), 0)
+
+        res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+        threshold = 0.98
+        loc = np.where(res >= threshold)
+
+        if (len(loc[0]) != 0):
+            hand += value['alias']
+        if len(hand) == 6:
+            return hand
 
 #Вставка пути к изображению в бд
 def insertImagePathIntoDb(image_path,screen_area):

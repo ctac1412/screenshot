@@ -9,6 +9,7 @@ def getDecision(hand,current_stack,current_position,screen_area):
         if current_position == 'btn' and current_stack == 16 and openRange(hand) == 1:
             keyboard.open()
             action = 'open'
+            session_log.updateCurrentStackLogSession(str(screen_area))
             print(0)
         elif int(current_stack) == 0 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
             keyboard.push()
