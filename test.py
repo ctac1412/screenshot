@@ -1,3 +1,5 @@
-import session_log
+import logic
+import sklansky_chubukov
 
-session_log.checkConditionsBeforeInsert('QcTs',1)
+hand = logic.handConverting('9sKs')
+print(sklansky_chubukov.getValidStackValueToPush(hand))
