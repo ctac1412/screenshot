@@ -1,3 +1,3 @@
-import session_log
+import logic
 
-session_log.checkConditionsBeforeInsert('QcTs',1)
+logic.handConverting('Qs2d')
