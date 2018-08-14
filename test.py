@@ -1,3 +1,5 @@
 import logic
+import sklansky_chubukov
 
-logic.handConverting('Qs2d')
+hand = logic.handConverting('9sKs')
+print(sklansky_chubukov.getValidStackValueToPush(hand))
