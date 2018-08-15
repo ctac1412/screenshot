@@ -22,7 +22,7 @@ def searchCurrentStack(screen_area):
             current_stack = str(value['stack_value'])
         if len(current_stack) > 0:
             return str(current_stack)
-    return 20
+    return 666
 
 #Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getStackArea(screen_area):
