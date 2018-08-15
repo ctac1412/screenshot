@@ -7,6 +7,7 @@ import time
 import numpy as np
 import session_log
 import current_stack
+import logic
 
 images_folder = "images/"
 
@@ -62,8 +63,8 @@ def checkIsRaiseTo(screen_area):
         image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
 
         if searchRaiseToButton(str(item['screen_area'])) == 1:
-            # push/fold
-            # session_log.updateActionLogSession('push/fold', screen_area)
+            condition = session_log.getLastHandFromLogSession(str(screen_area))
+            logic.getDecision(condition[0]['hand'], condition[0]['current_stack'],condition[0]['current_position'], str(screen_area))
             return
 
 #Поиск кнопки "Raise To"
@@ -95,11 +96,11 @@ def checkIsCall(screen_area):
         image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
 
         if searchCallButton(str(item['screen_area'])) == 1:
-            # push/fold
-            # session_log.updateActionLogSession('push/fold', screen_area)
+            condition = session_log.getLastHandFromLogSession(str(screen_area))
+            logic.getDecision(condition[0]['hand'], condition[0]['current_stack'], condition[0]['current_position'], str(screen_area))
             return
 
-#Поиск кнопки "Call"
+        #Поиск кнопки "Call"
 def searchCallButton(screen_area):
     path = image_processing.getLastScreen(screen_area)
     path = path[0]['image_path']
