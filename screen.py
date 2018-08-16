@@ -12,6 +12,7 @@ import sitout
 import determine_position
 import current_stack
 import btn_open
+import flop
 
 images_folder = "images/"
 
@@ -36,9 +37,9 @@ def start():
         current_stack.saveStackImage(str(item['screen_area']),image_name,folder_name)
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
+        hand = image_processing.searchPlayerHand(str(item['screen_area']))
         # Если последняя строка для текущей области имеет конечный статус
         if session_log.getLastRowActionFromLogSession(str(item['screen_area'])) in ['push', 'fold', 'end']:
-            hand = image_processing.searchPlayerHand(str(item['screen_area']))
             #Если рука обнаружена на скрине
             condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
             if condition != False:
@@ -49,7 +50,12 @@ def start():
             btn_open.actionAfterOpen(str(item['screen_area']), image_name, folder_name)
         # Если Если последняя строка для текущей области имеет статус flop
         elif session_log.getLastRowActionFromLogSession(str(item['screen_area'])) == 'flop':
-            return
+            if flop.makeFlopDecision(str(item['screen_area']),hand) == True:
+                keyboard.push()
+                session_log.updateActionLogSession('push', str(item['screen_area']))
+            else:
+                keyboard.checkFold()
+                session_log.updateActionLogSession('fold', str(item['screen_area']))
         # Если статус null или не конечный
         else:
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action

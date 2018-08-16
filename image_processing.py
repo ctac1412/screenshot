@@ -36,7 +36,7 @@ def searchPlayerHand(screen_area):
 
 #Поиск карт на флопе
 def searchFlopCard(screen_area):
-    hand = ''
+    flop = ''
     for value in getCards():
         path = getLastScreen(screen_area)
         path = path[0]['image_path']
@@ -48,9 +48,9 @@ def searchFlopCard(screen_area):
         loc = np.where(res >= threshold)
 
         if (len(loc[0]) != 0):
-            hand += value['alias']
-        if len(hand) == 6:
-            return hand
+            flop += value['alias']
+        if len(flop) == 6:
+            return flop
 
 #Вставка пути к изображению в бд
 def insertImagePathIntoDb(image_path,screen_area):

@@ -1,8 +1,16 @@
-def makeFlopDecision(hand):
-    checkPair(hand)
-    checkFlushDraw(hand)
-    checkStraightDraw(hand)
-    return False
+import image_processing
+import postgresql
+import db_conf
+
+def makeFlopDecision(screen_area, hand):
+    flop_area = getFlopArea(str(screen_area))
+    flop_card = image_processing.searchFlopCard(str(flop_area))
+    if len(flop_card) > 0:
+        hand = hand + flop_card
+        checkPair(hand)
+        checkFlushDraw(hand)
+        checkStraightDraw(hand)
+        return False
 
 def checkStraightDraw(hand):
     hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
@@ -37,3 +45,9 @@ def checkPair(hand):
     doubles = {element: count for element, count in counter.items() if count > 1}
     if len(doubles) > 0:
         return True
+
+#Получаем номер области экрана, на которой нужно искать элемент для текущего стола
+def getFlopArea(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select flop_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
+    return data[0]['blind_area']
