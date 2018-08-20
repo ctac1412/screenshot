@@ -8,40 +8,17 @@ import sklansky_chubukov
 def getDecision(hand,current_stack,current_position,screen_area):
     hand = handConverting(hand)
     stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
+    stack_difference = int(current_stack) - int(stack_value)
     print(str(current_stack) + ' - ' + str(stack_value))
-    if int(current_stack) <= int(stack_value):
+    if current_position == 'btn' and (stack_difference >= 1 or stack_difference <= 10):
+        action = 'open'
+    elif int(current_stack) <= int(stack_value):
         keyboard.push()
         action = 'push'
     else:
         keyboard.checkFold()
         action = 'fold'
     session_log.updateActionLogSession(action, str(screen_area))
-    # try:
-    #     if current_position == 'btn' and current_stack == 666 and openRange(hand) == 1:
-    #         keyboard.open()
-    #         action = 'open'
-    #         session_log.updateCurrentStackLogSession(str(screen_area))
-    #         print(0)
-    #     elif int(current_stack) == 0 and pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1:
-    #         keyboard.push()
-    #         action = 'push'
-    #         print(1)
-    #     elif 7 < int(current_stack) and int(current_stack) <= 15 and (pocketBroadway(hand) == 1 or pocketPair(hand) == 1 or anyAce(hand) == 1 or suitedConnectors(hand) == 1):
-    #         keyboard.push()
-    #         action = 'push'
-    #         print(2)
-    #     elif int(current_stack) <= 7:
-    #         keyboard.push()
-    #         action = 'push'
-    #         print(3)
-    #     else:
-    #         keyboard.checkFold()
-    #         action = 'fold'
-    #         print(4)
-    #     session_log.updateActionLogSession(action, str(screen_area))
-    # except Exception as e:
-    #     print(e)
-
 
 def pocketBroadway(hand):
     val = ''
