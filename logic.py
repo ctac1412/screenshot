@@ -11,6 +11,7 @@ def getDecision(hand,current_stack,current_position,screen_area):
     stack_difference = int(current_stack) - int(stack_value)
     print(str(current_stack) + ' - ' + str(stack_value))
     if current_position == 'btn' and (stack_difference >= 1 or stack_difference <= 10):
+        keyboard.open()
         action = 'open'
     elif int(current_stack) <= int(stack_value):
         keyboard.push()

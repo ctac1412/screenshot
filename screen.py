@@ -31,15 +31,15 @@ def start():
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, item['screen_area'])
-        #Сохраняем скрин блайндов для текущего окна
-        determine_position.saveBlindImage(str(item['screen_area']),image_name,folder_name)
-        # Сохраняем скрин стека для текущего окна
-        current_stack.saveStackImage(str(item['screen_area']),image_name,folder_name)
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
         hand = image_processing.searchPlayerHand(str(item['screen_area']))
         # Если последняя строка для текущей области имеет конечный статус
         if session_log.getLastRowActionFromLogSession(str(item['screen_area'])) in ['push', 'fold', 'end']:
+            # Сохраняем скрин блайндов для текущего окна
+            determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
+            # Сохраняем скрин стека для текущего окна
+            current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
             #Если рука обнаружена на скрине
             condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
             if condition != False:

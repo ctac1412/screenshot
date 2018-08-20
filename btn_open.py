@@ -20,6 +20,7 @@ def actionAfterOpen(screen_area, image_name, folder_name):
 
 #Проверка, есть ли карты на столе
 def checkIsFlop(screen_area):
+    print('open-flop')
     folder_name = images_folder + str(datetime.datetime.now().date())
     element_area = getElementArea(screen_area,'green_board_area')
     for item in getElementData(element_area):
@@ -53,6 +54,7 @@ def searchEmptyBoard(screen_area):
 
 #Проверка, есть ли кнопка "Raise To"
 def checkIsActionButtons(screen_area):
+    print('open-action')
     folder_name = images_folder + str(datetime.datetime.now().date())
     element_area = getElementArea(screen_area, 'action_button')
     for item in getElementData(element_area):
@@ -90,6 +92,7 @@ def searchActionButtons(screen_area):
 
 #Проверка, слелали ли противники фолд
 def checkIsFold(screen_area, image_name, folder_name):
+    print('open-fold')
     last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
     current_stack.saveStackImage(screen_area, image_name, folder_name)
     cur_stack = current_stack.searchCurrentStack(screen_area)
