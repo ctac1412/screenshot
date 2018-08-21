@@ -102,11 +102,11 @@ def checkIsFold(screen_area, image_name, folder_name):
 
 def getElementArea(screen_area, element):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select " + element + "from screen_coordinates where screen_area = " + screen_area + " and active = 1")
+    data = db.query("select " + element + " from screen_coordinates where screen_area = " + str(screen_area) + " and active = 1")
     return data[0]['stack_area']
 
 def getElementData(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
-                    "where active = 1 and screen_area = " + screen_area)
+                    "where active = 1 and screen_area = " + str(screen_area))
     return data
