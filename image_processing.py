@@ -37,7 +37,7 @@ def searchPlayerHand(screen_area):
 #Поиск карт на флопе
 def searchFlopCard(screen_area):
     flop = ''
-    for value in getCards():
+    for value in getFlopCards():
         path = getLastScreen(screen_area)
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
@@ -87,6 +87,12 @@ def checkIsFolderExist():
 def getCards():
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path) as image_path,card,suit,trim(alias) as alias from cards")
+    return data
+
+#Получение путей к изображениям шаблонов карт флопа
+def getFlopCards():
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select trim(image_path) as image_path,card,suit,trim(alias) as alias from flop_cards")
     return data
 
 #Получение последнего скрина для текущей области экрана

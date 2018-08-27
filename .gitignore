@@ -6,6 +6,7 @@
 .idea/
 /cards
 /cards1
+/flop_cards
 venv/
 __pycache__/
 /blinds

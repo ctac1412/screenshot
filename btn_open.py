@@ -14,15 +14,14 @@ import db_conf
 images_folder = "images/"
 
 def actionAfterOpen(screen_area, image_name, folder_name):
-    checkIsFold(screen_area, image_name, folder_name)
-    checkIsFlop(screen_area)
-    checkIsActionButtons(screen_area)
+    if checkIsFold(screen_area, image_name, folder_name) == 1:return
+    if checkIsFlop(screen_area) == 1:return
+    if checkIsActionButtons(screen_area) == 1:return
 
 #Проверка, есть ли карты на столе
 def checkIsFlop(screen_area):
-    print('open-flop')
     folder_name = images_folder + str(datetime.datetime.now().date())
-    element_area = getElementArea(screen_area,'green_board_area')
+    element_area = getElementArea(screen_area,'green_board_area')['green_board_area']
     for item in getElementData(element_area):
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
@@ -34,8 +33,9 @@ def checkIsFlop(screen_area):
         image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
 
         if searchEmptyBoard(element_area) == 0:
+            print('open-flop')
             session_log.updateActionLogSession('flop', screen_area)
-            return
+            return 1
 
 #Поиск "зеленого сукна", если нет значит раздали флоп
 def searchEmptyBoard(screen_area):
@@ -56,7 +56,7 @@ def searchEmptyBoard(screen_area):
 def checkIsActionButtons(screen_area):
     print('open-action')
     folder_name = images_folder + str(datetime.datetime.now().date())
-    element_area = getElementArea(screen_area, 'action_button')
+    element_area = getElementArea(screen_area, 'action_btn_area')['action_btn_area']
     for item in getElementData(element_area):
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
@@ -69,8 +69,10 @@ def checkIsActionButtons(screen_area):
 
         if searchActionButtons(element_area) == 1:
             condition = session_log.getLastHandFromLogSession(str(screen_area))
-            logic.getDecision(condition[0]['hand'], condition[0]['current_stack'],condition[0]['current_position'], str(screen_area))
-            return
+            print(condition)
+            logic.getDecision(condition[0]['hand'], condition[0]['current_stack'],condition[0]['current_position'], str(screen_area),condition[0]['action'])
+            return 1
+        else:print('not found')
 
 #Поиск кнопок "Raise To" "Call"
 def searchActionButtons(screen_area):
@@ -87,23 +89,23 @@ def searchActionButtons(screen_area):
 
         if (len(loc[0]) != 0):
             return 1
-        else:
-            return 0
 
 #Проверка, слелали ли противники фолд
 def checkIsFold(screen_area, image_name, folder_name):
-    print('open-fold')
     last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
     current_stack.saveStackImage(screen_area, image_name, folder_name)
     cur_stack = current_stack.searchCurrentStack(screen_area)
-    if last_stack != cur_stack:
+    print(last_stack)
+    print(cur_stack)
+    if int(last_stack) != int(cur_stack):
+        print('open-fold')
         session_log.updateActionLogSession('end', screen_area)
-        return
+        return 1
 
 def getElementArea(screen_area, element):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select " + element + " from screen_coordinates where screen_area = " + str(screen_area) + " and active = 1")
-    return data[0]['stack_area']
+    return data[0]
 
 def getElementData(screen_area):
     db = postgresql.open(db_conf.connectionString())

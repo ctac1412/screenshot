@@ -4,22 +4,42 @@ import db_conf
 import keyboard
 import session_log
 import sklansky_chubukov
+import time
+import datetime
+import math
+import current_stack as cur_stack
 
-def getDecision(hand,current_stack,current_position,screen_area):
+images_folder = "images/"
+
+
+def getDecision(hand, current_stack, current_position, screen_area, action):
+    folder_name = images_folder + str(datetime.datetime.now().date())
     hand = handConverting(hand)
     stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
     stack_difference = int(current_stack) - int(stack_value)
-    print(str(current_stack) + ' - ' + str(stack_value))
-    if current_position == 'btn' and (stack_difference >= 1 or stack_difference <= 10):
+    print(stack_difference)
+    print(current_position)
+    if current_position == 'button' and stack_difference >= 1 and stack_difference <= 25 and action != 'open':
+        print('open')
         keyboard.open()
+        image_name = str(math.floor(time.time()))
+        folder_name = images_folder + str(datetime.datetime.now().date())
+        # cur_stack.saveStackImage(screen_area, image_name, folder_name)
         action = 'open'
     elif int(current_stack) <= int(stack_value):
+        print('push')
         keyboard.push()
         action = 'push'
     else:
+        print('fold')
         keyboard.checkFold()
         action = 'fold'
-    session_log.updateActionLogSession(action, str(screen_area))
+    if action == 'fold':
+        session_log.updateActionLogSession(action, str(screen_area))
+    if checkBeforeUpdateAction(screen_area,folder_name) == 1 and action != 'fold':
+        session_log.updateActionLogSession(action, str(screen_area))
+        if action == 'open':
+            session_log.updateCurrentStackLogSession(str(screen_area))
 
 def pocketBroadway(hand):
     val = ''
@@ -80,3 +100,13 @@ def handConverting(hand):
     else:
         hand = hand[0] + hand[2] + 'o'
     return hand
+
+def checkBeforeUpdateAction(screen_area, folder_name):
+    image_name = str(math.floor(time.time()))
+    last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
+    cur_stack.saveStackImage(screen_area, image_name, folder_name)
+    curr_stack = cur_stack.searchCurrentStack(screen_area)
+    print(last_stack)
+    print(curr_stack)
+    if int(last_stack) != int(curr_stack):
+        return 1

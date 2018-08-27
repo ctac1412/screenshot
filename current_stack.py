@@ -9,7 +9,7 @@ from PIL import Image, ImageGrab
 def searchCurrentStack(screen_area):
     current_stack = ''
     for value in getStackImages():
-        path = image_processing.getLastScreen(str(getStackArea(screen_area)))
+        path = image_processing.getLastScreen(str(getStackArea(str(screen_area))))
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
         template = cv2.imread(str(value['image_path']), 0)

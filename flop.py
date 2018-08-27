@@ -1,15 +1,19 @@
 import image_processing
+import cv2
+import numpy as np
 import postgresql
 import db_conf
+from PIL import Image, ImageGrab
 
 def makeFlopDecision(screen_area, hand):
     flop_area = getFlopArea(str(screen_area))
     flop_card = image_processing.searchFlopCard(str(flop_area))
     if len(flop_card) > 0:
         hand = hand + flop_card
-        checkPair(hand)
-        checkFlushDraw(hand)
-        checkStraightDraw(hand)
+        print(hand)
+        if checkPair(hand) == True: return True
+        if checkFlushDraw(hand) == True: return True
+        if checkStraightDraw(hand) == True: return True
         return False
 
 def checkStraightDraw(hand):
@@ -50,4 +54,20 @@ def checkPair(hand):
 def getFlopArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select flop_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
-    return data[0]['blind_area']
+    return data[0]['flop_area']
+
+def saveFlopImage(screen_area,image_name,folder_name):
+    for value in getFlopData(str(getFlopArea(str(screen_area)))):
+        image_path = folder_name + "/" + str(getFlopArea(str(screen_area))) + "/" + image_name + ".png"
+        # Делаем скрин указанной области экрана
+        image = ImageGrab.grab(bbox=(value['x_coordinate'], value['y_coordinate'], value['width'], value['height']))
+        # Сохраняем изображение на жестком диске
+        image.save(image_path, "PNG")
+        # Сохраняем инфо в бд
+        image_processing.insertImagePathIntoDb(image_path, value['screen_area'])
+
+def getFlopData(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
+                    "where screen_area = "  + screen_area)
+    return data
