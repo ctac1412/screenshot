@@ -11,7 +11,7 @@ def insertIntoLogSession(screen_area, hand, current_position='0', current_stack=
         data = db.prepare("insert into session_log(screen_area,hand,current_position,current_stack) values($1,$2,$3,$4)")
         data(screen_area, hand, current_position, current_stack)
     except Exception as e:
-        error_log.errorLog('insertIntoLogSession',e)
+        error_log.errorLog('insertIntoLogSession',str(e))
 
 #Получение значение поля action последней записи для текущей области экрана
 def getLastRowActionFromLogSession(screen_area):
@@ -20,7 +20,7 @@ def getLastRowActionFromLogSession(screen_area):
         data = db.query("select trim(action) as action from session_log where screen_area = " + screen_area + " order by id desc limit 1")
         return data[0]['action']
     except Exception as e:
-        error_log.errorLog('getLastRowActionFromLogSession',e)
+        error_log.errorLog('getLastRowActionFromLogSession', str(e))
 
 #Обновление значения поля action последней записи для текущей области экрана
 def updateActionLogSession(action, screen_area):
@@ -31,7 +31,7 @@ def updateActionLogSession(action, screen_area):
                         "(SELECT id, '" + action + "' AS yourvalue FROM session_log where screen_area = " + screen_area + " ORDER BY id desc limit 1) AS t1 "
                                                                                                                           "WHERE session_log.id=t1.id ")
     except Exception as e:
-        error_log.errorLog('updateActionLogSession',e)
+        error_log.errorLog('updateActionLogSession', str(e))
 
 #Обновление значения поля current_stack
 def updateCurrentStackLogSession(screen_area):
@@ -49,7 +49,7 @@ def getLastHandFromLogSession(screen_area):
             " from session_log where screen_area = " + str(screen_area) + " order by id desc limit 1")
         return data
     except Exception as e:
-        error_log.errorLog('getLastHandFromLogSession',e)
+        error_log.errorLog('getLastHandFromLogSession', str(e))
 
 
 def checkConditionsBeforeInsert(hand, screen_area):
@@ -65,5 +65,5 @@ def checkConditionsBeforeInsert(hand, screen_area):
         else:
             return False
     except Exception as e:
-        error_log.errorLog('checkConditionsBeforeInsert',e)
+        error_log.errorLog('checkConditionsBeforeInsert', str(e))
         print(e)

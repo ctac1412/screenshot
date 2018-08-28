@@ -54,5 +54,5 @@ def saveStackImage(screen_area,image_name,folder_name):
             # Сохраняем инфо в бд
             image_processing.insertImagePathIntoDb(image_path, val['screen_area'])
     except Exception as e:
-        error_log.errorLog('saveStackImage',e)
+        error_log.errorLog('saveStackImage', str(e))
         print(e)

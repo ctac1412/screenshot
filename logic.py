@@ -40,7 +40,7 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
             if action == 'open':
                 session_log.updateCurrentStackLogSession(str(screen_area))
     except Exception as e:
-        error_log.errorLog('getScreenData',e)
+        error_log.errorLog('getScreenData', str(e))
         print(e)
 
 def pocketBroadway(hand):
@@ -112,5 +112,5 @@ def checkBeforeUpdateAction(screen_area, folder_name):
         if int(last_stack) != int(curr_stack):
             return 1
     except Exception as e:
-        error_log.errorLog('checkBeforeUpdateAction',e)
+        error_log.errorLog('checkBeforeUpdateAction', str(e))
         print(e)

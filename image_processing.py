@@ -29,10 +29,10 @@ def searchPlayerHand(screen_area):
                     return hand
 
             except Exception as e:
-                error_log.errorLog('searchPlayerHand', e)
+                error_log.errorLog('searchPlayerHand', str(e))
         return hand
     except Exception as e:
-        error_log.errorLog('searchPlayerHand',e)
+        error_log.errorLog('searchPlayerHand', str(e))
 
 #Поиск карт на флопе
 def searchFlopCard(screen_area):
@@ -54,12 +54,12 @@ def searchFlopCard(screen_area):
 
 #Вставка пути к изображению в бд
 def insertImagePathIntoDb(image_path,screen_area):
-    # try:
+    try:
         db = postgresql.open(db_conf.connectionString())
         insert = db.prepare("insert into screenshots (image_path,screen_area) values($1,$2)")
         insert(image_path, screen_area)
-    # except Exception as e:
-    #     error_log.errorLog('insertImagePathIntoDb',e)
+    except Exception as e:
+        error_log.errorLog('insertImagePathIntoDb',str(e))
 
 
 #Получение информации об области экрана, на которой будет делаться скриншот
@@ -70,7 +70,7 @@ def getScreenData():
                         "where active = 1 and alias = 'workspace'")
         return data
     except Exception as e:
-        error_log.errorLog('getScreenData',e)
+        error_log.errorLog('getScreenData',str(e))
 
 #Проверка на существование папок
 def checkIsFolderExist():
@@ -109,5 +109,5 @@ def getUIButtonData(alias):
                         "where active = 1 and alias = '" + alias + "'")
         return data
     except Exception as e:
-        error_log.errorLog('getScreenData',e)
+        error_log.errorLog('getScreenData',str(e))
         print(e)

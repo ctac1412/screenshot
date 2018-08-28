@@ -49,5 +49,5 @@ def saveBlindImage(screen_area,image_name,folder_name):
             # Сохраняем инфо в бд
             image_processing.insertImagePathIntoDb(image_path, value['screen_area'])
     except Exception as e:
-        error_log.errorLog('saveBlindImage',e)
+        error_log.errorLog('saveBlindImage', str(e))
         print(e)
