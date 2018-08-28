@@ -110,3 +110,4 @@ def getUIButtonData(alias):
         return data
     except Exception as e:
         error_log.errorLog('getScreenData',e)
+        print(e)

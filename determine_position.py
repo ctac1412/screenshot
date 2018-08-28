@@ -4,6 +4,7 @@ import numpy as np
 import postgresql
 import db_conf
 from PIL import Image, ImageGrab
+import error_log
 
 #Поиск блайндов и соответственно определение позиции за столом
 def seacrhBlindChips(screen_area):
@@ -38,11 +39,15 @@ def getBlindData(screen_area):
     return data
 
 def saveBlindImage(screen_area,image_name,folder_name):
-    for value in getBlindData(str(getBlindArea(str(screen_area)))):
-        image_path = folder_name + "/" + str(getBlindArea(str(screen_area))) + "/" + image_name + ".png"
-        # Делаем скрин указанной области экрана
-        image = ImageGrab.grab(bbox=(value['x_coordinate'], value['y_coordinate'], value['width'], value['height']))
-        # Сохраняем изображение на жестком диске
-        image.save(image_path, "PNG")
-        # Сохраняем инфо в бд
-        image_processing.insertImagePathIntoDb(image_path, value['screen_area'])
+    try:
+        for value in getBlindData(str(getBlindArea(str(screen_area)))):
+            image_path = folder_name + "/" + str(getBlindArea(str(screen_area))) + "/" + image_name + ".png"
+            # Делаем скрин указанной области экрана
+            image = ImageGrab.grab(bbox=(value['x_coordinate'], value['y_coordinate'], value['width'], value['height']))
+            # Сохраняем изображение на жестком диске
+            image.save(image_path, "PNG")
+            # Сохраняем инфо в бд
+            image_processing.insertImagePathIntoDb(image_path, value['screen_area'])
+    except Exception as e:
+        error_log.errorLog('saveBlindImage',e)
+        print(e)

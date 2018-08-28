@@ -13,33 +13,35 @@ images_folder = "images/"
 
 
 def getDecision(hand, current_stack, current_position, screen_area, action):
-    folder_name = images_folder + str(datetime.datetime.now().date())
-    hand = handConverting(hand)
-    stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
-    stack_difference = int(current_stack) - int(stack_value)
-    print(stack_difference)
-    print(current_position)
-    if current_position == 'button' and stack_difference >= 1 and stack_difference <= 25 and action != 'open':
-        print('open')
-        keyboard.open()
-        image_name = str(math.floor(time.time()))
+    try:
         folder_name = images_folder + str(datetime.datetime.now().date())
-        # cur_stack.saveStackImage(screen_area, image_name, folder_name)
-        action = 'open'
-    elif int(current_stack) <= int(stack_value):
-        print('push')
-        keyboard.push()
-        action = 'push'
-    else:
-        print('fold')
-        keyboard.checkFold()
-        action = 'fold'
-    if action == 'fold':
-        session_log.updateActionLogSession(action, str(screen_area))
-    if checkBeforeUpdateAction(screen_area,folder_name) == 1 and action != 'fold':
-        session_log.updateActionLogSession(action, str(screen_area))
-        if action == 'open':
-            session_log.updateCurrentStackLogSession(str(screen_area))
+        hand = handConverting(hand)
+        stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
+        stack_difference = int(current_stack) - int(stack_value)
+        print(stack_difference)
+        print(current_position)
+        if current_position == 'button' and stack_difference >= 1 and stack_difference <= 25 and action != 'open':
+            print('open')
+            keyboard.open()
+            folder_name = images_folder + str(datetime.datetime.now().date())
+            action = 'open'
+        elif int(current_stack) <= int(stack_value):
+            print('push')
+            keyboard.push()
+            action = 'push'
+        else:
+            print('fold')
+            keyboard.checkFold()
+            action = 'fold'
+        if action == 'fold':
+            session_log.updateActionLogSession(action, str(screen_area))
+        if checkBeforeUpdateAction(screen_area, folder_name) == 1 and action != 'fold':
+            session_log.updateActionLogSession(action, str(screen_area))
+            if action == 'open':
+                session_log.updateCurrentStackLogSession(str(screen_area))
+    except Exception as e:
+        error_log.errorLog('getScreenData',e)
+        print(e)
 
 def pocketBroadway(hand):
     val = ''
@@ -102,11 +104,13 @@ def handConverting(hand):
     return hand
 
 def checkBeforeUpdateAction(screen_area, folder_name):
-    image_name = str(math.floor(time.time()))
-    last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
-    cur_stack.saveStackImage(screen_area, image_name, folder_name)
-    curr_stack = cur_stack.searchCurrentStack(screen_area)
-    print(last_stack)
-    print(curr_stack)
-    if int(last_stack) != int(curr_stack):
-        return 1
+    try:
+        image_name = str(math.floor(time.time()))
+        last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
+        cur_stack.saveStackImage(screen_area, image_name, folder_name)
+        curr_stack = cur_stack.searchCurrentStack(screen_area)
+        if int(last_stack) != int(curr_stack):
+            return 1
+    except Exception as e:
+        error_log.errorLog('checkBeforeUpdateAction',e)
+        print(e)
