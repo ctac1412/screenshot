@@ -28,6 +28,7 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
             keyboard.checkFold()
             action = 'fold'
             session_log.updateActionLogSession(action, str(screen_area))
+            return
         if checkBeforeUpdateAction(screen_area, folder_name) == 1 and action != 'fold':
             session_log.updateActionLogSession(action, str(screen_area))
             if action == 'open':

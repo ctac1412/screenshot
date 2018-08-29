@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import error_log
 import btn_open
+import mouse
 # btn_open.checkIsActionButtons('1')
 
-message = 36
-error_log.errorLog('test',str(message))
+mouse.moveMouse(100,100)
