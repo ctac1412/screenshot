@@ -19,8 +19,8 @@ images_folder = "images/"
 def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
     for item in image_processing.getScreenData():
-        # if logic.getIterationTimer("register_button") >= 40:
-        #     end_game.checkIsGameEnd()
+        if logic.getIterationTimer("register_button") >= 40:
+            end_game.checkIsGameEnd()
         if logic.getIterationTimer("sitout_button") >= 40:
             sitout.checkIsSitout()
         image_name = str(math.floor(time.time()))
@@ -44,8 +44,7 @@ def start():
             #Если рука обнаружена на скрине
             condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
             if condition != False:
-                logic.getDecision(condition[0]['hand'], condition[0]['current_stack'],condition[0]['current_position'],
-                                  item['screen_area'],condition[0]['action'])
+                logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
         # Если Если последняя строка для текущей области имеет статус open
         elif last_row_action == 'open':
             btn_open.actionAfterOpen(str(item['screen_area']), image_name, folder_name)

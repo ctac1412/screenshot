@@ -18,18 +18,18 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
         hand = handConverting(hand)
         stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
         stack_difference = int(current_stack) - int(stack_value)
-        if current_position == 'button' and stack_difference >= 1 and stack_difference <= 11 and action != 'open':
-            keyboard.open()
-            action = 'open'
-        elif int(current_stack) <= int(stack_value):
+        if int(current_stack) <= int(stack_value):
             keyboard.push()
             action = 'push'
+        elif current_position == 'button' and stack_difference in range(1,15) and action != 'open':
+            keyboard.open()
+            action = 'open'
         else:
             keyboard.checkFold()
             action = 'fold'
             session_log.updateActionLogSession(action, str(screen_area))
             return
-        if checkBeforeUpdateAction(screen_area, folder_name) == 1 and action != 'fold':
+        if checkBeforeUpdateAction(screen_area, folder_name) == 1:
             session_log.updateActionLogSession(action, str(screen_area))
             if action == 'open':
                 session_log.updateCurrentStackLogSession(str(screen_area))
