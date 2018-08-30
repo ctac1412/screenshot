@@ -33,7 +33,6 @@ def checkIsFlop(screen_area):
         image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
 
         if searchEmptyBoard(element_area) == 0:
-            print('open-flop')
             session_log.updateActionLogSession('flop', screen_area)
             return 1
 
@@ -54,7 +53,6 @@ def searchEmptyBoard(screen_area):
 
 #Проверка, есть ли кнопка "Raise To"
 def checkIsActionButtons(screen_area):
-    print('open-action')
     folder_name = images_folder + str(datetime.datetime.now().date())
     element_area = getElementArea(screen_area, 'action_btn_area')['action_btn_area']
     for item in getElementData(element_area):
@@ -69,10 +67,8 @@ def checkIsActionButtons(screen_area):
 
         if searchActionButtons(element_area) == 1:
             condition = session_log.getLastHandFromLogSession(str(screen_area))
-            print(condition)
             logic.getDecision(condition[0]['hand'], condition[0]['current_stack'],condition[0]['current_position'], str(screen_area),condition[0]['action'])
             return 1
-        else:print('not found')
 
 #Поиск кнопок "Raise To" "Call"
 def searchActionButtons(screen_area):
@@ -95,10 +91,7 @@ def checkIsFold(screen_area, image_name, folder_name):
     last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
     current_stack.saveStackImage(screen_area, image_name, folder_name)
     cur_stack = current_stack.searchCurrentStack(screen_area)
-    print(last_stack)
-    print(cur_stack)
     if int(last_stack) != int(cur_stack):
-        print('open-fold')
         session_log.updateActionLogSession('end', screen_area)
         return 1
 

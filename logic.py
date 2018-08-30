@@ -21,7 +21,7 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
         if int(current_stack) <= int(stack_value):
             keyboard.push()
             action = 'push'
-        elif current_position == 'button' and stack_difference in range(1,15) and action != 'open':
+        elif current_position == 'button' and stack_difference in range(1,15) and int(current_stack) >= 15 and action != 'open':
             keyboard.open()
             action = 'open'
         else:

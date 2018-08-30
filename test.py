@@ -7,4 +7,6 @@ import btn_open
 import mouse
 # btn_open.checkIsActionButtons('1')
 
-mouse.moveMouse(100,100)
+hand = 'tdest'
+if hand not in ['', 'test']:
+    print(1)

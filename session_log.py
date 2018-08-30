@@ -59,7 +59,7 @@ def getLastHandFromLogSession(screen_area):
 def checkConditionsBeforeInsert(hand, screen_area):
     try:
         session = getLastHandFromLogSession(str(screen_area))
-        if hand not in ['',hand != session[0]['hand']] and session[0]['current_position'] != 'button':
+        if hand != '' and hand != session[0]['hand']:
             stack = str(current_stack.searchCurrentStack(str(screen_area)))
             position = str(determine_position.seacrhBlindChips(screen_area))
             insertIntoLogSession(screen_area, hand, position, stack)
