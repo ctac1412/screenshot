@@ -64,12 +64,20 @@ class Window(tkinter.Tk, threading.Thread):
             screen_area_list = []
             if self.first.get() != getCurrenValue(1):
                 screen_area_list.append(1)
+                screen_area_list.append(14)
+                screen_area_list.append(20)
             if self.second.get() != getCurrenValue(2):
                 screen_area_list.append(2)
+                screen_area_list.append(13)
+                screen_area_list.append(19)
             if self.third.get() != getCurrenValue(3):
                 screen_area_list.append(3)
+                screen_area_list.append(16)
+                screen_area_list.append(18)
             if self.fourth.get() != getCurrenValue(4):
                 screen_area_list.append(4)
+                screen_area_list.append(15)
+                screen_area_list.append(17)
 
             return screen_area_list
 

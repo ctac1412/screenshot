@@ -21,7 +21,7 @@ def start():
     for item in image_processing.getScreenData():
         if logic.getIterationTimer("register_button") >= 40:
             end_game.checkIsGameEnd()
-        if logic.getIterationTimer("sitout_button") >= 40:
+        if logic.getIterationTimer("sitout_button") >= 30:
             sitout.checkIsSitout()
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
@@ -44,6 +44,7 @@ def start():
             #Если рука обнаружена на скрине
             condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
             if condition != False:
+                # print(condition)
                 logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
         # Если Если последняя строка для текущей области имеет статус open
         elif last_row_action == 'open':
