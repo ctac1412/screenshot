@@ -29,7 +29,7 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
             action = 'fold'
             session_log.updateActionLogSession(action, str(screen_area))
             return
-        if checkBeforeUpdateAction(screen_area, folder_name) == 1 and action != 'fold':
+        if checkBeforeUpdateAction(screen_area, folder_name) == 1:
             session_log.updateActionLogSession(action, str(screen_area))
             if action == 'open':
                 session_log.updateCurrentStackLogSession(str(screen_area))

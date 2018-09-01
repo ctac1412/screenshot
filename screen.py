@@ -19,8 +19,8 @@ images_folder = "images/"
 def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
     for item in image_processing.getScreenData():
-        # if logic.getIterationTimer("register_button") >= 40:
-        #     end_game.checkIsGameEnd()
+        if logic.getIterationTimer("register_button") >= 30:
+            end_game.checkIsGameEnd()
         if logic.getIterationTimer("sitout_button") >= 40:
             sitout.checkIsSitout()
         image_name = str(math.floor(time.time()))
