@@ -19,11 +19,26 @@ def searchCurrentStack(screen_area):
         threshold = 0.98
         loc = np.where(res >= threshold)
 
-        if (len(loc[0]) != 0):
+        if len(loc[0]) != 0:
             current_stack = str(value['stack_value'])
-        if len(current_stack) > 0:
             return str(current_stack)
     return 36
+
+#Поиск конкретного стека
+def searchConctreteStack(screen_area, last_stack):
+    path = image_processing.getLastScreen(str(getStackArea(str(screen_area))))
+    path = path[0]['image_path']
+    img_rgb = cv2.imread(path, 0)
+    template = cv2.imread(getStackImage(last_stack), 0)
+    if len(template) == 0:
+        return False
+
+    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.98
+    loc = np.where(res >= threshold)
+
+    if len(loc) > 0: return True
+    else: return False
 
 #Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getStackArea(screen_area):
@@ -36,6 +51,13 @@ def getStackImages():
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path) as image_path, stack_value from stack")
     return data
+
+#Получение путей к конкретному изображению
+def getStackImage(stack_value):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select trim(image_path) as image_path from stack where stack_value = " + stack_value)
+    return data[0]['image_path']
+
 
 def getStackData(screen_area):
     db = postgresql.open(db_conf.connectionString())
