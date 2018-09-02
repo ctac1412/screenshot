@@ -7,6 +7,8 @@ import btn_open
 import mouse
 # btn_open.checkIsActionButtons('1')
 
-hand = 'tdest'
-if hand not in ['', 'test']:
-    print(1)
+def test():
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select trim(image_path) as image_path from stack where stack_value = 50")
+    print(len(data))
+test()
