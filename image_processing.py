@@ -115,7 +115,8 @@ def getUIButtonData(alias):
 
 # Делаем скрин указанной области экрана
 def madeScreenshot(x_coordinate, y_coordinate, width, height):
-    ImageGrab.grab(bbox=(x_coordinate, y_coordinate, width, height))
+    image = ImageGrab.grab(bbox=(x_coordinate, y_coordinate, width, height))
+    return image
 
 def imaging(x_coordinate, y_coordinate, width, height, image_path, screen_area):
     image = madeScreenshot(x_coordinate, y_coordinate, width, height)
