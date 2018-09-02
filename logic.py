@@ -8,6 +8,7 @@ import time
 import datetime
 import math
 import current_stack as cur_stack
+import introduction
 
 images_folder = "images/"
 
@@ -24,6 +25,12 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
         elif current_position == 'button' and stack_difference in range(1,15) and int(current_stack) >= 15 and action != 'open':
             keyboard.open()
             action = 'open'
+        # elif current_position == 'small_blind' and stack_difference in range(1,15) and int(current_stack) >= 15:
+        #     if introduction.searchLimpValue(str(screen_area)) == True:
+        #         keyboard.call()
+        #         action = 'call'
+        #         session_log.updateActionLogSession(action, str(screen_area))
+        #         return
         else:
             keyboard.checkFold()
             action = 'fold'

@@ -7,11 +7,9 @@ import session_log
 import logic
 import keyboard
 import mouse
-import end_game
-import sitout
 import determine_position
 import current_stack
-import btn_open
+import introduction
 import flop
 
 images_folder = "images/"
@@ -19,18 +17,9 @@ images_folder = "images/"
 def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
     for item in image_processing.getScreenData():
-        # if logic.getIterationTimer("register_button") >= 40:
-        #     end_game.checkIsGameEnd()
-        # if logic.getIterationTimer("sitout_button") >= 30:
-        #     sitout.checkIsSitout()
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
-        # Делаем скрин указанной области экрана
-        image = ImageGrab.grab(bbox=(item['x_coordinate'], item['y_coordinate'], item['width'], item['height']))
-        # Сохраняем изображение на жестком диске
-        image.save(image_path, "PNG")
-        # Сохраняем инфо в бд
-        image_processing.insertImagePathIntoDb(image_path, item['screen_area'])
+        image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
         hand = image_processing.searchPlayerHand(str(item['screen_area']))
@@ -48,7 +37,7 @@ def start():
                 logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
         # Если Если последняя строка для текущей области имеет статус open
         elif last_row_action == 'open':
-            btn_open.actionAfterOpen(str(item['screen_area']), image_name, folder_name)
+            introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name)
         # Если Если последняя строка для текущей области имеет статус flop
         elif last_row_action == 'flop':
             flop.saveFlopImage(str(item['screen_area']), image_name, folder_name)
@@ -58,6 +47,8 @@ def start():
             else:
                 keyboard.checkFold()
                 session_log.updateActionLogSession('fold', str(item['screen_area']))
+        # elif last_row_action == 'call':
+        #     return
         # Если статус null или не конечный
         else:
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action

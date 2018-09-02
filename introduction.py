@@ -14,9 +14,19 @@ import db_conf
 images_folder = "images/"
 
 def actionAfterOpen(screen_area, image_name, folder_name):
-    if checkIsFold(screen_area, image_name, folder_name) == 1:return
-    if checkIsFlop(screen_area) == 1:return
-    if checkIsActionButtons(screen_area) == 1:return
+    if checkIsFold(screen_area, image_name, folder_name) == 1: return
+    if checkIsFlop(screen_area) == 1: return
+    if checkIsActionButtons(screen_area) == 1: return
+
+def checkIsLimpAvailable(screen_area):
+    folder_name = images_folder + str(datetime.datetime.now().date())
+    element_area = getElementArea(screen_area, 'limp_area')['limp_area']
+    for item in getElementData(element_area):
+        image_name = str(math.floor(time.time()))
+        image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
+        image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
+    if searchLimpValue(element_area) == 1:
+        return True
 
 #Проверка, есть ли карты на столе
 def checkIsFlop(screen_area):
@@ -30,7 +40,7 @@ def checkIsFlop(screen_area):
         # Сохраняем изображение на  жестком диске
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
-        image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
+        image_processing.insertImagePathIntoDb(image_path, item['screen_area'])
 
         if searchEmptyBoard(element_area) == 0:
             session_log.updateActionLogSession('flop', screen_area)
@@ -105,3 +115,17 @@ def getElementData(screen_area):
     data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
                     "where active = 1 and screen_area = " + str(screen_area))
     return data
+
+def searchLimpValue(screen_area):
+    path = image_processing.getLastScreen(screen_area)
+    path = path[0]['image_path']
+    img_rgb = cv2.imread(path, 0)
+    template = cv2.imread('limp/limp.png', 0)
+
+    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.98
+    loc = np.where(res >= threshold)
+
+    if (len(loc[0]) != 0):
+        return 1
+    else: return 0

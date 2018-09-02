@@ -3,9 +3,6 @@ import pyautogui
 def push():
     pyautogui.press('q')
 
-def check():
-    pyautogui.press('c')
-
 def checkFold():
     pyautogui.press('f')
 
@@ -14,3 +11,6 @@ def doubleSpace():
 
 def open():
     pyautogui.press('o')
+
+def call():
+    pyautogui.press('c')

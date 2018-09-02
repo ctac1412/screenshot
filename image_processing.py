@@ -5,6 +5,7 @@ import os
 import datetime
 import error_log
 import db_conf
+from PIL import Image, ImageGrab
 
 images_folder = "images/"
 
@@ -111,3 +112,12 @@ def getUIButtonData(alias):
     except Exception as e:
         error_log.errorLog('getScreenData',str(e))
         print(e)
+
+# Делаем скрин указанной области экрана
+def madeScreenshot(x_coordinate, y_coordinate, width, height):
+    ImageGrab.grab(bbox=(x_coordinate, y_coordinate, width, height))
+
+def imaging(x_coordinate, y_coordinate, width, height, image_path, screen_area):
+    image = madeScreenshot(x_coordinate, y_coordinate, width, height)
+    image.save(image_path, "PNG")
+    insertImagePathIntoDb(image_path, screen_area)
