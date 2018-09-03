@@ -18,24 +18,24 @@ def actionAfterOpen(screen_area, image_name, folder_name, action):
     if checkIsFlop(screen_area) == 1: return
     if checkIsActionButtons(screen_area) == 1: return
 
-def checkIsLimpAvailable(screen_area):
+def saveElement(screen_area, element_name):
     folder_name = images_folder + str(datetime.datetime.now().date())
-    element_area = getElementArea(screen_area, 'limp_area')['limp_area']
+    element_area = getElementArea(screen_area, element_name)[element_name]
     for item in getElementData(element_area):
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
-        image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
+        image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path,
+                                 item['screen_area'])
+    return element_area
+
+def checkIsLimpAvailable(screen_area):
+    element_area = saveElement(screen_area, 'limp_area')
     if searchLimpValue(element_area) == 1:
         return True
 
 #Проверка, есть ли карты на столе
 def checkIsFlop(screen_area):
-    folder_name = images_folder + str(datetime.datetime.now().date())
-    element_area = getElementArea(screen_area,'green_board_area')['green_board_area']
-    for item in getElementData(element_area):
-        image_name = str(math.floor(time.time()))
-        image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
-        image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
+    element_area = saveElement(screen_area, 'green_board_area')
     if searchEmptyBoard(element_area) == 0:
         session_log.updateActionLogSession('flop', screen_area)
         return 1
@@ -57,12 +57,7 @@ def searchEmptyBoard(screen_area):
 
 #Проверка, есть ли кнопка "Raise To"
 def checkIsActionButtons(screen_area):
-    folder_name = images_folder + str(datetime.datetime.now().date())
-    element_area = getElementArea(screen_area, 'action_btn_area')['action_btn_area']
-    for item in getElementData(element_area):
-        image_name = str(math.floor(time.time()))
-        image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
-        image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
+    element_area = saveElement(screen_area, 'action_btn_area')
     if searchActionButtons(element_area) == 1:
         condition = session_log.getLastHandFromLogSession(str(screen_area))
         logic.getDecision(condition[0]['hand'], condition[0]['current_stack'], condition[0]['current_position'],
