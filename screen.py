@@ -36,8 +36,8 @@ def start():
                 # print(condition)
                 logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
         # Если Если последняя строка для текущей области имеет статус open
-        elif last_row_action == 'open':
-            introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name)
+        elif last_row_action in ['open', 'call']:
+            introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name, last_row_action)
         # Если Если последняя строка для текущей области имеет статус flop
         elif last_row_action == 'flop':
             flop.saveFlopImage(str(item['screen_area']), image_name, folder_name)
@@ -47,8 +47,6 @@ def start():
             else:
                 keyboard.press('f')
                 session_log.updateActionLogSession('fold', str(item['screen_area']))
-        # elif last_row_action == 'call':
-        #     return
         # Если статус null или не конечный
         else:
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action

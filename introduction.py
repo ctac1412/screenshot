@@ -1,5 +1,4 @@
 import image_processing
-from PIL import Image, ImageGrab
 import cv2
 import datetime
 import math
@@ -13,8 +12,9 @@ import db_conf
 
 images_folder = "images/"
 
-def actionAfterOpen(screen_area, image_name, folder_name):
-    if checkIsFold(screen_area, image_name, folder_name) == 1: return
+def actionAfterOpen(screen_area, image_name, folder_name, action):
+    if action == 'open':
+        if checkIsFold(screen_area, image_name, folder_name) == 1: return
     if checkIsFlop(screen_area) == 1: return
     if checkIsActionButtons(screen_area) == 1: return
 

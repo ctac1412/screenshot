@@ -26,10 +26,9 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
             action = 'open'
             keyboard.press('o')
         # elif current_position == 'small_blind' and stack_difference in range(1,15) and int(current_stack) >= 15:
-        #     if introduction.searchLimpValue(str(screen_area)) == True:
-        # action = 'call'
-        #         keyboard.press(action)
-        #
+        #     if introduction.checkIsLimpAvailable(str(screen_area)) == True:
+        #         action = 'call'
+        #         keyboard.press('c')
         #         session_log.updateActionLogSession(action, str(screen_area))
         #         return
         else:
