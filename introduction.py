@@ -38,6 +38,7 @@ def checkIsFlop(screen_area):
     element_area = saveElement(screen_area, 'green_board_area')
     if searchEmptyBoard(element_area) == 0:
         session_log.updateActionLogSession('flop', screen_area)
+        print('flop')
         return 1
 
 #Поиск "зеленого сукна", если нет значит раздали флоп

@@ -22,7 +22,7 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
         if int(current_stack) <= int(stack_value):
             action = 'push'
             keyboard.press('q')
-        elif current_position == 'button' and stack_difference in range(1,15) and int(current_stack) >= 25 and action != 'open':
+        elif current_position == 'button' and stack_difference in range(1,15) and int(current_stack) >= 15 and action != 'open':
             action = 'open'
             keyboard.press('o')
         elif current_position == 'small_blind' and stack_difference in range(1,15) and int(current_stack) >= 15:
@@ -30,6 +30,7 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
                 action = 'call'
                 keyboard.press('c')
                 session_log.updateActionLogSession(action, str(screen_area))
+                print('call')
                 return
         else:
             action = 'fold'
