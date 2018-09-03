@@ -22,15 +22,15 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
         if int(current_stack) <= int(stack_value):
             action = 'push'
             keyboard.press('q')
-        elif current_position == 'button' and stack_difference in range(1,15) and int(current_stack) >= 15 and action != 'open':
+        elif current_position == 'button' and stack_difference in range(1,15) and int(current_stack) >= 25 and action != 'open':
             action = 'open'
             keyboard.press('o')
-        # elif current_position == 'small_blind' and stack_difference in range(1,15) and int(current_stack) >= 15:
-        #     if introduction.checkIsLimpAvailable(str(screen_area)) == True:
-        #         action = 'call'
-        #         keyboard.press('c')
-        #         session_log.updateActionLogSession(action, str(screen_area))
-        #         return
+        elif current_position == 'small_blind' and stack_difference in range(1,15) and int(current_stack) >= 15:
+            if introduction.checkIsLimpAvailable(str(screen_area)) == True:
+                action = 'call'
+                keyboard.press('c')
+                session_log.updateActionLogSession(action, str(screen_area))
+                return
         else:
             action = 'fold'
             keyboard.press('f')
@@ -41,7 +41,7 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
             if action == 'open':
                 session_log.updateCurrentStackLogSession(str(screen_area))
     except Exception as e:
-        error_log.errorLog('getScreenData', str(e))
+        error_log.errorLog('getDecision', str(e))
         print(e)
 
 def getIterationTimer(ui_element):

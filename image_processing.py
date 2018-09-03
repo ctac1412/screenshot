@@ -110,7 +110,7 @@ def getUIButtonData(alias):
                         "where active = 1 and alias = '" + alias + "'")
         return data
     except Exception as e:
-        error_log.errorLog('getScreenData',str(e))
+        error_log.errorLog('getUIButtonData',str(e))
         print(e)
 
 # Делаем скрин указанной области экрана

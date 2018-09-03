@@ -116,6 +116,6 @@ def searchLimpValue(screen_area):
     threshold = 0.98
     loc = np.where(res >= threshold)
 
-    if (len(loc[0]) != 0):
+    if len(loc[0]) != 0:
         return 1
     else: return 0
