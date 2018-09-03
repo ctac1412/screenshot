@@ -11,29 +11,25 @@ images_folder = "images/"
 
 #Поиск карт игрока на скрине
 def searchPlayerHand(screen_area):
+    hand = ''
     try:
-        hand = ''
         for value in getCards():
-            try:
-                path = getLastScreen(screen_area)
-                path = path[0]['image_path']
-                img_rgb = cv2.imread(path, 0)
-                template = cv2.imread(str(value['image_path']), 0)
+            path = getLastScreen(screen_area)
+            path = path[0]['image_path']
+            img_rgb = cv2.imread(path, 0)
+            template = cv2.imread(str(value['image_path']), 0)
 
-                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-                threshold = 0.98
-                loc = np.where(res >= threshold)
+            res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+            threshold = 0.98
+            loc = np.where(res >= threshold)
 
-                if (len(loc[0]) != 0):
-                    hand += value['alias']
-                if len(hand) == 4:
-                    return hand
-
-            except Exception as e:
-                error_log.errorLog('searchPlayerHand', str(e))
-        return hand
+            if len(loc[0]) != 0:
+                hand += value['alias']
+            if len(hand) == 4:
+                return hand
     except Exception as e:
         error_log.errorLog('searchPlayerHand', str(e))
+    return hand
 
 #Поиск карт на флопе
 def searchFlopCard(screen_area):
@@ -48,7 +44,7 @@ def searchFlopCard(screen_area):
         threshold = 0.98
         loc = np.where(res >= threshold)
 
-        if (len(loc[0]) != 0):
+        if len(loc[0]) != 0:
             flop += value['alias']
         if len(flop) == 6:
             return flop

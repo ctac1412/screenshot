@@ -1,4 +1,3 @@
-from PIL import Image, ImageGrab
 import time
 import datetime
 import math
@@ -33,7 +32,6 @@ def start():
             #Если рука обнаружена на скрине
             condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
             if condition != False:
-                # print(condition)
                 logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
         # Если Если последняя строка для текущей области имеет статус open
         elif last_row_action in ['open', 'call']:
