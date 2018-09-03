@@ -42,10 +42,10 @@ def start():
         elif last_row_action == 'flop':
             flop.saveFlopImage(str(item['screen_area']), image_name, folder_name)
             if flop.makeFlopDecision(str(item['screen_area']),hand) == True:
-                keyboard.push()
+                keyboard.press('q')
                 session_log.updateActionLogSession('push', str(item['screen_area']))
             else:
-                keyboard.checkFold()
+                keyboard.press('f')
                 session_log.updateActionLogSession('fold', str(item['screen_area']))
         # elif last_row_action == 'call':
         #     return

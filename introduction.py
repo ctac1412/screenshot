@@ -35,16 +35,10 @@ def checkIsFlop(screen_area):
     for item in getElementData(element_area):
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
-        # Делаем скрин указанной области экрана
-        image = ImageGrab.grab(bbox=(item['x_coordinate'], item['y_coordinate'], item['width'], item['height']))
-        # Сохраняем изображение на  жестком диске
-        image.save(image_path, "PNG")
-        # Сохраняем инфо в бд
-        image_processing.insertImagePathIntoDb(image_path, item['screen_area'])
-
-        if searchEmptyBoard(element_area) == 0:
-            session_log.updateActionLogSession('flop', screen_area)
-            return 1
+        image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
+    if searchEmptyBoard(element_area) == 0:
+        session_log.updateActionLogSession('flop', screen_area)
+        return 1
 
 #Поиск "зеленого сукна", если нет значит раздали флоп
 def searchEmptyBoard(screen_area):
@@ -68,17 +62,13 @@ def checkIsActionButtons(screen_area):
     for item in getElementData(element_area):
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
-        # Делаем скрин указанной области экрана
-        image = ImageGrab.grab(bbox=(item['x_coordinate'], item['y_coordinate'], item['width'], item['height']))
-        # Сохраняем изображение на  жестком диске
-        image.save(image_path, "PNG")
-        # Сохраняем инфо в бд
-        image_processing.insertImagePathIntoDb(image_path, (item['screen_area']))
+        image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
+    if searchActionButtons(element_area) == 1:
+        condition = session_log.getLastHandFromLogSession(str(screen_area))
+        logic.getDecision(condition[0]['hand'], condition[0]['current_stack'], condition[0]['current_position'],
+                          str(screen_area), condition[0]['action'])
+        return 1
 
-        if searchActionButtons(element_area) == 1:
-            condition = session_log.getLastHandFromLogSession(str(screen_area))
-            logic.getDecision(condition[0]['hand'], condition[0]['current_stack'],condition[0]['current_position'], str(screen_area),condition[0]['action'])
-            return 1
 
 #Поиск кнопок "Raise To" "Call"
 def searchActionButtons(screen_area):

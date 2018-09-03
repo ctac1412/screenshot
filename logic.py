@@ -20,20 +20,21 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
         stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
         stack_difference = int(current_stack) - int(stack_value)
         if int(current_stack) <= int(stack_value):
-            keyboard.push()
             action = 'push'
+            keyboard.press('q')
         elif current_position == 'button' and stack_difference in range(1,15) and int(current_stack) >= 15 and action != 'open':
-            keyboard.open()
             action = 'open'
+            keyboard.press('o')
         # elif current_position == 'small_blind' and stack_difference in range(1,15) and int(current_stack) >= 15:
         #     if introduction.searchLimpValue(str(screen_area)) == True:
-        #         keyboard.call()
-        #         action = 'call'
+        # action = 'call'
+        #         keyboard.press(action)
+        #
         #         session_log.updateActionLogSession(action, str(screen_area))
         #         return
         else:
-            keyboard.checkFold()
             action = 'fold'
+            keyboard.press('f')
             session_log.updateActionLogSession(action, str(screen_area))
             return
         if checkBeforeUpdateAction(screen_area, folder_name) == 1:
