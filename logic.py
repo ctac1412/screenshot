@@ -37,7 +37,7 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
             keyboard.press('f')
             session_log.updateActionLogSession(action, str(screen_area))
             return
-        if checkBeforeUpdateAction(screen_area, folder_name) == 1:
+        if checkBeforeUpdateAction(screen_area, folder_name):
             session_log.updateActionLogSession(action, str(screen_area))
             if action == 'open':
                 session_log.updateCurrentStackLogSession(str(screen_area))
@@ -67,7 +67,7 @@ def checkBeforeUpdateAction(screen_area, folder_name):
         last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
         cur_stack.saveStackImage(screen_area, image_name, folder_name)
         if cur_stack.searchConctreteStack(screen_area, last_stack) == False:
-            return 1
+            return True
     except Exception as e:
         error_log.errorLog('checkBeforeUpdateAction', str(e))
         print(e)
