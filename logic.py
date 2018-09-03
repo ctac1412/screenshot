@@ -30,7 +30,6 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
                 action = 'call'
                 keyboard.press('c')
                 session_log.updateActionLogSession(action, str(screen_area))
-                print('call')
                 return
         else:
             action = 'fold'

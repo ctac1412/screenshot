@@ -55,13 +55,13 @@ def searchElement(screen_area, elements, folder):
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
         template = cv2.imread(folder + item + '.png', 0)
-
         res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
         threshold = 0.98
         loc = np.where(res >= threshold)
 
         if len(loc[0]) != 0:
             return True
+        return False
 
 #Проверка, слелали ли противники фолд
 def checkIsFold(screen_area, image_name, folder_name):
