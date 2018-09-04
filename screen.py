@@ -21,33 +21,32 @@ def start():
         image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
-        time.sleep(2)
-        # hand = image_processing.searchPlayerHand(str(item['screen_area']))
-        # # Если последняя строка для текущей области имеет конечный статус
-        # last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
-        # if last_row_action in ['push', 'fold', 'end']:
-        #     # Сохраняем скрин блайндов для текущего окна
-        #     determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
-        #     # Сохраняем скрин стека для текущего окна
-        #     current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
-        #     #Если рука обнаружена на скрине
-        #     condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
-        #     if condition != False:
-        #         logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
-        # # Если Если последняя строка для текущей области имеет статус open
-        # elif last_row_action in ['open', 'call']:
-        #     introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name, last_row_action)
-        # # Если Если последняя строка для текущей области имеет статус flop
-        # elif last_row_action == 'flop':
-        #     flop.saveFlopImage(str(item['screen_area']), image_name, folder_name)
-        #     if flop.makeFlopDecision(str(item['screen_area']),hand) == True:
-        #         keyboard.press('q')
-        #         session_log.updateActionLogSession('push', str(item['screen_area']))
-        #     else:
-        #         keyboard.press('f')
-        #         session_log.updateActionLogSession('fold', str(item['screen_area']))
-        # # Если статус null или не конечный
-        # else:
-        #     #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
-        #     hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
-        #     logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'],item['screen_area'],hand[0]['action'])
+        hand = image_processing.searchPlayerHand(str(item['screen_area']))
+        # Если последняя строка для текущей области имеет конечный статус
+        last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
+        if last_row_action in ['push', 'fold', 'end']:
+            # Сохраняем скрин блайндов для текущего окна
+            determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
+            # Сохраняем скрин стека для текущего окна
+            current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
+            #Если рука обнаружена на скрине
+            condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
+            if condition != False:
+                logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
+        # Если Если последняя строка для текущей области имеет статус open
+        elif last_row_action in ['open', 'call']:
+            introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name, last_row_action)
+        # Если Если последняя строка для текущей области имеет статус flop
+        elif last_row_action == 'flop':
+            flop.saveFlopImage(str(item['screen_area']), image_name, folder_name)
+            if flop.makeFlopDecision(str(item['screen_area']),hand) == True:
+                keyboard.press('q')
+                session_log.updateActionLogSession('push', str(item['screen_area']))
+            else:
+                keyboard.press('f')
+                session_log.updateActionLogSession('fold', str(item['screen_area']))
+        # Если статус null или не конечный
+        else:
+            #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
+            hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
+            logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'],item['screen_area'],hand[0]['action'])
