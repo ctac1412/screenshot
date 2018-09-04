@@ -32,6 +32,7 @@ def checkIsLimpAvailable(screen_area):
     element_area = saveElement(screen_area, 'limp_area')
     if searchElement(element_area, ['limp'], 'limp/'):
         return True
+    return False
 
 #Проверка, есть ли карты на столе
 def checkIsFlop(screen_area):
@@ -53,6 +54,7 @@ def searchElement(screen_area, elements, folder):
     for item in elements:
         path = image_processing.getLastScreen(screen_area)
         path = path[0]['image_path']
+        print(path)
         img_rgb = cv2.imread(path, 0)
         template = cv2.imread(folder + item + '.png', 0)
         res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
