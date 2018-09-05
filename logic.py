@@ -65,7 +65,7 @@ def checkBeforeUpdateAction(screen_area, folder_name):
         image_name = str(math.floor(time.time()))
         last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
         cur_stack.saveStackImage(screen_area, image_name, folder_name)
-        if cur_stack.searchConctreteStack(screen_area, last_stack) == False:
+        if cur_stack.searchConctreteStack(screen_area, last_stack) is False:
             return True
     except Exception as e:
         error_log.errorLog('checkBeforeUpdateAction', str(e))

@@ -11,9 +11,9 @@ def makeFlopDecision(screen_area, hand):
     if len(flop_card) > 0:
         hand = hand + flop_card
         print(hand)
-        if checkPair(hand) == True: return True
-        if checkFlushDraw(hand) == True: return True
-        if checkStraightDraw(hand) == True: return True
+        if checkPair(hand): return True
+        if checkFlushDraw(hand): return True
+        if checkStraightDraw(hand): return True
         return False
 
 def checkStraightDraw(hand):

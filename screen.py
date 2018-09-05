@@ -31,7 +31,7 @@ def start():
             current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
             #Если рука обнаружена на скрине
             condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
-            if condition != False:
+            if condition is not False:
                 logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
         # Если Если последняя строка для текущей области имеет статус open
         elif last_row_action in ['open', 'call']:
@@ -39,7 +39,7 @@ def start():
         # Если Если последняя строка для текущей области имеет статус flop
         elif last_row_action == 'flop':
             flop.saveFlopImage(str(item['screen_area']), image_name, folder_name)
-            if flop.makeFlopDecision(str(item['screen_area']),hand) == True:
+            if flop.makeFlopDecision(str(item['screen_area']),hand):
                 keyboard.press('q')
                 session_log.updateActionLogSession('push', str(item['screen_area']))
             else:
