@@ -12,18 +12,21 @@ images_folder = "images/"
 def searchCards(screen_area, deck, list_length):
     hand = ''
     for value in deck:
-        path = getLastScreen(screen_area)
-        path = path[0]['image_path']
-        img_rgb = cv2.imread(path, 0)
-        template = cv2.imread(str(value['image_path']), 0)
-        res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-        threshold = 0.98
-        loc = np.where(res >= threshold)
-
-        if len(loc[0]) != list_length:
-            hand += value['alias']
-        if len(hand) == list_length:
-            return hand
+        try:
+            path = getLastScreen(screen_area)
+            path = path[0]['image_path']
+            img_rgb = cv2.imread(path, 0)
+            template = cv2.imread(str(value['image_path']), 0)
+            res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+            threshold = 0.98
+            loc = np.where(res >= threshold)
+            if len(loc[0]) != 0:
+                hand += value['alias']
+            if len(hand) == list_length:
+                return hand
+        except Exception as e:
+         error_log.errorLog('searchPlayerHand', str(e))
+    return hand
 
 #Вставка пути к изображению в бд
 def insertImagePathIntoDb(image_path,screen_area):

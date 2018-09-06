@@ -22,6 +22,7 @@ def start():
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
         hand = image_processing.searchCards(str(item['screen_area']),image_processing.getCards(), 4)
+        print(hand)
         # Если последняя строка для текущей области имеет конечный статус
         last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
         if last_row_action in ['push', 'fold', 'end']:

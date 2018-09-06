@@ -8,4 +8,7 @@ import mouse
 import current_stack
 # btn_open.checkIsActionButtons('1')
 
-print(type(current_stack.getStackImages()))
+def test():
+    stack = str(current_stack.searchCurrentStack(str(1)))
+    print(stack)
+test()
