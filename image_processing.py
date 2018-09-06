@@ -22,7 +22,7 @@ def searchCards(screen_area, deck, list_length):
 
         if len(loc[0]) != list_length:
             hand += value['alias']
-        if len(hand) == 6:
+        if len(hand) == list_length:
             return hand
 
 #Вставка пути к изображению в бд
