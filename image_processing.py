@@ -9,45 +9,21 @@ from PIL import Image, ImageGrab
 
 images_folder = "images/"
 
-#Поиск карт игрока на скрине
-def searchPlayerHand(screen_area):
+def searchCards(screen_area, deck, list_length):
     hand = ''
-    try:
-        for value in getCards():
-            path = getLastScreen(screen_area)
-            path = path[0]['image_path']
-            img_rgb = cv2.imread(path, 0)
-            template = cv2.imread(str(value['image_path']), 0)
-
-            res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-            threshold = 0.98
-            loc = np.where(res >= threshold)
-
-            if len(loc[0]) != 0:
-                hand += value['alias']
-            if len(hand) == 4:
-                return hand
-    except Exception as e:
-        error_log.errorLog('searchPlayerHand', str(e))
-    return hand
-
-#Поиск карт на флопе
-def searchFlopCard(screen_area):
-    flop = ''
-    for value in getFlopCards():
+    for value in deck:
         path = getLastScreen(screen_area)
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
         template = cv2.imread(str(value['image_path']), 0)
-
         res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
         threshold = 0.98
         loc = np.where(res >= threshold)
 
-        if len(loc[0]) != 0:
-            flop += value['alias']
-        if len(flop) == 6:
-            return flop
+        if len(loc[0]) != list_length:
+            hand += value['alias']
+        if len(hand) == 6:
+            return hand
 
 #Вставка пути к изображению в бд
 def insertImagePathIntoDb(image_path,screen_area):
