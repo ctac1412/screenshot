@@ -19,7 +19,7 @@ def seacrhBlindChips(screen_area):
         threshold = 0.98
         loc = np.where(res >= threshold)
 
-        if (len(loc[0]) != 0):
+        if len(loc[0]) != 0:
             return blind
 
     return 'button'
