@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 from PIL import Image, ImageGrab
 import error_log
+import math
+import time
 
 #Определение текущего стека
 def searchCurrentStack(screen_area):
@@ -21,7 +23,30 @@ def searchCurrentStack(screen_area):
         if len(loc[0]) != 0:
             current_stack = str(value['stack_value'])
             return str(current_stack)
+    searchOpponentStack(screen_area)
     return 36
+
+def searchOpponentStack(screen_area):
+    try:
+        saveOpponentStackImage(screen_area, str(math.floor(time.time())), "images/")
+        opponent_stack = []
+        for item in image_processing.getLastScreen(screen_area, '2'):
+            for value in getStackImages():
+                path = item['image_path']
+                img_rgb = cv2.imread(path, 0)
+                template = cv2.imread(str(value['image_path']), 0)
+
+                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+                threshold = 0.98
+                loc = np.where(res >= threshold)
+
+                if len(loc[0]) != 0:
+                    opponent_stack.append(value['stack_value'])
+                    break
+        print(opponent_stack)
+    except Exception as e:
+        print(e)
+
 
 #Поиск конкретного стека
 def searchConctreteStack(screen_area, last_stack):
@@ -47,6 +72,11 @@ def getStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select stack_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
     return data[0]['stack_area']
+
+def getOpponentStackArea(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select opponent_stack_area from screen_coordinates where screen_area = " + screen_area)
+    return data[0]['opponent_stack_area']
 
 #Получение путей к изображениям шаблонов стеков
 def getStackImages():
