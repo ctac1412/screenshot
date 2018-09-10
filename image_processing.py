@@ -72,7 +72,7 @@ def getFlopCards():
     return data
 
 #Получение последнего скрина для текущей области экрана
-def getLastScreen(screen_area, limit=1):
+def getLastScreen(screen_area, limit='1'):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " + str(screen_area) + " order by id desc limit " + limit)
     return data
