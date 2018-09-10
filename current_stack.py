@@ -28,9 +28,9 @@ def searchCurrentStack(screen_area):
 
 def searchOpponentStack(screen_area):
     try:
-        saveOpponentStackImage(screen_area, str(math.floor(time.time())), "images/")
+        saveOpponentStackImage(str(screen_area), str(math.floor(time.time())), "images/")
         opponent_stack = []
-        for item in image_processing.getLastScreen(screen_area, '2'):
+        for item in image_processing.getLastScreen(str(screen_area), '2'):
             for value in getStackImages():
                 path = item['image_path']
                 img_rgb = cv2.imread(path, 0)
@@ -41,7 +41,7 @@ def searchOpponentStack(screen_area):
                 loc = np.where(res >= threshold)
 
                 if len(loc[0]) != 0:
-                    opponent_stack.append(value['stack_value'])
+                    opponent_stack.append(str(value['stack_value']))
                     break
         print(opponent_stack)
     except Exception as e:
@@ -104,7 +104,7 @@ def getOpponentStackData(screen_area):
     data = db.query("select opp.x_coordinate,opp.y_coordinate,opp.width,opp.height,opp.screen_area "
                     "from screen_coordinates as sc "
                     "inner join opponent_screen_coordinates as opp on sc.opponent_stack_area = opp.screen_area "
-                    "where screen_coordinates.screen_area = " + screen_area)
+                    "where sc.screen_area = " + str(screen_area))
     return data
 
 def saveStackImage(screen_area,image_name,folder_name):
