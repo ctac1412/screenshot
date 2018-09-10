@@ -66,7 +66,15 @@ def getStackImage(stack_value):
 def getStackData(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
-                    "where screen_area = "  + screen_area)
+                    "where screen_area = " + screen_area)
+    return data
+
+def getOpponentStackData(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select opp.x_coordinate,opp.y_coordinate,opp.width,opp.height,opp.screen_area "
+                    "from screen_coordinates as sc "
+                    "inner join opponent_screen_coordinates as opp on sc.opponent_stack_area = opp.screen_area "
+                    "where screen_coordinates.screen_area = " + screen_area)
     return data
 
 def saveStackImage(screen_area,image_name,folder_name):
@@ -82,3 +90,13 @@ def saveStackImage(screen_area,image_name,folder_name):
     except Exception as e:
         error_log.errorLog('saveStackImage', str(e))
         print(e)
+
+def saveOpponentStackImage(screen_area,image_name,folder_name):
+    for val in getOpponentStackData(str(screen_area)):
+        image_path = folder_name + "/" + val['screen_area'] + "/" + image_name + ".png"
+        # Делаем скрин указанной области экрана
+        image = ImageGrab.grab(bbox=(val['x_coordinate'], val['y_coordinate'], val['width'], val['height']))
+        # Сохраняем изображение на жестком диске
+        image.save(image_path, "PNG")
+        # Сохраняем инфо в бд
+        image_processing.insertImagePathIntoDb(image_path, val['screen_area'])
