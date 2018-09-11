@@ -6,9 +6,12 @@ import error_log
 import introduction
 import mouse
 import current_stack
+import math
+import datetime
+import time
 # btn_open.checkIsActionButtons('1')
 
-def test():
-    stack = str(current_stack.searchCurrentStack(str(1)))
-    print(stack)
-test()
+ls = []
+
+print(len(ls))
+print(max(ls))

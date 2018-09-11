@@ -7,6 +7,7 @@ from PIL import Image, ImageGrab
 import error_log
 import math
 import time
+import datetime
 
 #Определение текущего стека
 def searchCurrentStack(screen_area):
@@ -19,31 +20,35 @@ def searchCurrentStack(screen_area):
         res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
         threshold = 0.98
         loc = np.where(res >= threshold)
-
         if len(loc[0]) != 0:
             current_stack = str(value['stack_value'])
             return str(current_stack)
-    searchOpponentStack(screen_area)
+
+    opponent_stack = searchOpponentStack(screen_area)
+    if opponent_stack != 0:
+        return opponent_stack
     return 36
 
 def searchOpponentStack(screen_area):
     try:
-        saveOpponentStackImage(str(screen_area), str(math.floor(time.time())), "images/")
+        folder_name = 'images/' + str(datetime.datetime.now().date())
+        saveOpponentStackImage(str(screen_area), folder_name)
         opponent_stack = []
+        screen_area = getOpponentStackArea(str(screen_area))
         for item in image_processing.getLastScreen(str(screen_area), '2'):
             for value in getStackImages():
                 path = item['image_path']
                 img_rgb = cv2.imread(path, 0)
                 template = cv2.imread(str(value['image_path']), 0)
-
                 res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
                 threshold = 0.98
                 loc = np.where(res >= threshold)
-
                 if len(loc[0]) != 0:
-                    opponent_stack.append(str(value['stack_value']))
+                    opponent_stack.append(int(value['stack_value']))
                     break
-        print(opponent_stack)
+        if len(opponent_stack) > 0:
+            return max(opponent_stack)
+        else: return 0
     except Exception as e:
         print(e)
 
@@ -121,8 +126,9 @@ def saveStackImage(screen_area,image_name,folder_name):
         error_log.errorLog('saveStackImage', str(e))
         print(e)
 
-def saveOpponentStackImage(screen_area,image_name,folder_name):
+def saveOpponentStackImage(screen_area,folder_name):
     for val in getOpponentStackData(str(screen_area)):
+        image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(val['screen_area']) + "/" + image_name + ".png"
         # Делаем скрин указанной области экрана
         image = ImageGrab.grab(bbox=(val['x_coordinate'], val['y_coordinate'], val['width'], val['height']))
@@ -130,3 +136,4 @@ def saveOpponentStackImage(screen_area,image_name,folder_name):
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, val['screen_area'])
+        time.sleep(1)

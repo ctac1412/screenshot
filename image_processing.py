@@ -54,7 +54,8 @@ def checkIsFolderExist():
     if not os.path.exists(str(folder_name)):
         os.makedirs(str(folder_name))
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select screen_area from screen_coordinates")
+    data = db.query("select screen_area from screen_coordinates "
+                    "union select screen_area from opponent_screen_coordinates")
     for value in data:
         if not os.path.exists(str(folder_name) + "/" + str(value['screen_area'])):
             os.makedirs(str(folder_name) + "/" + str(value['screen_area']))
