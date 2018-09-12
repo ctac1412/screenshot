@@ -11,7 +11,6 @@ import datetime
 import time
 # btn_open.checkIsActionButtons('1')
 
-ls = []
-
-print(len(ls))
-print(max(ls))
+hand = '4hKs'
+hand = hand[0]+hand[1]+','+hand[2]+hand[3]
+print(type(hand))

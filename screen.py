@@ -48,5 +48,11 @@ def start():
         # Если статус null или не конечный
         else:
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
-            hand = session_log.getLastHandFromLogSession(str(item['screen_area']))
-            logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'],item['screen_area'],hand[0]['action'])
+            hand = session_log.getLastRowFromLogSession(str(item['screen_area']))
+            current_hand = session_log.convertHand(hand[0]['hand'])
+            print(current_hand)
+            deck = image_processing.getCurrentCards(current_hand)
+            if len(image_processing.searchCards(str(item['screen_area']),deck, 2)) == 2:
+                logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'],item['screen_area'],hand[0]['action'])
+            else:
+                session_log.updateActionLogSession(str(item['screen_area'], 'end'))

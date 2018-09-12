@@ -63,7 +63,7 @@ def checkIsFolderExist():
 #Получение путей к изображениям шаблонов карт
 def getCards():
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path) as image_path,card,suit,trim(alias) as alias from cards")
+    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards")
     return data
 
 #Получение путей к изображениям шаблонов карт флопа
@@ -112,3 +112,8 @@ def searchElement(screen_area, elements, folder):
         if len(loc[0]) != 0:
             return True
         return False
+
+def getCurrentCards(condition):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards where alias in(" + condition + ")")
+    return data

@@ -22,10 +22,10 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
         if int(current_stack) <= int(stack_value):
             action = 'push'
             keyboard.press('q')
-        elif current_position == 'button' and stack_difference in range(1,15) and int(current_stack) >= 15 and action != 'open':
+        elif current_position == 'button' and stack_difference in range(1, 15) and int(current_stack) >= 15 and action != 'open':
             action = 'open'
             keyboard.press('o')
-        elif current_position == 'small_blind' and stack_difference in range(1,15) and int(current_stack) >= 15 and action != 'call':
+        elif current_position == 'small_blind' and stack_difference in range(1, 20) and int(current_stack) >= 15 and action != 'call':
             if introduction.checkIsLimpAvailable(str(screen_area)):
                 action = 'call'
                 keyboard.press('c')
@@ -63,7 +63,7 @@ def handConverting(hand):
 def checkBeforeUpdateAction(screen_area, folder_name):
     try:
         image_name = str(math.floor(time.time()))
-        last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
+        last_stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
         cur_stack.saveStackImage(screen_area, image_name, folder_name)
         if cur_stack.searchConctreteStack(screen_area, last_stack) is False:
             return True

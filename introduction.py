@@ -45,14 +45,14 @@ def checkIsFlop(screen_area):
 def checkIsActionButtons(screen_area):
     element_area = saveElement(screen_area, 'action_btn_area')
     if image_processing.searchElement(element_area, ['raise_to', 'call'], 'action_buttons/'):
-        condition = session_log.getLastHandFromLogSession(str(screen_area))
+        condition = session_log.getLastRowFromLogSession(str(screen_area))
         logic.getDecision(condition[0]['hand'], condition[0]['current_stack'], condition[0]['current_position'],
                           str(screen_area), condition[0]['action'])
         return True
 
 #Проверка, слелали ли противники фолд
 def checkIsFold(screen_area, image_name, folder_name):
-    last_stack = session_log.getLastHandFromLogSession(screen_area)[0]['current_stack']
+    last_stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
     current_stack.saveStackImage(screen_area, image_name, folder_name)
     cur_stack = current_stack.searchCurrentStack(screen_area)
     if int(last_stack) != int(cur_stack):

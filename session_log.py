@@ -45,7 +45,7 @@ def updateCurrentStackLogSession(screen_area):
 
 
 #Получаем руку последней записи для текущей области экрана
-def getLastHandFromLogSession(screen_area):
+def getLastRowFromLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
         data = db.query(
@@ -58,7 +58,7 @@ def getLastHandFromLogSession(screen_area):
 #Проверка условий перед созданием новой записи
 def checkConditionsBeforeInsert(hand, screen_area):
     try:
-        session = getLastHandFromLogSession(str(screen_area))
+        session = getLastRowFromLogSession(str(screen_area))
         if hand != '' and hand != session[0]['hand']:
             stack = str(current_stack.searchCurrentStack(str(screen_area)))
             position = str(determine_position.seacrhBlindChips(screen_area))
@@ -70,3 +70,7 @@ def checkConditionsBeforeInsert(hand, screen_area):
     except Exception as e:
         error_log.errorLog('checkConditionsBeforeInsert', str(e))
         print(e)
+
+def convertHand(hand):
+    hand = hand[0]+hand[1]+','+hand[2]+hand[3]
+    return hand
