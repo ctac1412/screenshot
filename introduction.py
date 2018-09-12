@@ -1,9 +1,7 @@
 import image_processing
-import cv2
 import datetime
 import math
 import time
-import numpy as np
 import session_log
 import current_stack
 import logic
@@ -28,9 +26,9 @@ def saveElement(screen_area, element_name):
                                  item['screen_area'])
     return element_area
 
-def checkIsLimpAvailable(screen_area):
+def checkIsLimpAvailable(screen_area, element):
     element_area = saveElement(screen_area, 'limp_area')
-    if image_processing.searchElement(element_area, ['limp'], 'limp/'):
+    if image_processing.searchElement(element_area, element, 'limp/'):
         return True
     return False
 

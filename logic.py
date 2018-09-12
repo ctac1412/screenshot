@@ -26,11 +26,16 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
             action = 'open'
             keyboard.press('o')
         elif current_position == 'small_blind' and stack_difference in range(1, 20) and int(current_stack) >= 15 and action != 'call':
-            if introduction.checkIsLimpAvailable(str(screen_area)):
+            if introduction.checkIsLimpAvailable(str(screen_area), ['limp']):
                 action = 'call'
                 keyboard.press('c')
                 session_log.updateActionLogSession(action, str(screen_area))
                 return
+        elif current_position == 'big_blind':
+            if introduction.checkIsLimpAvailable(str(screen_area), ['check']):
+                action = 'check'
+                keyboard.press('h')
+                session_log.updateActionLogSession(action, str(screen_area))
         else:
             action = 'fold'
             keyboard.press('f')

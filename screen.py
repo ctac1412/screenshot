@@ -34,7 +34,7 @@ def start():
             if condition is not False:
                 logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
         # Если Если последняя строка для текущей области имеет статус open
-        elif last_row_action in ['open', 'call']:
+        elif last_row_action in ['open', 'call', 'check']:
             introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name, last_row_action)
         # Если Если последняя строка для текущей области имеет статус flop
         elif last_row_action == 'flop':
