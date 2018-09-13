@@ -72,5 +72,5 @@ def checkConditionsBeforeInsert(hand, screen_area):
         print(e)
 
 def convertHand(hand):
-    hand = hand[0]+hand[1]+','+hand[2]+hand[3]
+    hand = '"' + hand[0] + hand[1] + '"' + ',' + '"' + hand[2] + hand[3] + '"'
     return hand

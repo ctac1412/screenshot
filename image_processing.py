@@ -115,5 +115,5 @@ def searchElement(screen_area, elements, folder):
 
 def getCurrentCards(condition):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards where alias in(" + condition + ")")
+    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards where alias in('" + condition + "')")
     return data

@@ -31,11 +31,10 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
                 keyboard.press('c')
                 session_log.updateActionLogSession(action, str(screen_area))
                 return
-        elif current_position == 'big_blind':
-            if introduction.checkIsLimpAvailable(str(screen_area), ['check']):
-                action = 'check'
-                keyboard.press('h')
-                session_log.updateActionLogSession(action, str(screen_area))
+        elif current_position == 'big_blind' and introduction.checkIsLimpAvailable(str(screen_area), ['check']):
+            action = 'check'
+            keyboard.press('h')
+            session_log.updateActionLogSession(action, str(screen_area))
         else:
             action = 'fold'
             keyboard.press('f')
