@@ -12,6 +12,7 @@ def insertIntoLogSession(screen_area, hand, current_position='0', current_stack=
         data(screen_area, hand, current_position, current_stack)
     except Exception as e:
         error_log.errorLog('insertIntoLogSession',str(e))
+        print(e)
 
 #Получение значение поля action последней записи для текущей области экрана
 def getLastRowActionFromLogSession(screen_area):
@@ -21,6 +22,7 @@ def getLastRowActionFromLogSession(screen_area):
         return data[0]['action']
     except Exception as e:
         error_log.errorLog('getLastRowActionFromLogSession', str(e))
+        print(e)
 
 #Обновление значения поля action последней записи для текущей области экрана
 def updateActionLogSession(action, screen_area):
@@ -31,6 +33,7 @@ def updateActionLogSession(action, screen_area):
                                                                                                                           "WHERE session_log.id=t1.id ")
     except Exception as e:
         error_log.errorLog('updateActionLogSession', str(e))
+        print(e)
 
 #Обновление значения поля current_stack
 def updateCurrentStackLogSession(screen_area):
@@ -41,6 +44,7 @@ def updateCurrentStackLogSession(screen_area):
                                                                                                                           "WHERE session_log.id=t1.id ")
     except Exception as e:
         error_log.errorLog('updateCurrentStackLogSession', str(e))
+        print(e)
 
 
 
@@ -54,6 +58,7 @@ def getLastRowFromLogSession(screen_area):
         return data
     except Exception as e:
         error_log.errorLog('getLastHandFromLogSession', str(e))
+        print(e)
 
 #Проверка условий перед созданием новой записи
 def checkConditionsBeforeInsert(hand, screen_area):

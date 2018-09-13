@@ -125,8 +125,6 @@ def convertHand(hand):
 def checkCurrentHand(screen_area, hand):
     current_hand = convertHand(hand)
     deck = getCurrentCards(current_hand)
-    print(deck)
-    print(searchCards(screen_area, deck, 4))
     if len(searchCards(screen_area, deck, 4)) == 4:
         return True
     else: return False
