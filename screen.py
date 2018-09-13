@@ -52,4 +52,4 @@ def start():
             if image_processing.checkCurrentHand(str(item['screen_area']), hand[0]['hand']):
                 logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'],item['screen_area'],hand[0]['action'])
             else:
-                session_log.updateActionLogSession(str(item['screen_area'], 'end'))
+                session_log.updateActionLogSession(str(item['screen_area']), 'end')

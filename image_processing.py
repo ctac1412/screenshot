@@ -115,16 +115,18 @@ def searchElement(screen_area, elements, folder):
 
 def getCurrentCards(condition):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards where alias in('" + condition + "')")
+    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards where alias in(" + condition + ")")
     return data
 
 def convertHand(hand):
-    hand = '"' + hand[0] + hand[1] + '"' + ',' + '"' + hand[2] + hand[3] + '"'
+    hand = '\'' +  hand[0] + hand[1] + '\'' + ',' + '\'' + hand[2] + hand[3] + '\''
     return hand
 
 def checkCurrentHand(screen_area, hand):
     current_hand = convertHand(hand)
     deck = getCurrentCards(current_hand)
-    if len(searchCards(screen_area, deck, 2)) == 2:
+    print(deck)
+    print(searchCards(screen_area, deck, 4))
+    if len(searchCards(screen_area, deck, 4)) == 4:
         return True
     else: return False

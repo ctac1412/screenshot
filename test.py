@@ -11,6 +11,6 @@ import datetime
 import time
 # btn_open.checkIsActionButtons('1')
 
-hand = '4hKs'
-hand = hand[0]+hand[1]+','+hand[2]+hand[3]
-print(type(hand))
+hand = "\'4hKs\'"
+# hand = hand[0]+hand[1]+','+hand[2]+hand[3]
+print(hand)
