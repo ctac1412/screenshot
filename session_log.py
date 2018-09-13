@@ -70,7 +70,3 @@ def checkConditionsBeforeInsert(hand, screen_area):
     except Exception as e:
         error_log.errorLog('checkConditionsBeforeInsert', str(e))
         print(e)
-
-def convertHand(hand):
-    hand = '"' + hand[0] + hand[1] + '"' + ',' + '"' + hand[2] + hand[3] + '"'
-    return hand

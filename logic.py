@@ -9,6 +9,7 @@ import datetime
 import math
 import current_stack as cur_stack
 import introduction
+import image_processing
 
 images_folder = "images/"
 
@@ -16,8 +17,8 @@ images_folder = "images/"
 def getDecision(hand, current_stack, current_position, screen_area, action):
     try:
         folder_name = images_folder + str(datetime.datetime.now().date())
-        hand = handConverting(hand)
-        stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
+        current_hand = handConverting(hand)
+        stack_value = sklansky_chubukov.getValidStackValueToPush(current_hand)
         stack_difference = int(current_stack) - int(stack_value)
         if int(current_stack) <= int(stack_value):
             action = 'push'
@@ -40,7 +41,7 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
             keyboard.press('f')
             session_log.updateActionLogSession(action, str(screen_area))
             return
-        if checkBeforeUpdateAction(screen_area, folder_name):
+        if checkBeforeUpdateAction(screen_area, folder_name) and image_processing.checkCurrentHand(str(screen_area), hand):
             session_log.updateActionLogSession(action, str(screen_area))
             if action == 'open':
                 session_log.updateCurrentStackLogSession(str(screen_area))
