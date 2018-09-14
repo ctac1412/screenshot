@@ -8,9 +8,20 @@ import mouse
 import current_stack
 import math
 import datetime
-import time
-# btn_open.checkIsActionButtons('1')
+import image_processing
+import flop
 
-hand = "\'4hKs\'"
-# hand = hand[0]+hand[1]+','+hand[2]+hand[3]
+hand = ''
+for value in image_processing.getCards():
+    path = '1536059100.png'
+    img_rgb = cv2.imread(path, 0)
+    template = cv2.imread(str(value['image_path']), 0)
+    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.98
+    loc = np.where(res >= threshold)
+    if len(loc[0]) != 0:
+        hand += value['alias']
+    # if len(hand) == 6:
+    #     print(hand)
+    #     break
 print(hand)
