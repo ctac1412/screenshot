@@ -13,17 +13,19 @@ def searchCards(screen_area, deck, list_length):
     hand = ''
     for value in deck:
         try:
-            path = getLastScreen(screen_area)
-            path = path[0]['image_path']
-            img_rgb = cv2.imread(path, 0)
-            template = cv2.imread(str(value['image_path']), 0)
-            res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
             threshold = 0.98
-            loc = np.where(res >= threshold)
-            if len(loc[0]) != 0:
-                hand += value['alias']
-            if len(hand) == list_length:
-                return hand
+            for item in range(2):
+                path = getLastScreen(screen_area)
+                path = path[0]['image_path']
+                img_rgb = cv2.imread(path, 0)
+                template = cv2.imread(str(value['image_path']), 0)
+                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+                loc = np.where(res >= threshold)
+                if len(loc[0]) != 0:
+                    hand += value['alias']
+                if len(hand) == list_length:
+                    return hand
+                threshold -= 0.01
         except Exception as e:
          error_log.errorLog('searchCards', str(e))
     return hand
