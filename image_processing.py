@@ -11,10 +11,10 @@ images_folder = "images/"
 
 def searchCards(screen_area, deck, list_length):
     hand = ''
-    for value in deck:
-        try:
-            threshold = 0.98
-            for item in range(2):
+    for item in range(2):
+        threshold = 0.98
+        for value in deck:
+            try:
                 path = getLastScreen(screen_area)
                 path = path[0]['image_path']
                 img_rgb = cv2.imread(path, 0)
@@ -25,9 +25,9 @@ def searchCards(screen_area, deck, list_length):
                     hand += value['alias']
                 if len(hand) == list_length:
                     return hand
-                threshold -= 0.01
-        except Exception as e:
-         error_log.errorLog('searchCards', str(e))
+            except Exception as e:
+                error_log.errorLog('searchCards', str(e))
+        threshold -= 0.01
     return hand
 
 #Вставка пути к изображению в бд
