@@ -11,8 +11,9 @@ images_folder = "images/"
 
 def searchCards(screen_area, deck, list_length):
     hand = ''
-    for item in range(2):
-        threshold = 0.98
+    threshold = 0.98
+    for item in range(3):
+        hand = ''
         for value in deck:
             try:
                 path = getLastScreen(screen_area)

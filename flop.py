@@ -6,12 +6,15 @@ from PIL import Image, ImageGrab
 def makeFlopDecision(screen_area, hand):
     flop_area = getFlopArea(str(screen_area))
     flop_card = image_processing.searchCards(str(flop_area), image_processing.getCards(), 6)
-    if len(flop_card) > 0:
+    if len(flop_card) == 6:
         hand = hand + flop_card
         print(hand)
         if checkPair(hand): return True
         if checkFlushDraw(hand): return True
         if checkStraightDraw(hand): return True
+        return False
+    else:
+        print(hand)
         return False
 
 def checkStraightDraw(hand):

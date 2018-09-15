@@ -136,4 +136,3 @@ def saveOpponentStackImage(screen_area,folder_name):
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, val['screen_area'])
-        time.sleep(1)
