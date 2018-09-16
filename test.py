@@ -10,6 +10,7 @@ import math
 import datetime
 import image_processing
 import flop
+import time
 
 # hand = 'As6s2d6hKc'
 # flop.checkPair(hand)
@@ -35,6 +36,7 @@ import flop
 # print(hand)
 
 def searchCards(screen_area, deck, list_length):
+
     hand = ''
     threshold = 0.98
     for item in range(4):
@@ -52,9 +54,19 @@ def searchCards(screen_area, deck, list_length):
                 if len(hand) == list_length:
                     return (hand)
 
+
             except Exception as e:
                 error_log.errorLog('searchCards', str(e))
         threshold -= 0.01
     return hand
 
-print(searchCards(1,image_processing.getCards(),4))
+
+
+def test(screen_area, deck, list_length):
+    begin_time = time.time()
+    searchCards(screen_area, deck, list_length)
+    # получаем время окончания действия с начала запуска таймера
+    end_time = time.time()
+    return (end_time)
+
+print(test(1,image_processing.getCards(),4))
