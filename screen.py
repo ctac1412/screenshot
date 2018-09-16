@@ -17,29 +17,32 @@ def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
     for item in image_processing.getScreenData():
         image_name = str(math.floor(time.time()))
-        image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
-        image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
-        hand = image_processing.searchCards(str(item['screen_area']),image_processing.getCards(), 4)
         # Если последняя строка для текущей области имеет конечный статус
         last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
         if last_row_action in ['push', 'fold', 'end']:
-            # Сохраняем скрин блайндов для текущего окна
-            determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
-            # Сохраняем скрин стека для текущего окна
-            current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
+            image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
+            image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
+            hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4)
+            if hand != '':
+                # Сохраняем скрин блайндов для текущего окна
+                determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
+                # Сохраняем скрин стека для текущего окна
+                current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
+            else: return
             #Если рука обнаружена на скрине
-            condition = session_log.checkConditionsBeforeInsert(hand,(item['screen_area']))
+            condition = session_log.checkConditionsBeforeInsert(hand, (item['screen_area']))
             if condition is not False:
-                logic.getDecision(condition[0], condition[1],condition[2], item['screen_area'],condition[3])
+                logic.getDecision(condition[0], condition[1], condition[2], item['screen_area'], condition[3])
         # Если Если последняя строка для текущей области имеет статус open
         elif last_row_action in ['open', 'call', 'check']:
             introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name, last_row_action)
         # Если Если последняя строка для текущей области имеет статус flop
         elif last_row_action == 'flop':
             flop.saveFlopImage(str(item['screen_area']), image_name, folder_name)
-            if flop.makeFlopDecision(str(item['screen_area']),hand):
+            hand = session_log.getLastRowFromLogSession(str(item['screen_area']))
+            if flop.makeFlopDecision(str(item['screen_area']), hand):
                 keyboard.press('q')
                 session_log.updateActionLogSession('push', str(item['screen_area']))
             else:

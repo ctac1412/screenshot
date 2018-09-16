@@ -13,7 +13,6 @@ def searchCards(screen_area, deck, list_length):
     hand = ''
     threshold = 0.98
     for item in range(4):
-        print(threshold)
         hand = ''
         for value in deck:
             try:
