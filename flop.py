@@ -47,9 +47,10 @@ def checkPair(hand):
     for item in hand:
         counter[item] = counter.get(item, 0) + 1
     doubles = {element: count for element, count in counter.items() if count > 1}
-    double_element = list(doubles.keys())[0]
-    if len(doubles) > 0 and double_element in [hand[0], hand[1]]:
-        return True
+    if len(doubles) > 0:
+        double_element = list(doubles.keys())[0]
+        if double_element in [hand[0], hand[1]]:
+            return True
 
 #Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getFlopArea(screen_area):
