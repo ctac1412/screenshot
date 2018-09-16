@@ -32,8 +32,8 @@ def updateActionLogSession(action, screen_area):
                         "(SELECT id, '" + action + "' AS yourvalue FROM session_log where screen_area = " + screen_area + " ORDER BY id desc limit 1) AS t1 "
                                                                                                                           "WHERE session_log.id=t1.id ")
     except Exception as e:
-        error_log.errorLog('updateActionLogSession', str(e))
-        print(e)
+        error_log.errorLog('updateActionLogSession' + action, str(e))
+        print(e + action)
 
 #Обновление значения поля current_stack
 def updateCurrentStackLogSession(screen_area):

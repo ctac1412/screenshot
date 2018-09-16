@@ -50,6 +50,6 @@ def start():
             #Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
             hand = session_log.getLastRowFromLogSession(str(item['screen_area']))
             if image_processing.checkCurrentHand(str(item['screen_area']), hand[0]['hand']):
-                logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'],item['screen_area'],hand[0]['action'])
+                logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'], item['screen_area'], hand[0]['action'])
             else:
-                session_log.updateActionLogSession('end',str(item['screen_area']))
+                session_log.updateActionLogSession('end', str(item['screen_area']))
