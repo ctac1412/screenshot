@@ -41,7 +41,7 @@ def start():
         # Если Если последняя строка для текущей области имеет статус flop
         elif last_row_action == 'flop':
             flop.saveFlopImage(str(item['screen_area']), image_name, folder_name)
-            hand = session_log.getLastRowFromLogSession(str(item['screen_area']))
+            hand = session_log.getLastRowFromLogSession(str(item['screen_area']))['hand']
             if flop.makeFlopDecision(str(item['screen_area']), hand):
                 keyboard.press('q')
                 session_log.updateActionLogSession('push', str(item['screen_area']))
