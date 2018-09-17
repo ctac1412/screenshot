@@ -26,6 +26,8 @@ def start():
         last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
         if last_row_action in ['push', 'fold', 'end']:
             print('1')
+            if image_processing.searchCards(str(item['screen_area']), [('green_board/green_mark.png', 'mark')], 4, 1) == 'mark':
+                return
             # image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
             # image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
             hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4, 1)
