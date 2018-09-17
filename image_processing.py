@@ -6,13 +6,15 @@ import datetime
 import error_log
 import db_conf
 from PIL import Image, ImageGrab
+import time
 
 images_folder = "images/"
 
-def searchCards(screen_area, deck, list_length):
+def searchCards(screen_area, deck, list_length, iteration_count):
+    # begin_time = time.time()
     hand = ''
     threshold = 0.98
-    for item in range(4):
+    for item in range(iteration_count):
         hand = ''
         for value in deck:
             try:
@@ -25,6 +27,8 @@ def searchCards(screen_area, deck, list_length):
                 if len(loc[0]) != 0:
                     hand += value['alias']
                 if len(hand) == list_length:
+                    # end_time = time.time()
+                    # print(end_time - begin_time)
                     return hand
             except Exception as e:
                 error_log.errorLog('searchCards', str(e))
@@ -128,6 +132,6 @@ def convertHand(hand):
 def checkCurrentHand(screen_area, hand):
     current_hand = convertHand(hand)
     deck = getCurrentCards(current_hand)
-    if len(searchCards(screen_area, deck, 4)) == 4:
+    if len(searchCards(screen_area, deck, 4, 1)) == 4:
         return True
     else: return False

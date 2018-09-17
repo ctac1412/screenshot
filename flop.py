@@ -5,7 +5,7 @@ from PIL import Image, ImageGrab
 
 def makeFlopDecision(screen_area, hand):
     flop_area = getFlopArea(str(screen_area))
-    flop_card = image_processing.searchCards(str(flop_area), image_processing.getCards(), 6)
+    flop_card = image_processing.searchCards(str(flop_area), image_processing.getCards(), 6, 4)
     if len(flop_card) == 6:
         hand = hand + flop_card
         print(hand)

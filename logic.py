@@ -16,6 +16,7 @@ images_folder = "images/"
 
 def getDecision(hand, current_stack, current_position, screen_area, action):
     try:
+        # begin_time = time.time()
         folder_name = images_folder + str(datetime.datetime.now().date())
         current_hand = handConverting(hand)
         stack_value = sklansky_chubukov.getValidStackValueToPush(current_hand)
@@ -31,20 +32,28 @@ def getDecision(hand, current_stack, current_position, screen_area, action):
                 action = 'call'
                 keyboard.press('c')
                 session_log.updateActionLogSession(action, str(screen_area))
+                # end_time = time.time()
+                # print(end_time - begin_time)
                 return
         elif current_position == 'big_blind' and introduction.checkIsLimpAvailable(str(screen_area), ['check']):
             action = 'check'
             keyboard.press('h')
             session_log.updateActionLogSession(action, str(screen_area))
+            # end_time = time.time()
+            # print(end_time - begin_time)
+            return
         else:
             action = 'fold'
             keyboard.press('f')
             session_log.updateActionLogSession(action, str(screen_area))
+            # end_time = time.time()
+            # print(end_time - begin_time)
             return
         if checkBeforeUpdateAction(screen_area, folder_name) and image_processing.checkCurrentHand(str(screen_area), hand):
             session_log.updateActionLogSession(action, str(screen_area))
             if action == 'open':
                 session_log.updateCurrentStackLogSession(str(screen_area))
+            return
     except Exception as e:
         error_log.errorLog('getDecision', str(e))
         print(e)
