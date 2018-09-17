@@ -70,4 +70,4 @@ import session_log
 #     end_time = time.time()
 #     return (end_time)
 
-print(session_log.getLastRowFromLogSession('1')[0][0])
+print(image_processing.getCards())
