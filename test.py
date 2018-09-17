@@ -69,5 +69,7 @@ import session_log
 #     # получаем время окончания действия с начала запуска таймера
 #     end_time = time.time()
 #     return (end_time)
-
-print(image_processing.getCards())
+ls = [{'image_path':'green_board/green_mark.png', 'alias':'mark'}]
+for item in ls:
+    print(item['image_path'])
+print(type(ls))

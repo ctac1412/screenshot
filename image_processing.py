@@ -32,6 +32,7 @@ def searchCards(screen_area, deck, list_length, iteration_count):
                     return hand
             except Exception as e:
                 error_log.errorLog('searchCards', str(e))
+                print(e)
         threshold -= 0.01
     return hand
 
