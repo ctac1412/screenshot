@@ -25,7 +25,7 @@ def searchCards(screen_area, deck, list_length, iteration_count):
                 loc = np.where(res >= threshold)
                 if len(loc[0]) != 0:
                     hand += value['alias']
-                if len(hand) == list_length:
+                if len(hand) == list_length:f
                     return hand
             except Exception as e:
                 error_log.errorLog('searchCards', str(e))
