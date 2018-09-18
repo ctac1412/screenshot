@@ -41,6 +41,11 @@ def checkFlushDraw(hand):
         return True
 
 def checkPair(hand):
+    flop = [hand[4], hand[6], hand[8]]
+    ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
+    ts = []
+    for item in flop:
+        ts.append(ranks.index(item))
     hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
     counter = {}
 
@@ -49,7 +54,7 @@ def checkPair(hand):
     doubles = {element: count for element, count in counter.items() if count > 1}
     if len(doubles) > 0:
         double_element = list(doubles.keys())[0]
-        if double_element in [hand[0], hand[1]]:
+        if double_element in [hand[0], hand[1]] and ranks.index(double_element) == max(ts):
             return True
 
 #Получаем номер области экрана, на которой нужно искать элемент для текущего стола

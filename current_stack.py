@@ -127,7 +127,7 @@ def saveStackImage(screen_area,image_name,folder_name):
         print(e)
 
 def saveOpponentStackImage(screen_area,folder_name):
-    image_name = math.floor(time.time())
+    image_name = int(math.floor(time.time()))
     for val in getOpponentStackData(str(screen_area)):
         image_path = folder_name + "/" + str(val['screen_area']) + "/" + str(image_name) + ".png"
         # Делаем скрин указанной области экрана
@@ -136,4 +136,4 @@ def saveOpponentStackImage(screen_area,folder_name):
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, val['screen_area'])
-        image_name = int(image_name) + 1
+        image_name += 1
