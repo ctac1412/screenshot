@@ -127,9 +127,9 @@ def saveStackImage(screen_area,image_name,folder_name):
         print(e)
 
 def saveOpponentStackImage(screen_area,folder_name):
-    image_name = str(math.floor(time.time()))
+    image_name = math.floor(time.time())
     for val in getOpponentStackData(str(screen_area)):
-        image_path = folder_name + "/" + str(val['screen_area']) + "/" + image_name + ".png"
+        image_path = folder_name + "/" + str(val['screen_area']) + "/" + str(image_name) + ".png"
         # Делаем скрин указанной области экрана
         image = ImageGrab.grab(bbox=(val['x_coordinate'], val['y_coordinate'], val['width'], val['height']))
         # Сохраняем изображение на жестком диске
