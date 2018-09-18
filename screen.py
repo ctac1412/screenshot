@@ -25,19 +25,17 @@ def start():
         if last_row_action in ['push', 'fold', 'end']:
             image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
             image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
-            if image_processing.searchCards(str(item['screen_area']), green_mark, 4, 1) == 'mark':
-                return
-            hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4, 1)
-            if hand != '':
-                # Сохраняем скрин блайндов для текущего окна
-                determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
-                # Сохраняем скрин стека для текущего окна
-                current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
-                # Если рука обнаружена на скрине
-                condition = session_log.checkConditionsBeforeInsert(hand, (item['screen_area']))
-                if condition is not False:
-                    logic.getDecision(condition[0], condition[1], condition[2], item['screen_area'], condition[3])
-            else: return
+            if image_processing.searchCards(str(item['screen_area']), green_mark, 4, 1) != 'mark':
+                hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4, 1)
+                if hand != '':
+                    # Сохраняем скрин блайндов для текущего окна
+                    determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
+                    # Сохраняем скрин стека для текущего окна
+                    current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
+                    # Если рука обнаружена на скрине
+                    condition = session_log.checkConditionsBeforeInsert(hand, (item['screen_area']))
+                    if condition is not False:
+                        logic.getDecision(condition[0], condition[1], condition[2], item['screen_area'], condition[3])
         # Если Если последняя строка для текущей области имеет статус open
         elif last_row_action in ['open', 'call', 'check']:
             introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name, last_row_action)

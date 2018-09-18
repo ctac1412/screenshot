@@ -69,7 +69,5 @@ import session_log
 #     # получаем время окончания действия с начала запуска таймера
 #     end_time = time.time()
 #     return (end_time)
-ls = [{'image_path':'green_board/green_mark.png', 'alias':'mark'}]
-for item in ls:
-    print(item['image_path'])
-print(type(ls))
+folder_name = 'images/' + str(datetime.datetime.now().date())
+current_stack.saveOpponentStackImage(str(1), folder_name)

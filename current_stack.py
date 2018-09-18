@@ -136,3 +136,5 @@ def saveOpponentStackImage(screen_area,folder_name):
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
         image_processing.insertImagePathIntoDb(image_path, val['screen_area'])
+        # sleep для того, чтобы скрины получали уникальные имена(не затирали друг друга)
+        time.sleep(1)
