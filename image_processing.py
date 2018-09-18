@@ -11,7 +11,6 @@ import time
 images_folder = "images/"
 
 def searchCards(screen_area, deck, list_length, iteration_count):
-    # begin_time = time.time()
     hand = ''
     threshold = 0.98
     for item in range(iteration_count):
@@ -27,8 +26,6 @@ def searchCards(screen_area, deck, list_length, iteration_count):
                 if len(loc[0]) != 0:
                     hand += value['alias']
                 if len(hand) == list_length:
-                    # end_time = time.time()
-                    # print(end_time - begin_time)
                     return hand
             except Exception as e:
                 error_log.errorLog('searchCards', str(e))

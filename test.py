@@ -69,5 +69,7 @@ import session_log
 #     # получаем время окончания действия с начала запуска таймера
 #     end_time = time.time()
 #     return (end_time)
-folder_name = 'images/' + str(datetime.datetime.now().date())
-current_stack.saveOpponentStackImage(str(1), folder_name)
+flop_card = image_processing.searchCards(str(41), image_processing.getCards(), 6, 4)
+hand = '2dJh'
+hand = hand + flop_card
+flop.checkPair(hand)

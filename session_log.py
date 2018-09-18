@@ -5,11 +5,11 @@ import current_stack
 import determine_position
 
 #Создание новой записи в таблицу session_log
-def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0'):
+def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0',action=''):
     try:
         db = postgresql.open(db_conf.connectionString())
-        data = db.prepare("insert into session_log(screen_area,hand,current_position,current_stack) values($1,$2,$3,$4)")
-        data(screen_area, hand, current_position, current_stack)
+        data = db.prepare("insert into session_log(screen_area,hand,current_position,current_stack,action) values($1,$2,$3,$4,$5)")
+        data(screen_area, hand, current_position, current_stack, action)
     except Exception as e:
         error_log.errorLog('insertIntoLogSession',str(e))
         print(e)
