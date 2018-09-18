@@ -68,7 +68,7 @@ def checkConditionsBeforeInsert(hand, screen_area):
             stack = str(current_stack.searchCurrentStack(str(screen_area)))
             position = str(determine_position.seacrhBlindChips(screen_area))
             insertIntoLogSession(screen_area, hand, position, stack)
-            session = [hand, stack, position, None]
+            session = [hand, stack, position, '']
             return session
         else:
             return False
