@@ -69,6 +69,6 @@ import session_log
 #     # получаем время окончания действия с начала запуска таймера
 #     end_time = time.time()
 #     return (end_time)
-hand = '2sKdThKcAc'
+hand = '8s9dJc6c8h'
 flop.checkPair(hand)
 
