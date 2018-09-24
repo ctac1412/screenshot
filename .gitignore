@@ -12,4 +12,5 @@ __pycache__/
 /blinds
 /stacks
 /limp
+/is_headsup
 test.py
