@@ -3,7 +3,6 @@ import postgresql
 import image_processing
 import cv2
 import numpy as np
-from PIL import Image, ImageGrab
 import error_log
 import math
 import time
@@ -116,12 +115,8 @@ def saveStackImage(screen_area,image_name,folder_name):
     try:
         for val in getStackData(str(getStackArea(str(screen_area)))):
             image_path = folder_name + "/" + str(getStackArea(str(screen_area))) + "/" + image_name + ".png"
-            # Делаем скрин указанной области экрана
-            image = ImageGrab.grab(bbox=(val['x_coordinate'], val['y_coordinate'], val['width'], val['height']))
-            # Сохраняем изображение на жестком диске
-            image.save(image_path, "PNG")
-            # Сохраняем инфо в бд
-            image_processing.insertImagePathIntoDb(image_path, val['screen_area'])
+            image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
+                                     val['screen_area'])
     except Exception as e:
         error_log.errorLog('saveStackImage', str(e))
         print(e)
@@ -130,10 +125,5 @@ def saveOpponentStackImage(screen_area,folder_name):
     image_name = int(math.floor(time.time()))
     for val in getOpponentStackData(str(screen_area)):
         image_path = folder_name + "/" + str(val['screen_area']) + "/" + str(image_name) + ".png"
-        # Делаем скрин указанной области экрана
-        image = ImageGrab.grab(bbox=(val['x_coordinate'], val['y_coordinate'], val['width'], val['height']))
-        # Сохраняем изображение на жестком диске
-        image.save(image_path, "PNG")
-        # Сохраняем инфо в бд
-        image_processing.insertImagePathIntoDb(image_path, val['screen_area'])
+        image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path, val['screen_area'])
         image_name += 1

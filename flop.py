@@ -55,7 +55,6 @@ def checkPair(hand):
     if len(doubles) > 0:
         double_element = list(doubles.keys())[0]
         if double_element in [hand[0], hand[1]] and ranks.index(double_element) == max(ts):
-            print(1)
             return True
     return False
 

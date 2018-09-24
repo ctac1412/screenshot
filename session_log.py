@@ -3,13 +3,14 @@ import error_log
 import db_conf
 import current_stack
 import determine_position
+import headsup
 
 #Создание новой записи в таблицу session_log
-def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0',action=''):
+def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0', action='', is_headsup='0'):
     try:
         db = postgresql.open(db_conf.connectionString())
-        data = db.prepare("insert into session_log(screen_area,hand,current_position,current_stack,action) values($1,$2,$3,$4,$5)")
-        data(screen_area, hand, current_position, current_stack, action)
+        data = db.prepare("insert into session_log(screen_area,hand,current_position,current_stack,action,is_headsup) values($1,$2,$3,$4,$5,$6)")
+        data(screen_area, hand, current_position, current_stack, action, is_headsup)
     except Exception as e:
         error_log.errorLog('insertIntoLogSession',str(e))
         print(e)
@@ -67,7 +68,10 @@ def checkConditionsBeforeInsert(hand, screen_area):
         if hand != '' and hand != session[0]['hand']:
             stack = str(current_stack.searchCurrentStack(str(screen_area)))
             position = str(determine_position.seacrhBlindChips(screen_area))
-            insertIntoLogSession(screen_area, hand, position, stack)
+            if position != 'button' and headsup.searchOpponentCard(str(screen_area)):
+                is_headsup = '1'
+            else: is_headsup = '0'
+            insertIntoLogSession(screen_area, hand, position, stack, is_headsup)
             session = [hand, stack, position, '']
             return session
         else:
