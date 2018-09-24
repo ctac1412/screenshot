@@ -1,18 +1,5 @@
-import postgresql
-import db_conf
-import cv2
-import numpy as np
-import error_log
-import introduction
-import mouse
-import current_stack
-import math
-import datetime
-import image_processing
 import flop
-import time
-import session_log
-
+hand = '8s9dJc6c8h'
 # hand = 'As6s2d6hKc'
 # flop.checkPair(hand)
 
@@ -71,4 +58,3 @@ import session_log
 #     return (end_time)
 hand = '8s9dJc6c8h'
 flop.checkPair(hand)
-
