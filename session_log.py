@@ -6,11 +6,11 @@ import determine_position
 import headsup
 
 #Создание новой записи в таблицу session_log
-def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0', action='', is_headsup='0'):
+def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0', action='', is_headsup=0):
     try:
         db = postgresql.open(db_conf.connectionString())
         data = db.prepare("insert into session_log(screen_area,hand,current_position,current_stack,action,is_headsup) values($1,$2,$3,$4,$5,$6)")
-        data(screen_area, hand, current_position, current_stack, action, is_headsup)
+        data(screen_area, hand, current_position, current_stack, action, int(is_headsup))
     except Exception as e:
         error_log.errorLog('insertIntoLogSession',str(e))
         print(e)
@@ -69,9 +69,9 @@ def checkConditionsBeforeInsert(hand, screen_area):
             stack = str(current_stack.searchCurrentStack(str(screen_area)))
             position = str(determine_position.seacrhBlindChips(screen_area))
             if position != 'button' and headsup.searchOpponentCard(str(screen_area)):
-                is_headsup = '1'
-            else: is_headsup = '0'
-            insertIntoLogSession(screen_area, hand, position, stack, is_headsup)
+                is_headsup = 1
+            else: is_headsup = 0
+            insertIntoLogSession(screen_area, hand, position, stack, is_headsup = is_headsup)
             session = [hand, stack, position, '']
             return session
         else:

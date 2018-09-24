@@ -38,13 +38,13 @@ def saveOpponentCardImage(screen_area, folder_name):
 
 def getOpponentCardArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select opponent_stack_area from screen_coordinates where screen_area = " + screen_area)
-    return data[0]['opponent_stack_area']
+    data = db.query("select headsup_area from screen_coordinates where screen_area = " + screen_area)
+    return data[0]['headsup_area']
 
 def getOpponentCardData(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select opp.x_coordinate,opp.y_coordinate,opp.width,opp.height,opp.screen_area "
                     "from screen_coordinates as sc "
-                    "inner join opponent_screen_coordinates as opp on sc.opponent_stack_area = opp.screen_area "
+                    "inner join opponent_screen_coordinates as opp on sc.headsup_area = opp.screen_area "
                     "where sc.screen_area = " + str(screen_area))
     return data
