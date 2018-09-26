@@ -10,9 +10,11 @@ import determine_position
 import current_stack
 import introduction
 import flop
+import bar
 
 images_folder = "images/"
 green_mark = [{'image_path':'green_board/green_mark.png', 'alias':'mark'}]
+bar = [{'image_path':'bar/bar.png', 'alias':'bar'}]
 
 def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
@@ -25,7 +27,7 @@ def start():
         if last_row_action in ['push', 'fold', 'end']:
             image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
             image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
-            if image_processing.searchCards(str(item['screen_area']), green_mark, 4, 1) != 'mark':
+            if image_processing.searchCards(str(item['screen_area']), green_mark, 4, 1) != 'mark' and bar.seacrhBar(item['screen_area']):
                 hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4, 1)
                 if hand != '':
                     # Сохраняем скрин блайндов для текущего окна

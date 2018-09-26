@@ -40,12 +40,8 @@ def saveBlindImage(screen_area,image_name,folder_name):
     try:
         for value in getBlindData(str(getBlindArea(str(screen_area)))):
             image_path = folder_name + "/" + str(getBlindArea(str(screen_area))) + "/" + image_name + ".png"
-            # Делаем скрин указанной области экрана
-            image = ImageGrab.grab(bbox=(value['x_coordinate'], value['y_coordinate'], value['width'], value['height']))
-            # Сохраняем изображение на жестком диске
-            image.save(image_path, "PNG")
-            # Сохраняем инфо в бд
-            image_processing.insertImagePathIntoDb(image_path, value['screen_area'])
+            image_processing.imaging(value['x_coordinate'], value['y_coordinate'], value['width'], value['height'],
+                                     image_path, value['screen_area'])
     except Exception as e:
         error_log.errorLog('saveBlindImage', str(e))
         print(e)
