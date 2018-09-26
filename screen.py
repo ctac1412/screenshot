@@ -10,7 +10,7 @@ import determine_position
 import current_stack
 import introduction
 import flop
-import bar
+import bar as metka
 
 images_folder = "images/"
 green_mark = [{'image_path':'green_board/green_mark.png', 'alias':'mark'}]
@@ -25,9 +25,9 @@ def start():
         # Если последняя строка для текущей области имеет конечный статус
         last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
         if last_row_action in ['push', 'fold', 'end']:
-            image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
-            image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
-            if image_processing.searchCards(str(item['screen_area']), green_mark, 4, 1) != 'mark' and bar.seacrhBar(item['screen_area']):
+            if metka.seacrhBar(str(item['screen_area'])):
+                image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
+                image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path, item['screen_area'])
                 hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4, 1)
                 if hand != '':
                     # Сохраняем скрин блайндов для текущего окна

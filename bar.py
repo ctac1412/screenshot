@@ -6,6 +6,7 @@ import db_conf
 import math
 import time
 import error_log
+import datetime
 
 #Поиск элемента, который говорит, что пришла очередь хода
 def seacrhBar(screen_area):
@@ -28,8 +29,8 @@ def seacrhBar(screen_area):
 #Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getBarArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select blind_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
-    return data[0]['blind_area']
+    data = db.query("select bar_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
+    return data[0]['bar_area']
 
 def getBarData(screen_area):
     db = postgresql.open(db_conf.connectionString())
@@ -39,6 +40,7 @@ def getBarData(screen_area):
 
 def saveBarImage(screen_area, image_name, folder_name):
     try:
+        folder_name = folder_name + str(datetime.datetime.now().date())
         for value in getBarData(str(getBarArea(str(screen_area)))):
             image_path = folder_name + "/" + str(getBarArea(str(screen_area))) + "/" + image_name + ".png"
             image_processing.imaging(value['x_coordinate'], value['y_coordinate'], value['width'], value['height'], image_path, value['screen_area'])

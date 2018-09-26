@@ -13,4 +13,5 @@ __pycache__/
 /stacks
 /limp
 /is_headsup
+/bar
 test.py
