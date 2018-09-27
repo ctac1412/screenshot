@@ -7,6 +7,7 @@ import error_log
 import db_conf
 from PIL import Image, ImageGrab
 import time
+import introduction
 
 images_folder = "images/"
 
@@ -77,6 +78,11 @@ def getFlopCards():
     data = db.query("select trim(image_path) as image_path,card,suit,trim(alias) as alias from flop_cards")
     return data
 
+def getActionsButtons():
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select trim(image_path) as image_path,trim(opponent_action) as opponent_action from opponent_last_action")
+    return data
+
 #Получение последнего скрина для текущей области экрана
 def getLastScreen(screen_area, limit='1'):
     db = postgresql.open(db_conf.connectionString())
@@ -117,6 +123,22 @@ def searchElement(screen_area, elements, folder):
         if len(loc[0]) != 0:
             return True
         return False
+
+def searcLastOpponentAction(screen_area):
+    element_area = introduction.saveElement(screen_area, 'limp_area')
+    threshold = 0.98
+    for item in getActionsButtons():
+        path = getLastScreen(element_area)
+        path = path[0]['image_path']
+        img_rgb = cv2.imread(path, 0)
+        template = cv2.imread(str(item['image_path']), 0)
+        res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+        loc = np.where(res >= threshold)
+        if len(loc[0]) != 0:
+            print(item['opponent_action'])
+            return item['opponent_action']
+    return 'push'
+
 
 def getCurrentCards(condition):
     db = postgresql.open(db_conf.connectionString())

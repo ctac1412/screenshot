@@ -4,13 +4,15 @@ import db_conf
 import current_stack
 import determine_position
 import headsup
+import image_processing
 
 #Создание новой записи в таблицу session_log
-def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0', action='', is_headsup=0):
+def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0', action='', is_headsup=0, last_opponent_action=None):
     try:
         db = postgresql.open(db_conf.connectionString())
-        data = db.prepare("insert into session_log(screen_area,hand,current_position,current_stack,action,is_headsup) values($1,$2,$3,$4,$5,$6)")
-        data(screen_area, hand, current_position, current_stack, action, int(is_headsup))
+        data = db.prepare("insert into session_log(screen_area,hand,current_position,current_stack,action,is_headsup,last_opponent_action) "
+                          "values($1,$2,$3,$4,$5,$6,$7)")
+        data(screen_area, hand, current_position, current_stack, action, int(is_headsup), last_opponent_action)
     except Exception as e:
         error_log.errorLog('insertIntoLogSession',str(e))
         print(e)
@@ -54,7 +56,8 @@ def getLastRowFromLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
         data = db.query(
-            "select trim(hand) as hand,trim(current_stack) as current_stack,trim(current_position) as current_position, trim(action) as action"
+            "select trim(hand) as hand,trim(current_stack) as current_stack,trim(current_position) as current_position, trim(action) as action,"
+            "is_headsup"
             " from session_log where screen_area = " + str(screen_area) + " order by id desc limit 1")
         return data
     except Exception as e:
@@ -70,9 +73,14 @@ def checkConditionsBeforeInsert(hand, screen_area):
             position = str(determine_position.seacrhBlindChips(screen_area))
             if position != 'button' and headsup.searchOpponentCard(str(screen_area)):
                 is_headsup = 1
-            else: is_headsup = 0
-            insertIntoLogSession(screen_area, hand, position, stack, is_headsup = is_headsup)
-            session = [hand, stack, position, '']
+            else:
+                is_headsup = 0
+            if position == 'big_blind' or position == 'small_blind' and headsup == 0:
+                last_opponnet_action = image_processing.searcLastOpponentAction(screen_area)
+            else:
+                last_opponnet_action = None
+            insertIntoLogSession(screen_area, hand, position, stack, is_headsup=is_headsup, last_opponent_action=last_opponnet_action)
+            session = [hand, stack, position, '', is_headsup]
             return session
         else:
             return False
