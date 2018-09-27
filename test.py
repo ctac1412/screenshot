@@ -1,3 +1,3 @@
-import bar
+import logic
 
-bar.seacrhBar('2')
+print(logic.getActionFromPreflopChart('1'))

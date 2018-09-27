@@ -16,7 +16,7 @@ images_folder = "images/"
 
 def getDecision(hand, current_stack, current_position, screen_area, action):
     try:
-        action = getActionFromPreflopChart(screen_area)
+        action = getActionFromPreflopChart(str(screen_area))
         if action == 'push':
             keyboard.press('q')
         elif action == 'fold':
@@ -61,8 +61,13 @@ def checkBeforeUpdateAction(screen_area, folder_name):
 
 def getActionFromPreflopChart(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
+    last_opponent_action = row[0]['last_opponent_action']
+    hand = handConverting(row[0]['hand'])
+    if last_opponent_action is None:
+        last_opponent_action = ' is null'
+    else: last_opponent_action = ' = ' + last_opponent_action
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(action) as action from preflop_chart "
-                    "where hand = " + row[0]['hand'] + " and position = " + row[0]['current_position'] +
-                    " and opponent_last_action = " + row[0]['last_opponent_action'] + " and is_headsup = " + row[0]['is_headsup'])
+                    "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
+                    " and is_headsup = '" + str(row[0]['is_headsup']) + '\'' + " and opponent_last_action" + last_opponent_action)
     return data[0]['action']
