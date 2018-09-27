@@ -57,7 +57,7 @@ def getLastRowFromLogSession(screen_area):
         db = postgresql.open(db_conf.connectionString())
         data = db.query(
             "select trim(hand) as hand,trim(current_stack) as current_stack,trim(current_position) as current_position, trim(action) as action,"
-            "is_headsup"
+            "is_headsup, trim(last_opponent_action) as last_opponent_action"
             " from session_log where screen_area = " + str(screen_area) + " order by id desc limit 1")
         return data
     except Exception as e:

@@ -16,41 +16,18 @@ images_folder = "images/"
 
 def getDecision(hand, current_stack, current_position, screen_area, action):
     try:
-        folder_name = images_folder + str(datetime.datetime.now().date())
-        current_hand = handConverting(hand)
-        stack_value = sklansky_chubukov.getValidStackValueToPush(current_hand)
-        stack_difference = int(current_stack) - int(stack_value)
-        if int(current_stack) <= int(stack_value):
-            action = 'push'
+        action = getActionFromPreflopChart(screen_area)
+        if action == 'push':
             keyboard.press('q')
-        elif current_position == 'button' and stack_difference in range(1, 15) and int(current_stack) >= 15 and action != 'open':
-            action = 'open'
-            keyboard.press('o')
-        elif current_position == 'small_blind' and stack_difference in range(1, 20) and int(current_stack) >= 15 and action != 'call':
-            if introduction.checkIsLimpAvailable(str(screen_area), ['limp']):
-                action = 'call'
-                keyboard.press('c')
-                session_log.updateActionLogSession(action, str(screen_area))
-                return
-            else:
-                action = 'fold'
-                keyboard.press('f')
-                session_log.updateActionLogSession(action, str(screen_area))
-        elif current_position == 'big_blind' and introduction.checkIsLimpAvailable(str(screen_area), ['check']):
-            action = 'check'
-            keyboard.press('h')
-            session_log.updateActionLogSession(action, str(screen_area))
-            return
-        else:
-            action = 'fold'
+        elif action == 'fold':
             keyboard.press('f')
-            session_log.updateActionLogSession(action, str(screen_area))
-            return
-        if checkBeforeUpdateAction(screen_area, folder_name) and image_processing.checkCurrentHand(str(screen_area), hand):
-            session_log.updateActionLogSession(action, str(screen_area))
-            if action == 'open':
-                session_log.updateCurrentStackLogSession(str(screen_area))
-            return
+        elif action == 'open':
+            keyboard.press('o')
+        elif action == 'call':
+            keyboard.press('c')
+        elif action == 'check':
+            keyboard.press('h')
+        session_log.updateActionLogSession(action, str(screen_area))
     except Exception as e:
         error_log.errorLog('getDecision', str(e))
         print(e)
@@ -81,3 +58,11 @@ def checkBeforeUpdateAction(screen_area, folder_name):
     except Exception as e:
         error_log.errorLog('checkBeforeUpdateAction', str(e))
         print(e)
+
+def getActionFromPreflopChart(screen_area):
+    row = session_log.getLastRowFromLogSession(screen_area)
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select trim(action) as action from preflop_chart "
+                    "where hand = " + row[0]['hand'] + " and position = " + row[0]['current_position'] +
+                    " and opponent_last_action = " + row[0]['last_opponent_action'] + " and is_headsup = " + row[0]['is_headsup'])
+    return data[0]['action']
