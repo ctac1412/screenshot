@@ -19,6 +19,7 @@ def getDecision(screen_area):
             keyboard.press('f')
         elif action == 'open':
             keyboard.press('o')
+            session_log.updateCurrentStackLogSession(str(screen_area))
         elif action == 'call':
             keyboard.press('c')
         elif action == 'check':
@@ -62,12 +63,12 @@ def getActionFromPreflopChart(screen_area):
     stack = convertStack(int(row[0]['current_stack']))
     if last_opponent_action is None:
         last_opponent_action = ' is null'
-    else: last_opponent_action = ' = ' + last_opponent_action
+    else: last_opponent_action = " = '" + last_opponent_action + '\''
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(action) as action from preflop_chart "
                     "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
                     " and is_headsup = '" + str(row[0]['is_headsup']) + '\'' + " and opponent_last_action" +
-                    last_opponent_action + ' and stack = ' + str(stack))
+                    last_opponent_action + " and stack = " + str(stack))
     return data[0]['action']
 
 def convertStack(stack):

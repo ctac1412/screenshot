@@ -21,7 +21,6 @@ def seacrhBar(screen_area):
     loc = np.where(res >= threshold)
 
     if len(loc[0]) != 0:
-        print('bar')
         return True
 
     return False

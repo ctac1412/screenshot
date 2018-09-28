@@ -37,6 +37,7 @@ def checkIsLimpAvailable(screen_area, element):
 def checkIsFlop(screen_area):
     element_area = saveElement(screen_area, 'green_board_area')
     if image_processing.searchElement(element_area, ['green_board'], 'green_board/') is False:
+        print('flop')
         session_log.updateActionLogSession('flop', screen_area)
         return True
 
@@ -65,6 +66,7 @@ def checkIsFold(screen_area, image_name, folder_name):
     current_stack.saveStackImage(screen_area, image_name, folder_name)
     cur_stack = current_stack.searchCurrentStack(screen_area)
     if int(last_stack) != int(cur_stack):
+        print('open-end')
         session_log.updateActionLogSession('end', screen_area)
         return True
 
@@ -87,7 +89,7 @@ def getReactionToOpponent(row):
     if last_opponent_action is None:
         last_opponent_action = ' is null'
     else:
-        last_opponent_action = ' = ' + last_opponent_action
+        last_opponent_action = " = '" + last_opponent_action + '\''
     data = db.query("select trim(reaction_to_opponent) as reaction_to_opponent from preflop_chart "
                     "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
                     " and is_headsup = '" + str(row[0]['is_headsup']) + '\'' + " and opponent_last_action" +

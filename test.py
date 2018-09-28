@@ -1,7 +1,3 @@
-import image_processing
+import logic
 
-reac = image_processing.searchLastOpponentAction('2')
-if not isinstance(reac, str):
-    print(reac['alias'])
-# else:
-#     print(reac['alias'])
+print(logic.getActionFromPreflopChart('3'))
