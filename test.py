@@ -1,3 +1,7 @@
-import introduction
+import image_processing
 
-print(introduction.checkIsActionButtons(2))
+reac = image_processing.searchLastOpponentAction('2')
+if not isinstance(reac, str):
+    print(reac['alias'])
+# else:
+#     print(reac['alias'])
