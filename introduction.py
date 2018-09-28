@@ -42,8 +42,9 @@ def checkIsFlop(screen_area):
 #Проверка, есть ли кнопка "Raise To"
 def checkIsActionButtons(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
-    if image_processing.searchLastOpponentAction(screen_area) == 'push':
-        last_opponnet_action = 'push'
+    return getReactionToOpponent(row)
+    # if image_processing.searchLastOpponentAction(screen_area) == 'push':
+    #     last_opponnet_action = 'push'
 
 #Проверка, слелали ли противники фолд
 def checkIsFold(screen_area, image_name, folder_name):
@@ -68,7 +69,10 @@ def getElementData(screen_area):
 def getReactionToOpponent(row):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(reaction_to_opponent) as reaction_to_opponent from preflop_chart "
-                    "where hand = '" + row[0]['hand'] + '\'' + ' and ')
+                    "where hand = '" + row[0]['hand'] + '\'' + " and stack = " + row[0]['current_stack'] +
+                    " and position = '" + row[0]['current_position'] + '\'' + " and opponent_last_action = '" +
+                    row[0]['last_opponent_action'] + '\'' + " and action = '" + row[0]['action'] + '\'' +
+                    " and is_headsup = " + row[0]['is_headsup'])
     return data
 
 
