@@ -7,6 +7,7 @@ import current_stack
 import logic
 import postgresql
 import db_conf
+import keyboard
 
 images_folder = "images/"
 
@@ -42,9 +43,21 @@ def checkIsFlop(screen_area):
 #Проверка, есть ли кнопка "Raise To"
 def checkIsActionButtons(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
-    return getReactionToOpponent(row)
-    # if image_processing.searchLastOpponentAction(screen_area) == 'push':
-    #     last_opponnet_action = 'push'
+    reaction_to_opponent = getReactionToOpponent(row)
+    last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
+    if not isinstance(last_opponnet_action, str):
+        bb_count = last_opponnet_action['alias']
+        if reaction_to_opponent == 'fold' and bb_count == '1':
+            reaction_to_opponent = 'call'
+    if reaction_to_opponent == 'push':
+        keyboard.press('q')
+    elif reaction_to_opponent == 'call':
+        keyboard.press('c')
+    else:
+        keyboard.press('f')
+    session_log.updateActionLogSession(reaction_to_opponent, str(screen_area))
+
+
 
 #Проверка, слелали ли противники фолд
 def checkIsFold(screen_area, image_name, folder_name):

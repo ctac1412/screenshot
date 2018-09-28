@@ -3,13 +3,9 @@ import postgresql
 import db_conf
 import keyboard
 import session_log
-import sklansky_chubukov
 import time
-import datetime
 import math
 import current_stack as cur_stack
-import introduction
-import image_processing
 
 images_folder = "images/"
 

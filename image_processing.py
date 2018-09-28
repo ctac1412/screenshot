@@ -6,7 +6,6 @@ import datetime
 import error_log
 import db_conf
 from PIL import Image, ImageGrab
-import time
 import introduction
 
 images_folder = "images/"
