@@ -63,7 +63,7 @@ def getActionFromPreflopChart(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
     last_opponent_action = row[0]['last_opponent_action']
     hand = handConverting(row[0]['hand'])
-    stack = convertStack(row[0]['current_stack'])
+    stack = convertStack(int(row[0]['current_stack']))
     if last_opponent_action is None:
         last_opponent_action = ' is null'
     else: last_opponent_action = ' = ' + last_opponent_action
@@ -71,7 +71,7 @@ def getActionFromPreflopChart(screen_area):
     data = db.query("select trim(action) as action from preflop_chart "
                     "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
                     " and is_headsup = '" + str(row[0]['is_headsup']) + '\'' + " and opponent_last_action" +
-                    last_opponent_action + ' and stack = ' + stack)
+                    last_opponent_action + ' and stack = ' + str(stack))
     return data[0]['action']
 
 def convertStack(stack):
