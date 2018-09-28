@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 import postgresql
 import db_conf
-from PIL import Image, ImageGrab
 import error_log
 
 #Поиск блайндов и соответственно определение позиции за столом
