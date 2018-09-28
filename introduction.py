@@ -68,11 +68,17 @@ def getElementData(screen_area):
 
 def getReactionToOpponent(row):
     db = postgresql.open(db_conf.connectionString())
+    hand = logic.handConverting(row[0]['hand'])
+    stack = logic.convertStack(int(row[0]['current_stack']))
+    last_opponent_action = row[0]['last_opponent_action']
+    if last_opponent_action is None:
+        last_opponent_action = ' is null'
+    else:
+        last_opponent_action = ' = ' + last_opponent_action
     data = db.query("select trim(reaction_to_opponent) as reaction_to_opponent from preflop_chart "
-                    "where hand = '" + row[0]['hand'] + '\'' + " and stack = " + row[0]['current_stack'] +
-                    " and position = '" + row[0]['current_position'] + '\'' + " and opponent_last_action = '" +
-                    row[0]['last_opponent_action'] + '\'' + " and action = '" + row[0]['action'] + '\'' +
-                    " and is_headsup = " + row[0]['is_headsup'])
+                    "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
+                    " and is_headsup = '" + str(row[0]['is_headsup']) + '\'' + " and opponent_last_action" +
+                    last_opponent_action + ' and stack = ' + str(stack) + " and action = '" + row[0]['action'] + '\'')
     return data
 
 

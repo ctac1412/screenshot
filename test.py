@@ -1,3 +1,3 @@
-import logic
+import introduction
 
-print(logic.getActionFromPreflopChart(2))
+print(introduction.checkIsActionButtons(2))
