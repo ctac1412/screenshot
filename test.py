@@ -1,3 +1,5 @@
-import logic
+import session_log
 
-print(logic.getActionFromPreflopChart('1'))
+stack = 22
+if stack in range(17,22):
+    print(1)

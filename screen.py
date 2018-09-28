@@ -38,7 +38,7 @@ def start():
                     # Если рука обнаружена на скрине
                     condition = session_log.checkConditionsBeforeInsert(hand, (item['screen_area']))
                     if condition is not False:
-                        logic.getDecision(condition[0], condition[1], condition[2], item['screen_area'], condition[3])
+                        logic.getDecision(item['screen_area'])
             # Если Если последняя строка для текущей области имеет статус open
             elif last_row_action in ['open', 'call', 'check']:
                 introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name, last_row_action)
@@ -57,7 +57,6 @@ def start():
                 # Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action
                 hand = session_log.getLastRowFromLogSession(str(item['screen_area']))
                 if image_processing.checkCurrentHand(str(item['screen_area']), hand[0]['hand']):
-                    logic.getDecision(hand[0]['hand'], hand[0]['current_stack'], hand[0]['current_position'],
-                                      item['screen_area'], hand[0]['action'])
+                    logic.getDecision(item['screen_area'])
                 else:
                     session_log.updateActionLogSession('end', str(item['screen_area']))
