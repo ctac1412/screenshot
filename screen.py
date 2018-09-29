@@ -44,14 +44,11 @@ def start():
                 introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name, last_row_action)
             # Если Если последняя строка для текущей области имеет статус flop
             elif last_row_action == 'flop':
-                flop.saveFlopImage(str(item['screen_area']), image_name, folder_name)
                 hand = session_log.getLastRowFromLogSession(str(item['screen_area']))[0][0]
-                if flop.makeFlopDecision(str(item['screen_area']), hand):
-                    keyboard.press('q')
-                    session_log.updateActionLogSession('push', str(item['screen_area']))
-                else:
-                    keyboard.press('f')
-                    session_log.updateActionLogSession('fold', str(item['screen_area']))
+                flop.makeFlopDecision(str(item['screen_area']), hand, image_name, folder_name)
+            elif last_row_action == 'cbet':
+                keyboard.press('f')
+                session_log.updateActionLogSession('fold',str(item['screen_area']))
             # Если статус null или не конечный
             else:
                 # Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action

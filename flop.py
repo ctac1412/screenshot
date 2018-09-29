@@ -2,17 +2,22 @@ import image_processing
 import postgresql
 import db_conf
 from PIL import Image, ImageGrab
+import keyboard
+import session_log
 
-def makeFlopDecision(screen_area, hand):
+def makeFlopDecision(screen_area, hand, image_name, folder_name):
+    saveFlopImage(str(screen_area), image_name, folder_name)
     flop_area = getFlopArea(str(screen_area))
     flop_card = image_processing.searchCards(str(flop_area), image_processing.getCards(), 6, 4)
     if len(flop_card) == 6:
         hand = hand + flop_card
         print(hand)
-        if checkPair(hand): return True
-        if checkFlushDraw(hand): return True
-        if checkStraightDraw(hand): return True
-        return False
+        if checkPair(hand) or checkFlushDraw(hand) or checkStraightDraw(hand):
+            keyboard.press('q')
+            session_log.updateActionLogSession('push', str(screen_area))
+        elif session_log.getLastRowActionFromLogSession(str(screen_area)) == 'open':
+            keyboard.press('o')
+            session_log.updateActionLogSession('cbet', str(screen_area))
     else:
         print(hand)
         return False
