@@ -24,6 +24,7 @@ def searchOpponentCard(screen_area):
             if len(loc[0]) != 0:
                 check_is_headsup +=1
         if check_is_headsup == 1:
+            print(1)
             return True
         else: return 0
     except Exception as e:

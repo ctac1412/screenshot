@@ -125,16 +125,17 @@ def searchElement(screen_area, elements, folder):
         return False
 
 def searchLastOpponentAction(screen_area):
-    element_area = introduction.saveElement(screen_area, 'limp_area')
+    # element_area = introduction.saveElement(screen_area, 'limp_area')
     threshold = 0.98
     for item in getActionsButtons():
-        path = getLastScreen(element_area)
+        path = getLastScreen('46')
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
         template = cv2.imread(str(item['image_path']), 0)
         res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
         loc = np.where(res >= threshold)
         if len(loc[0]) != 0:
+            print(item)
             return item
     return 'push'
 

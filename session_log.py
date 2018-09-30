@@ -75,11 +75,12 @@ def checkConditionsBeforeInsert(hand, screen_area):
                 is_headsup = 1
             else:
                 is_headsup = 0
-            if position == 'big_blind' or position == 'small_blind' and headsup == 0:
+            if position == 'big_blind' or position == 'small_blind' and is_headsup == 0:
                 last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
                 if not isinstance(last_opponnet_action, str):
                     last_opponnet_action = last_opponnet_action['opponent_action']
             else:
+                print('err')
                 last_opponnet_action = None
             insertIntoLogSession(screen_area, hand, position, stack, is_headsup=is_headsup, last_opponent_action=last_opponnet_action)
             session = [hand, stack, position, '', is_headsup]

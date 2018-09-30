@@ -46,6 +46,7 @@ def checkIsActionButtons(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
     reaction_to_opponent = getReactionToOpponent(row)
     last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
+    print('checkIsActionButtons')
     if not isinstance(last_opponnet_action, str):
         bb_count = last_opponnet_action['alias']
         if reaction_to_opponent == 'fold' and bb_count == '1':
@@ -65,6 +66,8 @@ def checkIsFold(screen_area, image_name, folder_name):
     last_stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
     current_stack.saveStackImage(screen_area, image_name, folder_name)
     cur_stack = current_stack.searchCurrentStack(screen_area)
+    print('last ' + last_stack)
+    print('cur ' + cur_stack)
     if int(last_stack) != int(cur_stack):
         print('open-end')
         session_log.updateActionLogSession('end', screen_area)

@@ -15,11 +15,15 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name):
         if checkPair(hand) or checkFlushDraw(hand) or checkStraightDraw(hand):
             keyboard.press('q')
             session_log.updateActionLogSession('push', str(screen_area))
+            return
         elif session_log.getLastRowActionFromLogSession(str(screen_area)) == 'open':
             keyboard.press('o')
             session_log.updateActionLogSession('cbet', str(screen_area))
+            return
+        else:
+            keyboard.press('f')
+            session_log.updateActionLogSession('fold', str(screen_area))
     else:
-        print(hand)
         return False
 
 def checkStraightDraw(hand):
