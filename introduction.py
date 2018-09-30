@@ -66,10 +66,7 @@ def checkIsFold(screen_area, image_name, folder_name):
     last_stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
     current_stack.saveStackImage(screen_area, image_name, folder_name)
     cur_stack = current_stack.searchCurrentStack(screen_area)
-    print('last ' + last_stack)
-    print('cur ' + cur_stack)
     if int(last_stack) != int(cur_stack):
-        print('open-end')
         session_log.updateActionLogSession('end', screen_area)
         return True
 

@@ -71,6 +71,7 @@ def checkConditionsBeforeInsert(hand, screen_area):
         if hand != '' and hand != session[0]['hand']:
             stack = str(current_stack.searchCurrentStack(str(screen_area)))
             position = str(determine_position.seacrhBlindChips(screen_area))
+            print(stack)
             if position != 'button' and headsup.searchOpponentCard(str(screen_area)):
                 is_headsup = 1
             else:
@@ -80,7 +81,6 @@ def checkConditionsBeforeInsert(hand, screen_area):
                 if not isinstance(last_opponnet_action, str):
                     last_opponnet_action = last_opponnet_action['opponent_action']
             else:
-                print('err')
                 last_opponnet_action = None
             insertIntoLogSession(screen_area, hand, position, stack, is_headsup=is_headsup, last_opponent_action=last_opponnet_action)
             session = [hand, stack, position, '', is_headsup]
