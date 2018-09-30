@@ -81,7 +81,7 @@ def saveFlopImage(screen_area,image_name,folder_name):
         # Сохраняем изображение на жестком диске
         image.save(image_path, "PNG")
         # Сохраняем инфо в бд
-        image_processing.insertImagePathIntoDb(image_path, value['screen_area'])
+        image_processing.insertImagePathIntoDb(image_path, str(value['screen_area']))
 
 def getFlopData(screen_area):
     db = postgresql.open(db_conf.connectionString())

@@ -44,7 +44,7 @@ def checkIsFlop(screen_area):
 #Проверка, есть ли кнопка "Raise To"
 def checkIsActionButtons(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
-    reaction_to_opponent = getReactionToOpponent(row)
+    reaction_to_opponent = getReactionToOpponent(row)[0]['reaction_to_opponent']
     last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
     print('checkIsActionButtons')
     if not isinstance(last_opponnet_action, str):

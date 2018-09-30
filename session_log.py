@@ -32,8 +32,8 @@ def updateActionLogSession(action, screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
         db.query("UPDATE session_log SET action=yourvalue FROM "
-                "(SELECT id, '" + action + "' AS yourvalue FROM session_log where screen_area = " + screen_area +
-                " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id ")
+                        "(SELECT id, '" + action + "' AS yourvalue FROM session_log where screen_area = " + screen_area + " ORDER BY id desc limit 1) AS t1 "
+                                                                                                                          "WHERE session_log.id=t1.id ")
     except Exception as e:
         error_log.errorLog('updateActionLogSession' + action, str(e))
         print(e)
@@ -71,7 +71,6 @@ def checkConditionsBeforeInsert(hand, screen_area):
         if hand != '' and hand != session[0]['hand']:
             stack = str(current_stack.searchCurrentStack(str(screen_area)))
             position = str(determine_position.seacrhBlindChips(screen_area))
-            print(stack)
             if position != 'button' and headsup.searchOpponentCard(str(screen_area)):
                 is_headsup = 1
             else:

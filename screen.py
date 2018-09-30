@@ -30,7 +30,6 @@ def start():
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'])
                 hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4, 1)
-                # if hand != '':
                 # Сохраняем скрин блайндов для текущего окна
                 determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
                 # Сохраняем скрин стека для текущего окна
@@ -42,7 +41,7 @@ def start():
             # Если Если последняя строка для текущей области имеет статус open
             elif last_row_action in ['open', 'call', 'check']:
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
-                                         image_path, item['screen_area'], last_row_action)
+                                         image_path, str(item['screen_area']), last_row_action)
             # Если Если последняя строка для текущей области имеет статус flop
             elif last_row_action == 'flop':
                 hand = session_log.getLastRowFromLogSession(str(item['screen_area']))[0][0]
