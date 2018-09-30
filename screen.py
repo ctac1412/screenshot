@@ -23,10 +23,10 @@ def start():
         #перемещаем курсор на рабочую область
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
         if metka.seacrhBar(str(item['screen_area'])):
+            image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
             # Если последняя строка для текущей области имеет конечный статус
             last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
             if last_row_action in ['push', 'fold', 'end']:
-                image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'])
                 hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4, 1)
@@ -41,14 +41,15 @@ def start():
                     logic.getDecision(item['screen_area'])
             # Если Если последняя строка для текущей области имеет статус open
             elif last_row_action in ['open', 'call', 'check']:
-                introduction.actionAfterOpen(str(item['screen_area']), image_name, folder_name, last_row_action)
+                introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
+                                         image_path, item['screen_area'], last_row_action)
             # Если Если последняя строка для текущей области имеет статус flop
             elif last_row_action == 'flop':
                 hand = session_log.getLastRowFromLogSession(str(item['screen_area']))[0][0]
                 flop.makeFlopDecision(str(item['screen_area']), hand, image_name, folder_name)
             elif last_row_action == 'cbet':
                 keyboard.press('f')
-                session_log.updateActionLogSession('fold',str(item['screen_area']))
+                session_log.updateActionLogSession('fold', str(item['screen_area']))
             # Если статус null или не конечный
             else:
                 # Получаем руку из последней записи и нажимаем соответствующий хоткей. Обновляем action

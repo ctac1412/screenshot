@@ -11,9 +11,9 @@ import keyboard
 
 images_folder = "images/"
 
-def actionAfterOpen(screen_area, image_name, folder_name, action):
+def actionAfterOpen(x_coordinate, y_coordinate, width, height, image_path, screen_area, action):
     if action == 'open':
-        if checkIsFold(screen_area, image_name, folder_name): return
+        if checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
     if checkIsFlop(screen_area): return
     if checkIsActionButtons(screen_area): return
 
@@ -62,11 +62,11 @@ def checkIsActionButtons(screen_area):
 
 
 #Проверка, слелали ли противники фолд
-def checkIsFold(screen_area, image_name, folder_name):
-    last_stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
-    current_stack.saveStackImage(screen_area, image_name, folder_name)
-    cur_stack = current_stack.searchCurrentStack(screen_area)
-    if int(last_stack) != int(cur_stack):
+def checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path):
+    last_hand = session_log.getLastRowFromLogSession(str(screen_area))[0]['hand']
+    image_processing.imaging(x_coordinate, y_coordinate, width, height, image_path, str(screen_area))
+    cur_hand = image_processing.searchCards(str(screen_area), image_processing.getCards(), 4, 1)
+    if last_hand != cur_hand:
         session_log.updateActionLogSession('end', screen_area)
         return True
 
