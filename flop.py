@@ -1,7 +1,6 @@
 import image_processing
 import postgresql
 import db_conf
-from PIL import Image, ImageGrab
 import keyboard
 import session_log
 
@@ -63,7 +62,7 @@ def checkPair(hand):
     doubles = {element: count for element, count in counter.items() if count > 1}
     if len(doubles) > 0:
         double_element = list(doubles.keys())[0]
-        if double_element in [hand[0], hand[1]] and ranks.index(double_element) == max(ts):
+        if double_element in [hand[0], hand[1]] and ranks.index(double_element) != min(ts):
             return True
     return False
 
