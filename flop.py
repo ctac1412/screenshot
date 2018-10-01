@@ -77,7 +77,7 @@ def saveFlopImage(screen_area,image_name,folder_name):
     for value in getFlopData(str(getFlopArea(str(screen_area)))):
         image_path = folder_name + "/" + str(getFlopArea(str(screen_area))) + "/" + image_name + ".png"
         # Делаем скрин указанной области экрана
-        image_processing.imaging(value['x_coordinate'], value['y_coordinate'], value['width'], value['height']), image_path, str(value['screen_area'])
+        image_processing.imaging(value['x_coordinate'], value['y_coordinate'], value['width'], value['height'], image_path, value['screen_area'])
 
 def getFlopData(screen_area):
     db = postgresql.open(db_conf.connectionString())

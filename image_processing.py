@@ -34,11 +34,11 @@ def searchCards(screen_area, deck, list_length, iteration_count):
     return hand
 
 #Вставка пути к изображению в бд
-def insertImagePathIntoDb(image_path,screen_area):
+def insertImagePathIntoDb(image_path, screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
         insert = db.prepare("insert into screenshots (image_path,screen_area) values($1,$2)")
-        insert(image_path, screen_area)
+        insert(image_path, int(screen_area))
     except Exception as e:
         print('insertImagePathIntoDb ' + str(e))
         error_log.errorLog('insertImagePathIntoDb',str(e))
