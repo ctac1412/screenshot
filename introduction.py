@@ -3,7 +3,6 @@ import datetime
 import math
 import time
 import session_log
-import current_stack
 import logic
 import postgresql
 import db_conf

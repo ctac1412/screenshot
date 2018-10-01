@@ -14,7 +14,7 @@ def seacrhBar(screen_area):
     path = image_processing.getLastScreen(getBarArea(str(screen_area)))
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
-    template = cv2.imread('bar/bar.png', 0)
+    template = cv2.imread('bar/red_mark.png', 0)
 
     res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
     threshold = 0.98
@@ -28,7 +28,7 @@ def seacrhBar(screen_area):
 #Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getBarArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select bar_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
+    data = db.query("select action_button_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
     return data[0]['bar_area']
 
 def getBarData(screen_area):
@@ -44,5 +44,5 @@ def saveBarImage(screen_area, image_name, folder_name):
             image_path = folder_name + "/" + str(getBarArea(str(screen_area))) + "/" + image_name + ".png"
             image_processing.imaging(value['x_coordinate'], value['y_coordinate'], value['width'], value['height'], image_path, value['screen_area'])
     except Exception as e:
-        error_log.errorLog('saveBlindImage', str(e))
+        error_log.errorLog('red_mark', str(e))
         print(e)
