@@ -139,6 +139,18 @@ def searchLastOpponentAction(screen_area):
             return item
     return 'push'
 
+def checkIsCbetAvailable(screen_area):
+    element_area = introduction.saveElement(screen_area, 'limp_area')
+    threshold = 0.98
+    path = getLastScreen(element_area)
+    path = path[0]['image_path']
+    img_rgb = cv2.imread(path, 0)
+    template = cv2.imread('action_buttons/check.png', 0)
+    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+    loc = np.where(res >= threshold)
+    if len(loc) > 0:
+        return True
+
 
 def getCurrentCards(condition):
     db = postgresql.open(db_conf.connectionString())

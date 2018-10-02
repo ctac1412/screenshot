@@ -3,6 +3,7 @@ import postgresql
 import db_conf
 import keyboard
 import session_log
+import error_log
 
 def makeFlopDecision(screen_area, hand, image_name, folder_name):
     saveFlopImage(str(screen_area), image_name, folder_name)
@@ -15,8 +16,10 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name):
             session_log.updateActionLogSession('push', str(screen_area))
             return
         elif session_log.getLastRowActionFromLogSession(str(screen_area)) == 'open':
-            keyboard.press('o')
-            session_log.updateActionLogSession('cbet', str(screen_area))
+            stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
+            if image_processing.checkIsCbetAvailable(str(screen_area)) and stack > 12:
+                keyboard.press('o')
+                session_log.updateActionLogSession('cbet', str(screen_area))
             return
         else:
             keyboard.press('f')
@@ -31,10 +34,15 @@ def checkStraightDraw(hand):
 
     for val in hand:
         arr.append(collection.index(val))
+    arr = list(set(arr))
     arr = sorted(arr)
-
-    if int(arr[4]) - int(arr[1]) == 3 or int(arr[3]) - int(arr[0]) == 3:
-        return True
+    try:
+        if int(arr[-1]) - int(arr[1]) == 3 or int(arr[3]) - int(arr[0]) == 3:
+            return True
+    except Exception as e:
+        error_log.errorLog('checkStraightDraw', str(e))
+        print(e)
+        return False
 
 def checkFlushDraw(hand):
     hand = hand[1] + hand[3] + hand[5] + hand[7] + hand[9]
