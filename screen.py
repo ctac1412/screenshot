@@ -26,6 +26,7 @@ def start():
             image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
             # Если последняя строка для текущей области имеет конечный статус
             last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
+            is_flop = session_log.getLastIsFlopLogSession(str(item['screen_area']))
             if last_row_action in ['push', 'fold', 'end']:
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'])
@@ -38,14 +39,14 @@ def start():
                 condition = session_log.checkConditionsBeforeInsert(hand, (item['screen_area']))
                 if condition is not False:
                     logic.getDecision(item['screen_area'])
+            # Если Если последняя строка для текущей области имеет статус flop
+            elif is_flop == 1 and last_row_action not in ['push', 'fold', 'end', 'cbet']:
+                hand = session_log.getLastRowFromLogSession(str(item['screen_area']))[0][0]
+                flop.makeFlopDecision(str(item['screen_area']), hand, image_name, folder_name)
             # Если Если последняя строка для текущей области имеет статус open
             elif last_row_action in ['open', 'call', 'check']:
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, str(item['screen_area']), last_row_action)
-            # Если Если последняя строка для текущей области имеет статус flop
-            elif last_row_action == 'flop':
-                hand = session_log.getLastRowFromLogSession(str(item['screen_area']))[0][0]
-                flop.makeFlopDecision(str(item['screen_area']), hand, image_name, folder_name)
             elif last_row_action == 'cbet':
                 keyboard.press('f')
                 session_log.updateActionLogSession('fold', str(item['screen_area']))

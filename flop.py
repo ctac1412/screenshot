@@ -5,6 +5,7 @@ import keyboard
 import session_log
 
 def makeFlopDecision(screen_area, hand, image_name, folder_name):
+    print('flop_make_d')
     saveFlopImage(str(screen_area), image_name, folder_name)
     flop_area = getFlopArea(str(screen_area))
     flop_card = image_processing.searchCards(str(flop_area), image_processing.getCards(), 6, 4)
@@ -16,14 +17,16 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name):
             session_log.updateActionLogSession('push', str(screen_area))
             return
         elif session_log.getLastRowActionFromLogSession(str(screen_area)) == 'open':
+            print('flop_cbet')
             keyboard.press('o')
             session_log.updateActionLogSession('cbet', str(screen_area))
             return
         else:
+            print('flop_fold')
             keyboard.press('f')
             session_log.updateActionLogSession('fold', str(screen_area))
     else:
-        return False
+        session_log.updateActionLogSession('end', str(screen_area))
 
 def checkStraightDraw(hand):
     hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]

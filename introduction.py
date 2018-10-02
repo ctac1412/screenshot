@@ -37,7 +37,7 @@ def checkIsFlop(screen_area):
     element_area = saveElement(screen_area, 'green_board_area')
     if image_processing.searchElement(element_area, ['green_board'], 'green_board/') is False:
         print('flop')
-        session_log.updateActionLogSession('flop', screen_area)
+        session_log.updateIsFlopLogSession(screen_area)
         return True
 
 #Проверка, есть ли кнопка "Raise To"
@@ -45,7 +45,6 @@ def checkIsActionButtons(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
     reaction_to_opponent = getReactionToOpponent(row)[0]['reaction_to_opponent']
     last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
-    print('checkIsActionButtons')
     if not isinstance(last_opponnet_action, str):
         bb_count = last_opponnet_action['alias']
         if reaction_to_opponent == 'fold' and bb_count == '1':

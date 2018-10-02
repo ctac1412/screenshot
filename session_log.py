@@ -6,7 +6,7 @@ import determine_position
 import headsup
 import image_processing
 
-#Создание новой записи в таблицу session_log
+# Создание новой записи в таблицу session_log
 def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0', action='', is_headsup=0, last_opponent_action=None):
     try:
         db = postgresql.open(db_conf.connectionString())
@@ -27,7 +27,7 @@ def getLastRowActionFromLogSession(screen_area):
         error_log.errorLog('getLastRowActionFromLogSession', str(e))
         print(e)
 
-#Обновление значения поля action последней записи для текущей области экрана
+# Обновление значения поля action последней записи для текущей области экрана
 def updateActionLogSession(action, screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
@@ -38,7 +38,18 @@ def updateActionLogSession(action, screen_area):
         error_log.errorLog('updateActionLogSession' + action, str(e))
         print(e)
 
-#Обновление значения поля current_stack
+def getLastIsFlopLogSession(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query(
+        "select is_flop from session_log where screen_area = " + screen_area + " order by id desc limit 1")
+    return data[0]['is_flop']
+
+def updateIsFlopLogSession(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    db.query("UPDATE session_log SET is_flop = 1 FROM "
+             "(SELECT id FROM session_log where screen_area = " + screen_area + "ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")
+
+# Обновление значения поля current_stack
 def updateCurrentStackLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
@@ -51,7 +62,7 @@ def updateCurrentStackLogSession(screen_area):
 
 
 
-#Получаем руку последней записи для текущей области экрана
+#П олучаем руку последней записи для текущей области экрана
 def getLastRowFromLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
@@ -64,7 +75,7 @@ def getLastRowFromLogSession(screen_area):
         error_log.errorLog('getLastHandFromLogSession', str(e))
         print(e)
 
-#Проверка условий перед созданием новой записи
+# Проверка условий перед созданием новой записи
 def checkConditionsBeforeInsert(hand, screen_area):
     try:
         session = getLastRowFromLogSession(str(screen_area))

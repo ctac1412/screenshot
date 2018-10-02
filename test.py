@@ -1,3 +1,3 @@
-import bar
+import flop
 
-print(bar.seacrhBar('3'))
+print(flop.checkStraightDraw('3h2sTc2h5c'))

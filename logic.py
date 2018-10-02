@@ -64,6 +64,8 @@ def getActionFromPreflopChart(screen_area):
     if last_opponent_action is None:
         last_opponent_action = ' is null'
     else: last_opponent_action = " = '" + last_opponent_action + '\''
+    if stack == 7:
+        return 'push'
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(action) as action from preflop_chart "
                     "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
@@ -82,4 +84,6 @@ def convertStack(stack):
         stack = 13
     elif stack in range(7, 10):
         stack = 10
+    elif stack in range(0, 7):
+        stack = 7
     return stack
