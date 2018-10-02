@@ -26,7 +26,7 @@ def searchCurrentStack(screen_area):
     opponent_stack = searchOpponentStack(screen_area)
     if opponent_stack != 0:
         return opponent_stack
-    return 36
+    return 25
 
 def searchOpponentStack(screen_area):
     try:
@@ -85,7 +85,7 @@ def getOpponentStackArea(screen_area):
 #Получение путей к изображениям шаблонов стеков
 def getStackImages():
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path) as image_path, stack_value from stack")
+    data = db.query("select trim(image_path) as image_path, stack_value from stack where active = 1")
     return data
 
 #Получение путей к конкретному изображению

@@ -6,6 +6,7 @@ import session_log
 import time
 import math
 import current_stack as cur_stack
+import sklansky_chubukov
 
 images_folder = "images/"
 
@@ -65,7 +66,11 @@ def getActionFromPreflopChart(screen_area):
         last_opponent_action = ' is null'
     else: last_opponent_action = " = '" + last_opponent_action + '\''
     if stack == 7:
-        return 'push'
+        push_stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
+        if stack <= push_stack_value:
+            return 'push'
+        else:
+            return 'fold'
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(action) as action from preflop_chart "
                     "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
