@@ -36,7 +36,6 @@ def checkIsLimpAvailable(screen_area, element):
 def checkIsFlop(screen_area):
     element_area = saveElement(screen_area, 'green_board_area')
     if image_processing.searchElement(element_area, ['green_board'], 'green_board/') is False:
-        print('flop')
         session_log.updateIsFlopLogSession(screen_area)
         return True
 
