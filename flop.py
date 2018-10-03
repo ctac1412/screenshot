@@ -38,7 +38,10 @@ def checkStraightDraw(hand):
     arr = sorted(arr)
 
     try:
-        if int(arr[-1]) - int(arr[1]) == 3 or int(arr[3]) - int(arr[0]) == 3:
+        if len(arr) > 4 and int(arr[-1]) - int(arr[1]) == 3 or int(arr[3]) - int(arr[0]) == 3:
+            print(arr)
+            return True
+        elif int(arr[3]) - int(arr[0]) == 3:
             return True
     except Exception as e:
         error_log.errorLog('checkStraightDraw', str(e))

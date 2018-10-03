@@ -49,7 +49,7 @@ def checkIsActionButtons(screen_area):
     last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
     if not isinstance(last_opponnet_action, str):
         bb_count = last_opponnet_action['alias']
-        if reaction_to_opponent == 'fold' and bb_count == '1':
+        if reaction_to_opponent == 'fold' and bb_count == '1' and int(row[0]['current_stack']) > 9:
             reaction_to_opponent = 'call'
     if reaction_to_opponent == 'push':
         keyboard.press('q')
