@@ -17,7 +17,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name):
             return
         elif session_log.getLastRowActionFromLogSession(str(screen_area)) == 'open':
             stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
-            if image_processing.checkIsCbetAvailable(str(screen_area)) and stack > 12:
+            if image_processing.checkIsCbetAvailable(str(screen_area)) and int(stack) > 12:
                 keyboard.press('o')
                 session_log.updateActionLogSession('cbet', str(screen_area))
             return
@@ -36,6 +36,7 @@ def checkStraightDraw(hand):
         arr.append(collection.index(val))
     arr = list(set(arr))
     arr = sorted(arr)
+
     try:
         if int(arr[-1]) - int(arr[1]) == 3 or int(arr[3]) - int(arr[0]) == 3:
             return True
@@ -69,7 +70,8 @@ def checkPair(hand):
     doubles = {element: count for element, count in counter.items() if count > 1}
     if len(doubles) > 0:
         double_element = list(doubles.keys())[0]
-        if double_element in [hand[0], hand[1]] and ranks.index(double_element) != min(ts):
+        if double_element in [hand[0], hand[1]] and ranks.index(double_element) != min(ts) or \
+                list(doubles.values())[0] > 2 and double_element in [hand[0], hand[1]]:
             return True
     return False
 

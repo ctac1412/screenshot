@@ -148,7 +148,7 @@ def checkIsCbetAvailable(screen_area):
     template = cv2.imread('action_buttons/check.png', 0)
     res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
     loc = np.where(res >= threshold)
-    if len(loc) > 0:
+    if len(loc[0]) > 0:
         return True
 
 
