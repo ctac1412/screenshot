@@ -5,7 +5,7 @@ import keyboard
 import session_log
 import error_log
 
-def makeFlopDecision(screen_area, hand, image_name, folder_name):
+def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
     saveFlopImage(str(screen_area), image_name, folder_name)
     flop_area = getFlopArea(str(screen_area))
     flop_card = image_processing.searchCards(str(flop_area), image_processing.getCards(), 6, 4)
@@ -15,8 +15,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name):
             keyboard.press('q')
             session_log.updateActionLogSession('push', str(screen_area))
             return
-        elif session_log.getLastRowActionFromLogSession(str(screen_area)) == 'open':
-            # stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
+        elif action == 'open' and stack > 11:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
                 keyboard.press('o')
                 session_log.updateActionLogSession('cbet', str(screen_area))

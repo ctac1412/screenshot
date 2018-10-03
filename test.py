@@ -8,4 +8,8 @@ import image_processing
 #     print(1)
 
 # row = session_log.getLastRowFromLogSession('3')
-print(session_log.getLastRowFromLogSession('3')[0]['current_stack'])
+last_row = session_log.getLastRowFromLogSession('3')
+hand = last_row[0][0]
+stack = last_row[0][1]
+action = last_row[0][3]
+print(action)
