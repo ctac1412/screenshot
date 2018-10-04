@@ -15,7 +15,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
             keyboard.press('q')
             session_log.updateActionLogSession('push', str(screen_area))
             return
-        elif action == 'open' and stack > 11:
+        elif action == 'open' and int(stack) > 11:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
                 keyboard.press('o')
                 session_log.updateActionLogSession('cbet', str(screen_area))
@@ -27,6 +27,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
             keyboard.press('f')
             session_log.updateActionLogSession('fold', str(screen_area))
     else:
+        keyboard.press('f')
         session_log.updateActionLogSession('end', str(screen_area))
 
 def checkStraightDraw(hand):
@@ -40,13 +41,13 @@ def checkStraightDraw(hand):
     arr = sorted(arr)
 
     try:
-        if len(arr) > 4 and int(arr[-1]) - int(arr[1]) == 3 or int(arr[3]) - int(arr[0]) == 3:
+        if len(arr) > 4 and (int(arr[-1]) - int(arr[1]) == 3 or int(arr[3]) - int(arr[0]) == 3):
             return True
         elif int(arr[3]) - int(arr[0]) == 3:
             return True
     except Exception as e:
-        error_log.errorLog('checkStraightDraw', str(e))
-        print(e)
+        error_log.errorLog('checkStraightDraw', str(e) + ' ' + hand)
+        print(str(e) + hand)
         return False
 
 def checkFlushDraw(hand):

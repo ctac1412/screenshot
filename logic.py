@@ -67,6 +67,7 @@ def getActionFromPreflopChart(screen_area):
     else: last_opponent_action = " = '" + last_opponent_action + '\''
     if stack == 7:
         push_stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
+        print(push_stack_value)
         if int(stack) <= push_stack_value:
             return 'push'
         else:
