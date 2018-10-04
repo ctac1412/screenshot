@@ -19,9 +19,11 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
             if image_processing.checkIsCbetAvailable(str(screen_area)):
                 keyboard.press('o')
                 session_log.updateActionLogSession('cbet', str(screen_area))
+                return
             else:
                 keyboard.press('f')
                 session_log.updateActionLogSession('fold', str(screen_area))
+                return
             return
         else:
             keyboard.press('f')
