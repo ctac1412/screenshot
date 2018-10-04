@@ -39,17 +39,10 @@ def start():
                 condition = session_log.checkConditionsBeforeInsert(hand, (item['screen_area']))
                 if condition is not False:
                     logic.getDecision(item['screen_area'])
-            # Если Если последняя строка для текущей области имеет статус flop
-            elif is_flop == 1 and last_row_action not in ['push', 'fold', 'end', 'cbet']:
-                last_row = session_log.getLastRowFromLogSession(str(item['screen_area']))
-                hand = last_row[0][0]
-                stack = last_row[0][1]
-                action = last_row[0][3]
-                flop.makeFlopDecision(str(item['screen_area']), hand, image_name, folder_name, stack, action)
             # Если Если последняя строка для текущей области имеет статус open
             elif last_row_action in ['open', 'call', 'check']:
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
-                                         image_path, str(item['screen_area']), last_row_action)
+                                         image_path, str(item['screen_area']), last_row_action, image_name, folder_name)
             elif last_row_action == 'cbet':
                 keyboard.press('f')
                 session_log.updateActionLogSession('fold', str(item['screen_area']))

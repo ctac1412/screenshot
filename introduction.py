@@ -7,13 +7,14 @@ import logic
 import postgresql
 import db_conf
 import keyboard
+import flop
 
 images_folder = "images/"
 
-def actionAfterOpen(x_coordinate, y_coordinate, width, height, image_path, screen_area, action):
+def actionAfterOpen(x_coordinate, y_coordinate, width, height, image_path, screen_area, action, image_name, folder_name,):
     if action == 'open':
         if checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
-    if checkIsFlop(screen_area): return
+    if checkIsFlop(screen_area, image_name, folder_name,): return
     if checkIsActionButtons(screen_area): return
 
 def saveElement(screen_area, element_name):
@@ -33,10 +34,14 @@ def checkIsLimpAvailable(screen_area, element):
     return False
 
 #Проверка, есть ли карты на столе
-def checkIsFlop(screen_area):
+def checkIsFlop(screen_area, image_name, folder_name,):
     element_area = saveElement(screen_area, 'green_board_area')
     if image_processing.searchElement(element_area, ['green_board'], 'green_board/') is False:
-        session_log.updateIsFlopLogSession(screen_area)
+        last_row = session_log.getLastRowFromLogSession(str(screen_area))
+        hand = last_row[0][0]
+        stack = last_row[0][1]
+        action = last_row[0][3]
+        flop.makeFlopDecision(str(screen_area), hand, image_name, folder_name, stack, action)
         return True
 
 #Проверка, есть ли кнопка "Raise To"
