@@ -40,27 +40,31 @@ def checkStraightDraw(hand):
         arr.append(collection.index(val))
     arr = list(set(arr))
     arr = sorted(arr)
-
-    try:
-        if len(arr) > 4 and (int(arr[-1]) - int(arr[1]) == 3 or int(arr[3]) - int(arr[0]) == 3):
+    arr_length = len(arr)
+    if arr_length >= 4:
+        first = arr[:-1]
+        second = arr[1:]
+        if first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)):
             return True
-        elif int(arr[3]) - int(arr[0]) == 3:
-            return True
-    except Exception as e:
-        error_log.errorLog('checkStraightDraw', str(e) + ' ' + hand)
-        print(str(e) + hand)
+        else:
+            return False
+    else:
         return False
 
 def checkFlushDraw(hand):
     hand = hand[1] + hand[3] + hand[5] + hand[7] + hand[9]
-    counter = {}
-
-    for item in hand:
-        counter[item] = counter.get(item, 0) + 1
-
-    doubles = {element: count for element, count in counter.items() if count > 3}
-    if len(doubles) > 0:
+    suit_count = len(set(hand))
+    if suit_count == 1:
         return True
+    elif suit_count == 2:
+        counter = {}
+        for item in hand:
+            counter[item] = counter.get(item, 0) + 1
+        doubles = {element: count for element, count in counter.items() if count > 3}
+        if len(doubles) > 0:
+            return True
+    else:
+        return False
 
 def checkPair(hand):
     flop = [hand[4], hand[6], hand[8]]
