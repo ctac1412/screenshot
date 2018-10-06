@@ -35,7 +35,6 @@ def checkStraightDraw(hand):
     hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
     collection = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
     arr = []
-
     for val in hand:
         arr.append(collection.index(val))
     arr = list(set(arr))
