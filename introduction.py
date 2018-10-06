@@ -49,6 +49,8 @@ def checkIsActionButtons(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
     try:
         reaction_to_opponent = getReactionToOpponent(row)[0]['reaction_to_opponent']
+        if not isinstance(reaction_to_opponent, str):
+            reaction_to_opponent = 'fold'
     except:
         reaction_to_opponent = 'fold'
     last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
@@ -70,7 +72,7 @@ def checkIsActionButtons(screen_area):
 def checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path):
     last_hand = session_log.getLastRowFromLogSession(str(screen_area))[0]['hand']
     image_processing.imaging(x_coordinate, y_coordinate, width, height, image_path, str(screen_area))
-    cur_hand = image_processing.searchCards(str(screen_area), image_processing.getCards(), 4, 1)
+    cur_hand = image_processing.searchCards(str(screen_area), image_processing.getCards(), 4)
     if last_hand != cur_hand:
         session_log.updateActionLogSession('end', screen_area)
         return True

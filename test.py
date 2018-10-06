@@ -1,5 +1,12 @@
 import time
 import flop
+import session_log
+
+# hand = 'Qs6hJcAdKh'
+last_row = session_log.getLastRowFromLogSession(str(2))
+hand = last_row[0][0]
+stack = last_row[0][1]
+action = last_row[0][3]
 
 def timing(f):
     def wrap(*args):
@@ -10,3 +17,7 @@ def timing(f):
 
         return ret
     return wrap
+
+# timing(flop.makeFlopDecision('2', hand, 'test','test',stack,action))
+# print(hand)
+flop.makeFlopDecision('1', hand, 'test','test',stack,action)

@@ -9,7 +9,6 @@ import mouse
 import determine_position
 import current_stack
 import introduction
-import flop
 import bar as metka
 
 images_folder = "images/"
@@ -30,7 +29,7 @@ def start():
             if last_row_action in ['push', 'fold', 'end']:
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'])
-                hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4, 1)
+                hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4)
                 # Сохраняем скрин блайндов для текущего окна
                 determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
                 # Сохраняем скрин стека для текущего окна

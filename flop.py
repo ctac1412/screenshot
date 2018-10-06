@@ -8,7 +8,7 @@ import error_log
 def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
     saveFlopImage(str(screen_area), image_name, folder_name)
     flop_area = getFlopArea(str(screen_area))
-    flop_card = image_processing.searchCards(str(flop_area), image_processing.getCards(), 6, 4)
+    flop_card = image_processing.searchCards(str(flop_area), image_processing.getFlopCards(), 6)
     if len(flop_card) == 6:
         hand = hand + flop_card
         if checkPair(hand) or checkFlushDraw(hand) or checkStraightDraw(hand):
@@ -27,6 +27,15 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
         else:
             keyboard.press('f')
             session_log.updateActionLogSession('fold', str(screen_area))
+    elif action == 'open' and int(stack) > 11:
+        if image_processing.checkIsCbetAvailable(str(screen_area)):
+            keyboard.press('o')
+            session_log.updateActionLogSession('cbet', str(screen_area))
+            return
+        else:
+            keyboard.press('f')
+            session_log.updateActionLogSession('fold', str(screen_area))
+            return
     else:
         keyboard.press('f')
         session_log.updateActionLogSession('end', str(screen_area))
