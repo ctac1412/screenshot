@@ -25,7 +25,6 @@ def start():
             image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
             # Если последняя строка для текущей области имеет конечный статус
             last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
-            is_flop = session_log.getLastIsFlopLogSession(str(item['screen_area']))
             if last_row_action in ['push', 'fold', 'end']:
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'])
@@ -43,6 +42,8 @@ def start():
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, str(item['screen_area']), last_row_action, image_name, folder_name)
             elif last_row_action == 'cbet':
+                if introduction.checkIsFold(str(item['screen_area']), item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_name):
+                    return
                 keyboard.press('f')
                 session_log.updateActionLogSession('fold', str(item['screen_area']))
             # Если статус null или не конечный
