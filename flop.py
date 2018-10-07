@@ -6,15 +6,28 @@ import session_log
 import error_log
 
 def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
-    saveFlopImage(str(screen_area), image_name, folder_name)
-    flop_area = getFlopArea(str(screen_area))
-    flop_card = image_processing.searchCards(str(flop_area), image_processing.getFlopCards(), 6)
-    if len(flop_card) == 6:
-        hand = hand + flop_card
-        if checkPair(hand) or checkFlushDraw(hand) or checkStraightDraw(hand):
-            keyboard.press('q')
-            session_log.updateActionLogSession('push', str(screen_area))
-            return
+    try:
+        saveFlopImage(str(screen_area), image_name, folder_name)
+        flop_area = getFlopArea(str(screen_area))
+        flop_card = image_processing.searchCards(str(flop_area), image_processing.getFlopCards(), 6)
+        if len(flop_card) == 6:
+            hand = hand + flop_card
+            if checkPair(hand) or checkFlushDraw(hand) or checkStraightDraw(hand):
+                keyboard.press('q')
+                session_log.updateActionLogSession('push', str(screen_area))
+                return
+            elif action == 'open' and int(stack) > 11:
+                if image_processing.checkIsCbetAvailable(str(screen_area)):
+                    keyboard.press('o')
+                    session_log.updateActionLogSession('cbet', str(screen_area))
+                    return
+                else:
+                    keyboard.press('f')
+                    session_log.updateActionLogSession('fold', str(screen_area))
+                    return
+            else:
+                keyboard.press('f')
+                session_log.updateActionLogSession('fold', str(screen_area))
         elif action == 'open' and int(stack) > 11:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
                 keyboard.press('o')
@@ -26,19 +39,10 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
                 return
         else:
             keyboard.press('f')
-            session_log.updateActionLogSession('fold', str(screen_area))
-    elif action == 'open' and int(stack) > 11:
-        if image_processing.checkIsCbetAvailable(str(screen_area)):
-            keyboard.press('o')
-            session_log.updateActionLogSession('cbet', str(screen_area))
-            return
-        else:
-            keyboard.press('f')
-            session_log.updateActionLogSession('fold', str(screen_area))
-            return
-    else:
-        keyboard.press('f')
-        session_log.updateActionLogSession('end', str(screen_area))
+            session_log.updateActionLogSession('end', str(screen_area))
+    except Exception as e:
+        error_log.errorLog('makeFlopDecision' + action, str(e))
+        print(e)
 
 def checkStraightDraw(hand):
     hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
