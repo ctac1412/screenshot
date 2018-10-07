@@ -5,7 +5,7 @@ import os
 import datetime
 import error_log
 import db_conf
-from PIL import Image, ImageGrab
+from PIL import ImageGrab
 import introduction
 
 images_folder = "images/"
@@ -30,7 +30,6 @@ def searchCards(screen_area, deck, list_length):
             print(e)
     return hand
 
-#Вставка пути к изображению в бд
 def insertImagePathIntoDb(image_path, screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
@@ -40,8 +39,6 @@ def insertImagePathIntoDb(image_path, screen_area):
         print('insertImagePathIntoDb ' + str(e))
         error_log.errorLog('insertImagePathIntoDb',str(e))
 
-
-#Получение информации об области экрана, на которой будет делаться скриншот
 def getScreenData():
     try:
         db = postgresql.open(db_conf.connectionString())
@@ -51,7 +48,6 @@ def getScreenData():
     except Exception as e:
         error_log.errorLog('getScreenData',str(e))
 
-#Проверка на существование папок
 def checkIsFolderExist():
     folder_name = images_folder + str(datetime.datetime.now().date())
     if not os.path.exists(str(folder_name)):
@@ -63,13 +59,11 @@ def checkIsFolderExist():
         if not os.path.exists(str(folder_name) + "/" + str(value['screen_area'])):
             os.makedirs(str(folder_name) + "/" + str(value['screen_area']))
 
-#Получение путей к изображениям шаблонов карт
 def getCards():
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards")
     return data
 
-#Получение путей к изображениям шаблонов карт флопа
 def getFlopCards():
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path) as image_path,card,suit,trim(alias) as alias from flop_cards")
@@ -81,13 +75,11 @@ def getActionsButtons():
                     " from opponent_last_action")
     return data
 
-#Получение последнего скрина для текущей области экрана
 def getLastScreen(screen_area, limit='1'):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " + str(screen_area) + " order by id desc limit " + limit)
     return data
 
-#Получение инфа для поиска элемента на изображении
 def getUIButtonData(alias):
     try:
         db = postgresql.open(db_conf.connectionString())
@@ -98,7 +90,6 @@ def getUIButtonData(alias):
         error_log.errorLog('getUIButtonData',str(e))
         print(e)
 
-# Делаем скрин указанной области экрана
 def madeScreenshot(x_coordinate, y_coordinate, width, height):
     image = ImageGrab.grab(bbox=(x_coordinate, y_coordinate, width, height))
     return image
@@ -163,4 +154,5 @@ def checkCurrentHand(screen_area, hand):
     deck = getCurrentCards(current_hand)
     if len(searchCards(screen_area, deck, 4)) == 4:
         return True
-    else: return False
+    else:
+        return False

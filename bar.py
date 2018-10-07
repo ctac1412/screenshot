@@ -25,7 +25,6 @@ def seacrhBar(screen_area):
 
     return False
 
-#Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getBarArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select action_btn_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")

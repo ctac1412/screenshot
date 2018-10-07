@@ -1,7 +1,6 @@
 import threading, tkinter, time
 import screen
 import image_processing
-from tkinter import *
 import postgresql
 import db_conf
 
@@ -24,23 +23,22 @@ class Window(tkinter.Tk, threading.Thread):
         tkinter.Button(text='Exit', command=lambda: self.destroy()).grid(row=1, column=3)
         tkinter.Button(text='Update', command=lambda:updateCurrentStackLogSession(change())).grid(row=5, column=1)
 
-        self.first = tkinter.IntVar()  # Создаем переменную Tk, записываем как свойство объекта, чтобы потом можно было поулучить к ней доступ
+        self.first = tkinter.IntVar()
         tkinter.Checkbutton(text="1", variable=self.first, onvalue=1, offvalue=0).grid(row=3,
-                                                                                       column=1)  # Создаем Checkbutton, привязываем переменную
-        self.second = tkinter.IntVar()  # Создаем переменную Tk, записываем как свойство объекта, чтобы потом можно было поулучить к ней доступ
+                                                                                       column=1)
+        self.second = tkinter.IntVar()
         tkinter.Checkbutton(text="2", variable=self.second, onvalue=1, offvalue=0).grid(row=3,
-                                                                                       column=2)  # Создаем Checkbutton, привязываем переменную
-        self.third = tkinter.IntVar()  # Создаем переменную Tk, записываем как свойство объекта, чтобы потом можно было поулучить к ней доступ
+                                                                                       column=2)
+        self.third = tkinter.IntVar()
         tkinter.Checkbutton(text="3", variable=self.third, onvalue=1, offvalue=0).grid(row=4,
-                                                                                       column=1)  # Создаем Checkbutton, привязываем переменную
-        self.fourth = tkinter.IntVar()  # Создаем переменную Tk, записываем как свойство объекта, чтобы потом можно было поулучить к ней доступ
+                                                                                       column=1)
+        self.fourth = tkinter.IntVar()
         tkinter.Checkbutton(text="4", variable=self.fourth, onvalue=1, offvalue=0).grid(row=4,
-                                                                                       column=2)  # Создаем Checkbutton, привязываем переменную
+                                                                                       column=2)
 
         # Потом бизнес-логика
 
         def getCurrenValue(screen_area):
-            # self.screen_area = screen_area
             db = postgresql.open(db_conf.connectionString())
             data = db.query("select active from screen_coordinates where screen_area = " + str(screen_area))
             return data[0]['active']

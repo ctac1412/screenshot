@@ -100,7 +100,6 @@ def checkPair(hand):
         return True
     return False
 
-#Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getFlopArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select flop_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
@@ -109,7 +108,6 @@ def getFlopArea(screen_area):
 def saveFlopImage(screen_area,image_name,folder_name):
     for value in getFlopData(str(getFlopArea(str(screen_area)))):
         image_path = folder_name + "/" + str(getFlopArea(str(screen_area))) + "/" + image_name + ".png"
-        # Делаем скрин указанной области экрана
         image_processing.imaging(value['x_coordinate'], value['y_coordinate'], value['width'], value['height'], image_path, value['screen_area'])
 
 def getFlopData(screen_area):

@@ -33,7 +33,6 @@ def checkIsLimpAvailable(screen_area, element):
         return True
     return False
 
-#Проверка, есть ли карты на столе
 def checkIsFlop(screen_area, image_name, folder_name,):
     element_area = saveElement(screen_area, 'green_board_area')
     if image_processing.searchElement(element_area, ['green_board'], 'green_board/') is False:
@@ -44,7 +43,6 @@ def checkIsFlop(screen_area, image_name, folder_name,):
         flop.makeFlopDecision(str(screen_area), hand, image_name, folder_name, stack, action)
         return True
 
-#Проверка, есть ли кнопка "Raise To"
 def checkIsActionButtons(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
     try:
@@ -66,9 +64,6 @@ def checkIsActionButtons(screen_area):
         keyboard.press('f')
     session_log.updateActionLogSession(reaction_to_opponent, str(screen_area))
 
-
-
-#Проверка, слелали ли противники фолд
 def checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path):
     last_hand = session_log.getLastRowFromLogSession(str(screen_area))[0]['hand']
     image_processing.imaging(x_coordinate, y_coordinate, width, height, image_path, str(screen_area))

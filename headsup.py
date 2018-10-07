@@ -3,7 +3,6 @@ import postgresql
 import image_processing
 import cv2
 import numpy as np
-import error_log
 import math
 import time
 import datetime
@@ -25,7 +24,8 @@ def searchOpponentCard(screen_area):
                 check_is_headsup +=1
         if check_is_headsup == 1:
             return True
-        else: return 0
+        else:
+            return False
     except Exception as e:
         print(e)
 

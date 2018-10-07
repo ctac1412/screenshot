@@ -8,7 +8,6 @@ import math
 import time
 import datetime
 
-#Определение текущего стека
 def searchCurrentStack(screen_area):
     for value in getStackImages():
         path = image_processing.getLastScreen(str(getStackArea(str(screen_area))))
@@ -68,10 +67,11 @@ def searchConctreteStack(screen_area, last_stack):
     threshold = 0.98
     loc = np.where(res >= threshold)
 
-    if len(loc[0]) > 0: return True
-    else: return False
+    if len(loc[0]) > 0:
+        return True
+    else:
+        return False
 
-#Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select stack_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")

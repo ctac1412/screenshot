@@ -5,7 +5,6 @@ import postgresql
 import db_conf
 import error_log
 
-#Поиск блайндов и соответственно определение позиции за столом
 def seacrhBlindChips(screen_area):
     blinds = ['big_blind','small_blind']
     for blind in blinds:
@@ -23,7 +22,6 @@ def seacrhBlindChips(screen_area):
 
     return 'button'
 
-#Получаем номер области экрана, на которой нужно искать элемент для текущего стола
 def getBlindArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select blind_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
