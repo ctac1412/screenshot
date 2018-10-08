@@ -8,7 +8,8 @@ import math
 import time
 import datetime
 
-def searchCurrentStack(screen_area):
+def searchCurrentStack(screen_area, is_headsup):
+    current_stack = 0
     for value in getStackImages():
         path = image_processing.getLastScreen(str(getStackArea(str(screen_area))))
         path = path[0]['image_path']
@@ -19,12 +20,19 @@ def searchCurrentStack(screen_area):
         threshold = 0.98
         loc = np.where(res >= threshold)
         if len(loc[0]) != 0:
-            current_stack = str(value['stack_value'])
-            return str(current_stack)
+            current_stack = value['stack_value']
+            break
 
     opponent_stack = searchOpponentStack(screen_area)
-    if opponent_stack != 0:
-        return opponent_stack
+    if opponent_stack != 0 and current_stack != 0:
+        stack = []
+        stack.append(current_stack)
+        stack.append(opponent_stack)
+        max_stack = max(stack)
+        if max_stack < current_stack:
+            return max_stack
+        else:
+            return current_stack
     return 25
 
 def searchOpponentStack(screen_area):
@@ -46,7 +54,8 @@ def searchOpponentStack(screen_area):
                     break
         if len(opponent_stack) > 0:
             return max(opponent_stack)
-        else: return 0
+        else:
+            return 0
     except Exception as e:
         print(e)
 

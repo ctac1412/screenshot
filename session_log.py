@@ -72,12 +72,13 @@ def checkConditionsBeforeInsert(hand, screen_area):
     try:
         session = getLastRowFromLogSession(str(screen_area))
         if hand != '' and hand != session[0]['hand']:
-            stack = str(current_stack.searchCurrentStack(str(screen_area)))
             position = str(determine_position.seacrhBlindChips(screen_area))
             if position != 'button' and headsup.searchOpponentCard(str(screen_area)):
                 is_headsup = 1
             else:
                 is_headsup = 0
+            stack = str(current_stack.searchCurrentStack(str(screen_area), is_headsup))
+            print(stack)
             if position == 'big_blind' or position == 'small_blind' and is_headsup == 0:
                 last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
                 if not isinstance(last_opponnet_action, str):
