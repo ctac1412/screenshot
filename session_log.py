@@ -73,11 +73,15 @@ def checkConditionsBeforeInsert(hand, screen_area):
         session = getLastRowFromLogSession(str(screen_area))
         if hand != '' and hand != session[0]['hand']:
             position = str(determine_position.seacrhBlindChips(screen_area))
-            if position != 'button' and headsup.searchOpponentCard(str(screen_area)):
-                is_headsup = 1
-            else:
-                is_headsup = 0
-            stack = str(current_stack.searchCurrentStack(str(screen_area), is_headsup))
+            opponent_data = headsup.searchOpponentCard(str(screen_area))
+            is_headsup = opponent_data[0]
+            stack = str(current_stack.searchCurrentStack(str(screen_area)))
+            print(stack)
+            opponent_data.pop(0)
+            print(opponent_data)
+            opponent_actual_stack = max(opponent_data)
+            if int(opponent_actual_stack) < int(stack):
+                stack = opponent_actual_stack
             print(stack)
             if position == 'big_blind' or position == 'small_blind' and is_headsup == 0:
                 last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
@@ -85,7 +89,7 @@ def checkConditionsBeforeInsert(hand, screen_area):
                     last_opponnet_action = last_opponnet_action['opponent_action']
             else:
                 last_opponnet_action = None
-            insertIntoLogSession(screen_area, hand, position, stack, is_headsup=is_headsup, last_opponent_action=last_opponnet_action)
+            insertIntoLogSession(screen_area, hand, position, str(stack), is_headsup=is_headsup, last_opponent_action=last_opponnet_action)
             session = [hand, stack, position, '', is_headsup]
             return session
         else:

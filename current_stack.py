@@ -8,8 +8,8 @@ import math
 import time
 import datetime
 
-def searchCurrentStack(screen_area, is_headsup):
-    current_stack = 0
+def searchCurrentStack(screen_area):
+    current_stack = 25
     for value in getStackImages():
         path = image_processing.getLastScreen(str(getStackArea(str(screen_area))))
         path = path[0]['image_path']
@@ -22,26 +22,15 @@ def searchCurrentStack(screen_area, is_headsup):
         if len(loc[0]) != 0:
             current_stack = value['stack_value']
             break
+    return current_stack
 
-    opponent_stack = searchOpponentStack(screen_area)
-    if opponent_stack != 0 and current_stack != 0:
-        stack = []
-        stack.append(current_stack)
-        stack.append(opponent_stack)
-        max_stack = max(stack)
-        if max_stack < current_stack:
-            return max_stack
-        else:
-            return current_stack
-    return 25
-
-def searchOpponentStack(screen_area):
+def searchOpponentStack(screen_area, opponent_area):
     try:
         folder_name = 'images/' + str(datetime.datetime.now().date())
-        saveOpponentStackImage(str(screen_area), folder_name)
-        opponent_stack = []
+        saveOpponentStackImage(str(screen_area), folder_name, opponent_area)
+        opponent_stack = 25
         screen_area = getOpponentStackArea(str(screen_area))
-        for item in image_processing.getLastScreen(str(screen_area), '2'):
+        for item in image_processing.getLastScreen(str(screen_area)):
             for value in getStackImages():
                 path = item['image_path']
                 img_rgb = cv2.imread(path, 0)
@@ -49,14 +38,13 @@ def searchOpponentStack(screen_area):
                 res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
                 threshold = 0.98
                 loc = np.where(res >= threshold)
+
                 if len(loc[0]) != 0:
-                    opponent_stack.append(int(value['stack_value']))
+                    opponent_stack = int(value['stack_value'])
                     break
-        if len(opponent_stack) > 0:
-            return max(opponent_stack)
-        else:
-            return 0
+        return opponent_stack
     except Exception as e:
+        error_log.errorLog('searchOpponentStack', str(e))
         print(e)
 
 
@@ -112,15 +100,15 @@ def getStackData(screen_area):
                     "where screen_area = " + screen_area)
     return data
 
-def getOpponentStackData(screen_area):
+def getOpponentStackData(screen_area, opponent_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select opp.x_coordinate,opp.y_coordinate,opp.width,opp.height,opp.screen_area "
                     "from screen_coordinates as sc "
                     "inner join opponent_screen_coordinates as opp on sc.opponent_stack_area = opp.screen_area "
-                    "where sc.screen_area = " + str(screen_area))
+                    "where sc.screen_area = " + str(screen_area) + " and opp.opponent_area = " + opponent_area)
     return data
 
-def saveStackImage(screen_area,image_name,folder_name):
+def saveStackImage(screen_area, image_name, folder_name):
     try:
         for val in getStackData(str(getStackArea(str(screen_area)))):
             image_path = folder_name + "/" + str(getStackArea(str(screen_area))) + "/" + image_name + ".png"
@@ -130,9 +118,10 @@ def saveStackImage(screen_area,image_name,folder_name):
         error_log.errorLog('saveStackImage', str(e))
         print(e)
 
-def saveOpponentStackImage(screen_area,folder_name):
+def saveOpponentStackImage(screen_area, folder_name, opponent_area):
     image_name = int(math.floor(time.time()))
-    for val in getOpponentStackData(str(screen_area)):
+    for val in getOpponentStackData(str(screen_area), str(opponent_area)):
         image_path = folder_name + "/" + str(val['screen_area']) + "/" + str(image_name) + ".png"
-        image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path, val['screen_area'])
+        image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path, str(val['screen_area']))
         image_name += 1
+
