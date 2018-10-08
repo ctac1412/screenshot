@@ -46,4 +46,3 @@ def start():
                     logic.getDecision(item['screen_area'])
                 else:
                     session_log.updateActionLogSession('end', str(item['screen_area']))
-        time.sleep(3)
