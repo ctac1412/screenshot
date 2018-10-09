@@ -5,6 +5,7 @@ import current_stack
 import determine_position
 import headsup
 import image_processing
+import logic
 
 def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0', action='', is_headsup=0, last_opponent_action=None):
     try:
@@ -75,14 +76,12 @@ def checkConditionsBeforeInsert(hand, screen_area):
             position = str(determine_position.seacrhBlindChips(screen_area))
             opponent_data = headsup.searchOpponentCard(str(screen_area))
             is_headsup = opponent_data[0]
-            stack = str(current_stack.searchCurrentStack(str(screen_area)))
-            print(stack)
+            stack = current_stack.searchCurrentStack(str(screen_area))
             opponent_data.pop(0)
-            print(opponent_data)
             opponent_actual_stack = max(opponent_data)
             if int(opponent_actual_stack) < int(stack):
                 stack = opponent_actual_stack
-            print(stack)
+            stack = logic.convertStack(stack)
             if position == 'big_blind' or position == 'small_blind' and is_headsup == 0:
                 last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
                 if not isinstance(last_opponnet_action, str):
