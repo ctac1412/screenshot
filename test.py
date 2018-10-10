@@ -7,5 +7,5 @@ import math
 import datetime
 import time
 
-hand = '2h3s3c4c5c'
+hand = '6h5s3c8c7c'
 print(flop.checkStraightDraw(hand))
