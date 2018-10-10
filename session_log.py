@@ -74,13 +74,14 @@ def getLastRowFromLogSession(screen_area):
 def checkConditionsBeforeInsert(hand, screen_area):
     try:
         position = str(determine_position.seacrhBlindChips(screen_area))
-        opponent_data = headsup.searchOpponentCard(str(screen_area))
-        is_headsup = opponent_data[0]
         stack = current_stack.searchCurrentStack(str(screen_area))
-        opponent_data.pop(0)
-        opponent_actual_stack = max(opponent_data)
-        if int(opponent_actual_stack) < int(stack):
-            stack = opponent_actual_stack
+        if int(stack) > 6:
+            opponent_data = headsup.searchOpponentCard(str(screen_area))
+            is_headsup = opponent_data[0]
+            opponent_data.pop(0)
+            opponent_actual_stack = max(opponent_data)
+            if int(opponent_actual_stack) < int(stack):
+                stack = opponent_actual_stack
         stack = logic.convertStack(stack)
         if position == 'big_blind' or position == 'small_blind' and is_headsup == 0:
             last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)

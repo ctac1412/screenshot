@@ -7,4 +7,9 @@ import math
 import datetime
 import time
 
-print(current_stack.searchCurrentStack(1))
+image_name = str(math.floor(time.time()))
+def test():
+    for item in range(0, 10):
+        print(image_name)
+        time.sleep(1)
+test()
