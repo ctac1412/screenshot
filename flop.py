@@ -53,11 +53,15 @@ def checkStraightDraw(hand):
     arr = list(set(arr))
     arr = sorted(arr)
     arr_length = len(arr)
-    if arr_length >= 4:
+    if arr_length > 4:
         first = arr[:-1]
         second = arr[1:]
-        if len(first) == 4 and first == list(range(min(first), max(first) + 1)) or \
-                len(second) == 4 and second == list(range(min(second), max(second) + 1)):
+        if first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)):
+            return True
+        else:
+            return False
+    elif arr_length == 4:
+        if arr == list(range(min(arr), max(arr) + 1)):
             return True
         else:
             return False

@@ -12,10 +12,11 @@ import introduction
 import bar as metka
 
 images_folder = "images/"
+screen_data = image_processing.getScreenData()
 
 def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
-    for item in image_processing.getScreenData():
+    for item in screen_data:
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])

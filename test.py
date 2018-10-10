@@ -7,9 +7,5 @@ import math
 import datetime
 import time
 
-image_name = str(math.floor(time.time()))
-def test():
-    for item in range(0, 10):
-        print(image_name)
-        time.sleep(1)
-test()
+hand = '2h3s3c4c5c'
+print(flop.checkStraightDraw(hand))
