@@ -13,6 +13,7 @@ import bar as metka
 
 images_folder = "images/"
 screen_data = image_processing.getScreenData()
+deck = image_processing.getCards()
 
 def start():
     folder_name = images_folder + str(datetime.datetime.now().date())
@@ -25,7 +26,7 @@ def start():
             if last_row_action in ['push', 'fold', 'end']:
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'])
-                hand = image_processing.searchCards(str(item['screen_area']), image_processing.getCards(), 4)
+                hand = image_processing.searchCards(str(item['screen_area']), deck, 4)
                 determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
                 current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
                 session_log.checkConditionsBeforeInsert(hand, (item['screen_area']))

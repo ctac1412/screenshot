@@ -7,5 +7,5 @@ import math
 import datetime
 import time
 
-hand = '6h5s3c8c7c'
-print(flop.checkStraightDraw(hand))
+
+
