@@ -42,8 +42,8 @@ def insertImagePathIntoDb(image_path, screen_area):
 def getScreenData():
     try:
         db = postgresql.open(db_conf.connectionString())
-        data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates "
-                        "where active = 1 and alias = 'workspace'")
+        data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse "
+                        "from screen_coordinates where active = 1 and alias = 'workspace'")
         return data
     except Exception as e:
         error_log.errorLog('getScreenData',str(e))
@@ -71,20 +71,21 @@ def getFlopCards():
 
 def getActionsButtons():
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path) as image_path,trim(opponent_action) as opponent_action, trim(alias) as alias"
-                    " from opponent_last_action")
+    data = db.query("select trim(image_path) as image_path,trim(opponent_action) as opponent_action, "
+                    "trim(alias) as alias from opponent_last_action")
     return data
 
 def getLastScreen(screen_area, limit='1'):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " + str(screen_area) + " order by id desc limit " + limit)
+    data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " +
+                    str(screen_area) + " order by id desc limit " + limit)
     return data
 
 def getUIButtonData(alias):
     try:
         db = postgresql.open(db_conf.connectionString())
-        data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse from screen_coordinates "
-                        "where active = 1 and alias = '" + alias + "'")
+        data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse "
+                        "from screen_coordinates where active = 1 and alias = '" + alias + "'")
         return data
     except Exception as e:
         error_log.errorLog('getUIButtonData',str(e))

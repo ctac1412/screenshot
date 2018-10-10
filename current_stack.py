@@ -9,7 +9,7 @@ import time
 import datetime
 
 def searchCurrentStack(screen_area):
-    current_stack = 25
+    current_stack = 22
     for value in getStackImages():
         path = image_processing.getLastScreen(str(getStackArea(str(screen_area))))
         path = path[0]['image_path']
@@ -28,7 +28,7 @@ def searchOpponentStack(screen_area, opponent_area):
     try:
         folder_name = 'images/' + str(datetime.datetime.now().date())
         saveOpponentStackImage(str(screen_area), folder_name, opponent_area)
-        opponent_stack = 25
+        opponent_stack = 22
         screen_area = getOpponentStackArea(str(screen_area))
         for item in image_processing.getLastScreen(str(screen_area)):
             for value in getStackImages():
@@ -82,7 +82,7 @@ def getOpponentStackArea(screen_area):
 #Получение путей к изображениям шаблонов стеков
 def getStackImages():
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path) as image_path, stack_value from stack where active = 1")
+    data = db.query("select trim(image_path) as image_path, stack_value from stack where active = 1 order by id desc")
     return data
 
 #Получение путей к конкретному изображению

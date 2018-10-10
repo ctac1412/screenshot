@@ -32,7 +32,8 @@ def getDecision(screen_area):
 
 def getIterationTimer(ui_element):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select round(extract(epoch from now() - created_at)) as seconds_left from iteration_timer where ui_element = '" + ui_element + "'")
+    data = db.query("select round(extract(epoch from now() - created_at)) as seconds_left from iteration_timer "
+                    "where ui_element = '" + ui_element + "'")
     return data[0]['seconds_left']
 
 def updateIterationTimer(ui_element):
@@ -64,18 +65,17 @@ def getActionFromPreflopChart(screen_area):
     stack = convertStack(int(row[0]['current_stack']))
     if last_opponent_action is None:
         last_opponent_action = ' is null'
-    else: last_opponent_action = " = '" + last_opponent_action + '\''
+    else:
+        last_opponent_action = " = '" + last_opponent_action + '\''
     if stack == 7:
-        push_stack_value = sklansky_chubukov.getValidStackValueToPush(hand)
-        if int(stack) <= push_stack_value:
-            return 'push'
-        else:
-            return 'fold'
+        return sklansky_chubukov.getAction(hand, int(row[0]['current_stack']))
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(action) as action from preflop_chart "
                     "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
                     " and is_headsup = '" + str(row[0]['is_headsup']) + '\'' + " and opponent_last_action" +
                     last_opponent_action + " and stack = " + str(stack))
+    if len(data) == 0:
+        return sklansky_chubukov.getAction(hand, int(row[0]['current_stack']))
     return data[0]['action']
 
 def convertStack(stack):
