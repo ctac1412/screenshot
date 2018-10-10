@@ -7,5 +7,6 @@ import math
 import datetime
 import time
 
-hand = '2h3s3c4c5c'
-print(flop.checkStraightDraw(hand))
+for i in range(0,10):
+    print(flop.test())
+    time.sleep(1)

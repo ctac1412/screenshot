@@ -4,7 +4,9 @@ import db_conf
 import keyboard
 import session_log
 import error_log
-
+import math
+import time
+image_name = str(math.floor(time.time()))
 def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
     try:
         saveFlopImage(str(screen_area), image_name, folder_name)
@@ -119,3 +121,6 @@ def getFlopData(screen_area):
     data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
                     "where screen_area = "  + screen_area)
     return data
+
+def test():
+    return image_name
