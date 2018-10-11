@@ -8,7 +8,6 @@ import time
 import error_log
 import datetime
 
-#Поиск элемента, который говорит, что пришла очередь хода
 def seacrhBar(screen_area):
     saveBarImage(screen_area, str(math.floor(time.time())), 'images/')
     path = image_processing.getLastScreen(getBarArea(str(screen_area)))

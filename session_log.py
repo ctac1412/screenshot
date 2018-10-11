@@ -75,6 +75,7 @@ def checkConditionsBeforeInsert(hand, screen_area):
     try:
         position = str(determine_position.seacrhBlindChips(screen_area))
         stack = current_stack.searchCurrentStack(str(screen_area))
+        is_headsup = 1
         if int(stack) > 6:
             opponent_data = headsup.searchOpponentCard(str(screen_area))
             is_headsup = opponent_data[0]
