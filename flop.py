@@ -5,11 +5,11 @@ import keyboard
 import session_log
 import error_log
 
-def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action):
+def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, flop_deck):
     try:
         saveFlopImage(str(screen_area), image_name, folder_name)
         flop_area = getFlopArea(str(screen_area))
-        flop_card = image_processing.searchCards(str(flop_area), image_processing.getFlopCards(), 6)
+        flop_card = image_processing.searchCards(str(flop_area), flop_deck, 6)
         if len(flop_card) == 6:
             hand = hand + flop_card
             if checkPair(hand) or checkFlushDraw(hand) or checkStraightDraw(hand):

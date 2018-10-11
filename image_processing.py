@@ -69,6 +69,11 @@ def getFlopCards():
     data = db.query("select trim(image_path) as image_path,card,suit,trim(alias) as alias from flop_cards")
     return data
 
+def getStackImages():
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select trim(image_path) as image_path, stack_value from stack where active = 1 order by id desc")
+    return data
+
 def getActionsButtons():
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path) as image_path,trim(opponent_action) as opponent_action, "

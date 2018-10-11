@@ -12,11 +12,13 @@ import introduction
 import bar as metka
 
 images_folder = "images/"
+folder_name = images_folder + str(datetime.datetime.now().date())
 screen_data = image_processing.getScreenData()
 deck = image_processing.getCards()
+flop_deck = image_processing.getFlopCards()
+stack_collection = image_processing.getStackImages()
 
 def start():
-    folder_name = images_folder + str(datetime.datetime.now().date())
     for item in screen_data:
         image_name = str(math.floor(time.time()))
         image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
@@ -29,11 +31,11 @@ def start():
                 hand = image_processing.searchCards(str(item['screen_area']), deck, 4)
                 determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
                 current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
-                session_log.checkConditionsBeforeInsert(hand, (item['screen_area']))
+                session_log.checkConditionsBeforeInsert(hand, (item['screen_area']), stack_collection)
                 logic.getDecision(item['screen_area'])
             elif last_row_action in ['open', 'call', 'check']:
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
-                                         image_path, str(item['screen_area']), last_row_action, image_name, folder_name)
+                                         image_path, str(item['screen_area']), last_row_action, image_name, folder_name, flop_deck)
             elif last_row_action == 'cbet':
                 if introduction.checkIsFold(str(item['screen_area']), item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_name):
                     return

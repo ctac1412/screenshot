@@ -8,9 +8,9 @@ import math
 import time
 import datetime
 
-def searchCurrentStack(screen_area):
+def searchCurrentStack(screen_area, stack_collection):
     current_stack = 22
-    for value in getStackImages():
+    for value in stack_collection:
         path = image_processing.getLastScreen(str(getStackArea(str(screen_area))))
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
@@ -24,14 +24,14 @@ def searchCurrentStack(screen_area):
             break
     return current_stack
 
-def searchOpponentStack(screen_area, opponent_area):
+def searchOpponentStack(screen_area, opponent_area, stack_collection):
     try:
         folder_name = 'images/' + str(datetime.datetime.now().date())
         saveOpponentStackImage(str(screen_area), folder_name, opponent_area)
         opponent_stack = 22
         screen_area = getOpponentStackArea(str(screen_area))
         for item in image_processing.getLastScreen(str(screen_area)):
-            for value in getStackImages():
+            for value in stack_collection:
                 path = item['image_path']
                 img_rgb = cv2.imread(path, 0)
                 template = cv2.imread(str(value['image_path']), 0)
@@ -124,4 +124,5 @@ def saveOpponentStackImage(screen_area, folder_name, opponent_area):
         image_path = folder_name + "/" + str(val['screen_area']) + "/" + str(image_name) + ".png"
         image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path, str(val['screen_area']))
         image_name += 1
+
 

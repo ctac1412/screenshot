@@ -8,7 +8,7 @@ import time
 import datetime
 import current_stack
 
-def searchOpponentCard(screen_area):
+def searchOpponentCard(screen_area, stack_collection):
     try:
         folder_name = 'images/' + str(datetime.datetime.now().date())
         opponent_area = saveOpponentCardImage(str(screen_area), folder_name)[0]
@@ -26,7 +26,7 @@ def searchOpponentCard(screen_area):
             loc = np.where(res >= threshold)
             if len(loc[0]) != 0:
                 check_is_headsup +=1
-                opponent_stack.append(current_stack.searchOpponentStack(screen_area, opponent_area))
+                opponent_stack.append(current_stack.searchOpponentStack(screen_area, opponent_area, stack_collection))
             opponent_area += 1
         if check_is_headsup != 1:
             check_is_headsup = 0
