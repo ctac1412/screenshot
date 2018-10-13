@@ -8,4 +8,4 @@ import datetime
 import time
 import sklansky_chubukov
 
-print(current_stack.searchCurrentStack('2',image_processing.getStackImages()))
+print(flop.checkStraightDraw('2dKdJdTs7s'))

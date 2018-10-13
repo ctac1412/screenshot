@@ -67,7 +67,7 @@ def getActionFromPreflopChart(screen_area):
         last_opponent_action = ' is null'
     else:
         last_opponent_action = " = '" + last_opponent_action + '\''
-    if stack == 7:
+    if stack == 6:
         return sklansky_chubukov.getAction(hand, int(row[0]['current_stack']))
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(action) as action from preflop_chart "
@@ -90,5 +90,5 @@ def convertStack(stack):
     elif stack in range(7, 10):
         stack = 10
     elif stack in range(0, 7):
-        stack = 7
+        stack = 6
     return stack

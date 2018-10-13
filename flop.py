@@ -10,25 +10,12 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         saveFlopImage(str(screen_area), image_name, folder_name)
         flop_area = getFlopArea(str(screen_area))
         flop_card = image_processing.searchCards(str(flop_area), flop_deck, 6)
-        if len(flop_card) == 6:
-            hand = hand + flop_card
-            if checkPair(hand) or checkFlushDraw(hand) or checkStraightDraw(hand):
-                keyboard.press('q')
-                session_log.updateActionLogSession('push', str(screen_area))
-                return
-            elif action == 'open' and int(stack) > 12:
-                if image_processing.checkIsCbetAvailable(str(screen_area)):
-                    keyboard.press('o')
-                    session_log.updateActionLogSession('cbet', str(screen_area))
-                    return
-                else:
-                    keyboard.press('f')
-                    session_log.updateActionLogSession('fold', str(screen_area))
-                    return
-            else:
-                keyboard.press('f')
-                session_log.updateActionLogSession('fold', str(screen_area))
-        elif action == 'open' and int(stack) > 11:
+        hand = hand + flop_card
+        if checkPair(hand) or checkFlushDraw(hand) or checkStraightDraw(hand):
+            keyboard.press('q')
+            session_log.updateActionLogSession('push', str(screen_area))
+            return
+        elif action == 'open' and int(stack) > 12:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
                 keyboard.press('o')
                 session_log.updateActionLogSession('cbet', str(screen_area))
@@ -45,7 +32,12 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         print(e)
 
 def checkStraightDraw(hand):
-    hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
+    if len(hand) == 10:
+        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
+    elif len(hand) == 8:
+        hand = hand[0] + hand[2] + hand[4] + hand[6]
+    else:
+        return False
     collection = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
     arr = []
     for val in hand:
@@ -69,7 +61,12 @@ def checkStraightDraw(hand):
         return False
 
 def checkFlushDraw(hand):
-    hand = hand[1] + hand[3] + hand[5] + hand[7] + hand[9]
+    if len(hand) == 10:
+        hand = hand[1] + hand[3] + hand[5] + hand[7] + hand[9]
+    elif len(hand) == 8:
+        hand = hand[1] + hand[3] + hand[5] + hand[7]
+    else:
+        return False
     suit_count = len(set(hand))
     if suit_count == 1:
         return True
@@ -84,14 +81,23 @@ def checkFlushDraw(hand):
         return False
 
 def checkPair(hand):
-    flop = [hand[4], hand[6], hand[8]]
-    ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
-    ts = []
-    for item in flop:
-        ts.append(ranks.index(item))
-    hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
+    if len(hand) == 10:
+        flop = [hand[4], hand[6], hand[8]]
+        ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
+        ts = []
+        for item in flop:
+            ts.append(ranks.index(item))
+        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
+    elif len(hand) == 8:
+        flop = [hand[4], hand[6]]
+        ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
+        ts = []
+        for item in flop:
+            ts.append(ranks.index(item))
+        hand = hand[0] + hand[2] + hand[4] + hand[6]
+    else:
+        return False
     counter = {}
-
     for item in hand:
         counter[item] = counter.get(item, 0) + 1
     doubles = {element: count for element, count in counter.items() if count > 1}
