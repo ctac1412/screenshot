@@ -53,7 +53,7 @@ def updateCurrentStackLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
         db.query("UPDATE session_log SET current_stack=yourvalue FROM "
-                 "(SELECT id, int2(current_stack) - 3 AS yourvalue FROM session_log where screen_area = " +
+                 "(SELECT id, int2(current_stack) - 2 AS yourvalue FROM session_log where screen_area = " +
                  screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id ")
     except Exception as e:
         error_log.errorLog('updateCurrentStackLogSession', str(e))
@@ -64,7 +64,7 @@ def getLastRowFromLogSession(screen_area):
         db = postgresql.open(db_conf.connectionString())
         data = db.query(
             "select trim(hand) as hand,trim(current_stack) as current_stack,trim(current_position) as current_position,"
-            "trim(action) as action,is_headsup, trim(last_opponent_action) as last_opponent_action"
+            "trim(action) as action, is_headsup, trim(last_opponent_action) as last_opponent_action"
             " from session_log where screen_area = " + str(screen_area) + " order by id desc limit 1")
         return data
     except Exception as e:

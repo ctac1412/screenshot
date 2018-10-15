@@ -19,8 +19,10 @@ def getDecision(screen_area):
         elif action == 'fold':
             keyboard.press('f')
         elif action == 'open':
-            keyboard.press('o')
-            session_log.updateCurrentStackLogSession(str(screen_area))
+            if session_log.getLastRowFromLogSession(str(screen_area))[0]['is_headsup'] == 1:
+                keyboard.press('o')
+            else:
+                keyboard.press('r')
         elif action == 'call':
             keyboard.press('c')
         elif action == 'check':
@@ -63,19 +65,20 @@ def getActionFromPreflopChart(screen_area):
     last_opponent_action = row[0]['last_opponent_action']
     hand = handConverting(row[0]['hand'])
     stack = convertStack(int(row[0]['current_stack']))
+    position = row[0]['current_position']
+    if stack == 6:
+        return sklansky_chubukov.getAction(hand, int(row[0]['current_stack']), last_opponent_action, position)
     if last_opponent_action is None:
         last_opponent_action = ' is null'
     else:
         last_opponent_action = " = '" + last_opponent_action + '\''
-    if stack == 6:
-        return sklansky_chubukov.getAction(hand, int(row[0]['current_stack']))
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(action) as action from preflop_chart "
-                    "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
+                    "where hand = '" + hand + '\'' + " and position = '" + position + '\'' +
                     " and is_headsup = '" + str(row[0]['is_headsup']) + '\'' + " and opponent_last_action" +
                     last_opponent_action + " and stack = " + str(stack))
     if len(data) == 0:
-        return sklansky_chubukov.getAction(hand, int(row[0]['current_stack']))
+        return sklansky_chubukov.getAction(hand, int(row[0]['current_stack']), last_opponent_action, position)
     return data[0]['action']
 
 def convertStack(stack):
