@@ -10,6 +10,7 @@ import determine_position
 import current_stack
 import introduction
 import bar as metka
+import os
 
 images_folder = "images/"
 folder_name = images_folder + str(datetime.datetime.now().date())
@@ -20,10 +21,10 @@ stack_collection = image_processing.getStackImages()
 
 def start():
     for item in screen_data:
-        image_name = str(math.floor(time.time()))
-        image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
         if metka.seacrhBar(str(item['screen_area'])):
+            image_name = str(math.floor(time.time()))
+            image_path = os.path.join(images_folder, str(datetime.datetime.now().date()), str(item['screen_area']), image_name + ".png")
             last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
             if last_row_action in ['push', 'fold', 'end']:
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
