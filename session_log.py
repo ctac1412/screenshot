@@ -95,3 +95,9 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
     except Exception as e:
         error_log.errorLog('checkConditionsBeforeInsert', str(e))
         print(e)
+
+def updateHandAfterPostflop(screen_area, hand):
+    db = postgresql.open(db_conf.connectionString())
+    db.query("UPDATE session_log SET hand=yourvalue FROM "
+             "(SELECT id, " + hand + " AS yourvalue FROM session_log where screen_area = " +
+             screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")

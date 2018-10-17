@@ -11,4 +11,4 @@ import current_stack
 import introduction
 import bar as metka
 import os
-logic.getDecision('1')
+session_log.updateHandAfterPostflop('8', 'test')
