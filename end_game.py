@@ -7,14 +7,13 @@ import datetime
 import math
 import time
 import numpy as np
+import os
 
-images_folder = "images/"
+images_folder = "images"
 
 def checkIsGameEnd():
-    folder_name = images_folder + str(datetime.datetime.now().date())
     for item in image_processing.getUIButtonData("register_button"):
-        image_name = str(math.floor(time.time()))
-        image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
+        image_path = os.path.join(images_folder, str(datetime.datetime.now().date()), str(item['screen_area']), str(math.floor(time.time())))
         image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path,
                                  item['screen_area'])
 

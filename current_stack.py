@@ -7,6 +7,7 @@ import error_log
 import math
 import time
 import datetime
+import os
 
 def searchCurrentStack(screen_area, stack_collection):
     current_stack = 22
@@ -111,7 +112,7 @@ def getOpponentStackData(screen_area, opponent_area):
 def saveStackImage(screen_area, image_name, folder_name):
     try:
         for val in getStackData(str(getStackArea(str(screen_area)))):
-            image_path = folder_name + "/" + str(getStackArea(str(screen_area))) + "/" + image_name + ".png"
+            image_path = os.path.join(folder_name, str(getStackArea(str(screen_area))), image_name)
             image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
                                      val['screen_area'])
     except Exception as e:

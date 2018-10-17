@@ -8,8 +8,9 @@ import postgresql
 import db_conf
 import keyboard
 import flop
+import os
 
-images_folder = "images/"
+images_folder = "images"
 
 def actionAfterOpen(x_coordinate, y_coordinate, width, height, image_path, screen_area, action, image_name, folder_name, flop_deck):
     if action == 'open':
@@ -18,11 +19,10 @@ def actionAfterOpen(x_coordinate, y_coordinate, width, height, image_path, scree
     if checkIsActionButtons(screen_area): return
 
 def saveElement(screen_area, element_name):
-    folder_name = images_folder + str(datetime.datetime.now().date())
     element_area = getElementArea(screen_area, element_name)[element_name]
     for item in getElementData(element_area):
-        image_name = str(math.floor(time.time()))
-        image_path = folder_name + "/" + str(item['screen_area']) + "/" + image_name + ".png"
+        image_name = str(math.floor(time.time())) + ".png"
+        image_path = os.path.join(images_folder, str(datetime.datetime.now().date()), str(item['screen_area']), image_name)
         image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path,
                                  item['screen_area'])
     return element_area

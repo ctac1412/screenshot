@@ -23,8 +23,8 @@ def start():
     for item in screen_data:
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
         if metka.seacrhBar(str(item['screen_area'])):
-            image_name = str(math.floor(time.time()))
-            image_path = os.path.join(images_folder, str(datetime.datetime.now().date()), str(item['screen_area']), image_name + ".png")
+            image_name = str(math.floor(time.time())) + ".png"
+            image_path = os.path.join(images_folder, str(datetime.datetime.now().date()), str(item['screen_area']), image_name)
             last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
             if last_row_action in ['push', 'fold', 'end']:
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],

@@ -8,7 +8,7 @@ import db_conf
 from PIL import ImageGrab
 import introduction
 
-images_folder = "images/"
+images_folder = "images"
 
 def searchCards(screen_area, deck, list_length):
     hand = ''
@@ -49,7 +49,7 @@ def getScreenData():
         error_log.errorLog('getScreenData',str(e))
 
 def checkIsFolderExist():
-    folder_name = images_folder + str(datetime.datetime.now().date())
+    folder_name = os.path.join(images_folder, str(datetime.datetime.now().date()))
     if not os.path.exists(str(folder_name)):
         os.makedirs(str(folder_name))
     db = postgresql.open(db_conf.connectionString())

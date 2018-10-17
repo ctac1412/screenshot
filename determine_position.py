@@ -4,6 +4,7 @@ import numpy as np
 import postgresql
 import db_conf
 import error_log
+import os
 
 def seacrhBlindChips(screen_area):
     blinds = ['big_blind','small_blind']
@@ -36,7 +37,7 @@ def getBlindData(screen_area):
 def saveBlindImage(screen_area,image_name,folder_name):
     try:
         for value in getBlindData(str(getBlindArea(str(screen_area)))):
-            image_path = folder_name + "/" + str(getBlindArea(str(screen_area))) + "/" + image_name + ".png"
+            image_path = os.path.join(folder_name, str(getBlindArea(str(screen_area))), image_name)
             image_processing.imaging(value['x_coordinate'], value['y_coordinate'], value['width'], value['height'],
                                      image_path, value['screen_area'])
     except Exception as e:
