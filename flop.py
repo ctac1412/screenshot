@@ -12,7 +12,8 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         flop_area = getFlopArea(str(screen_area))
         flop_card = image_processing.searchCards(str(flop_area), flop_deck, 6)
         hand = hand + flop_card
-        if checkPair(hand) or checkFlushDraw(hand) or checkStraightDraw(hand):
+        session_log.updateHandAfterFlop(screen_area, hand)
+        if checkPair(hand, screen_area) or checkFlushDraw(hand) or checkStraightDraw(hand):
             keyboard.press('q')
             session_log.updateActionLogSession('push', str(screen_area))
             return
@@ -81,7 +82,7 @@ def checkFlushDraw(hand):
     else:
         return False
 
-def checkPair(hand):
+def checkPair(hand, screen_area):
     if len(hand) == 10:
         flop = [hand[4], hand[6], hand[8]]
         ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
@@ -102,13 +103,22 @@ def checkPair(hand):
     for item in hand:
         counter[item] = counter.get(item, 0) + 1
     doubles = {element: count for element, count in counter.items() if count > 1}
+    hand_value = 'trash'
     if len(doubles) == 1:
         double_element = list(doubles.keys())[0]
-        if double_element in [hand[0], hand[1]] and ranks.index(double_element) != min(ts) or \
-                list(doubles.values())[0] > 2 and double_element in [hand[0], hand[1]]:
-            return True
+        if double_element in [hand[0], hand[1]] and ranks.index(double_element) == max(ts):
+            hand_value = 'top_pair'
+        elif list(doubles.values())[0] > 2 and double_element in [hand[0], hand[1]]:
+            hand_value = 'set'
+        elif double_element in [hand[0], hand[1]] and ranks.index(double_element) == min(ts):
+            hand_value = 'bottom_pair'
+        elif double_element in [hand[0], hand[1]]:
+            hand_value = 'middle_pair'
+        else:
+            return False
     elif len(doubles) == 2:
-        return True
+        hand_value = 'two_pairs'
+    session_log.updateHandValue(screen_area, hand_value)
     return False
 
 def getFlopArea(screen_area):

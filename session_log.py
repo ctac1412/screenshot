@@ -96,8 +96,20 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
         error_log.errorLog('checkConditionsBeforeInsert', str(e))
         print(e)
 
-def updateHandAfterPostflop(screen_area, hand):
+def updateHandAfterFlop(screen_area, hand):
     db = postgresql.open(db_conf.connectionString())
-    db.query("UPDATE session_log SET hand=yourvalue FROM "
-             "(SELECT id, " + hand + " AS yourvalue FROM session_log where screen_area = " +
+    db.query("UPDATE session_log SET hand= '" + hand +
+             "' from(SELECT id FROM session_log where screen_area = " +
+             screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")
+
+def updateHandAfterTurn(screen_area, turn):
+    db = postgresql.open(db_conf.connectionString())
+    db.query("UPDATE session_log SET hand= hand || '" + turn +
+             "' from(SELECT id FROM session_log where screen_area = " +
+             screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")
+
+def updateHandValue(screen_area, hand_value):
+    db = postgresql.open(db_conf.connectionString())
+    db.query("UPDATE session_log SET hand_value= '" + hand_value +
+             "' from(SELECT id FROM session_log where screen_area = " +
              screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")

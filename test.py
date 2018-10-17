@@ -11,4 +11,8 @@ import current_stack
 import introduction
 import bar as metka
 import os
-session_log.updateHandAfterPostflop('8', 'test')
+import postflop
+import flop
+
+print(flop.checkPair('3dQd6s5cQh'))
+session_log.updateHandValue('1',flop.checkPair('3dQd6s5cQh'))
