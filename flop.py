@@ -18,32 +18,48 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
             hand_value = checkFlushDraw(hand, screen_area, hand_value)
         if hand_value != True:
             checkStraightDraw(hand,screen_area, hand_value)
+        hand_value = session_log.getHandValue(screen_area)
         if action == 'open' and int(stack) > 12:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
                 keyboard.press('b')
                 session_log.updateActionLogSession('cbet', str(screen_area))
                 return
             else:
-                #получить hand_value
-                #определить размер рейза
-                #push-fold
+                if hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                    keyboard.press('q')
+                    session_log.updateActionLogSession('push', str(screen_area))
+                    return
+                elif hand_value in['trash']:
+                    keyboard.press('f')
+                    session_log.updateActionLogSession('fold', str(screen_area))
+                    return
+                elif image_processing.searchLastOpponentAction(screen_area) in['1','2','3']:
+                    keyboard.press('c')
+                    session_log.updateActionLogSession('call', str(screen_area))
+                else:
+                    keyboard.press('f')
+                    session_log.updateActionLogSession('fold', str(screen_area))
         else:
-            # получить hand_value
-            # keyboard.press('q')
-            # session_log.updateActionLogSession('push', str(screen_area))
-            # return
-        # elif action == 'open' and int(stack) > 12 and is_headsup == 1:
-        #     if image_processing.checkIsCbetAvailable(str(screen_area)):
-        #         keyboard.press('o')
-        #         session_log.updateActionLogSession('cbet', str(screen_area))
-        #         return
-        #     else:
-        #         keyboard.press('f')
-        #         session_log.updateActionLogSession('fold', str(screen_area))
-        #         return
-        # else:
-        #     keyboard.press('f')
-        #     session_log.updateActionLogSession('end', str(screen_area))
+            if image_processing.checkIsCbetAvailable(str(screen_area)):
+                if hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                    keyboard.press('b')
+                    session_log.updateActionLogSession('cbet', str(screen_area))
+                    return
+            else:
+                if hand_value in['trash']:
+                    keyboard.press('f')
+                    session_log.updateActionLogSession('fold', str(screen_area))
+                    return
+                elif hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                    keyboard.press('q')
+                    session_log.updateActionLogSession('push', str(screen_area))
+                    return
+                elif image_processing.searchLastOpponentAction(screen_area) in['1','2','3']:
+                    keyboard.press('c')
+                    session_log.updateActionLogSession('call', str(screen_area))
+                else:
+                    keyboard.press('f')
+                    session_log.updateActionLogSession('fold', str(screen_area))
     except Exception as e:
         error_log.errorLog('makeFlopDecision' + action, str(e))
         print(e)

@@ -113,3 +113,9 @@ def updateHandValue(screen_area, hand_value):
     db.query("UPDATE session_log SET hand_value= '" + hand_value +
              "' from(SELECT id FROM session_log where screen_area = " +
              screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")
+
+def getHandValue(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query(
+        "select hand_value from session_log where screen_area = " + screen_area + " order by id desc limit 1")
+    return data[0]['hand_value']
