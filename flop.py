@@ -33,7 +33,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
-                elif image_processing.searchLastOpponentAction(screen_area) in['1','2','3']:
+                elif image_processing.searchLastOpponentAction(screen_area) in['1', '2', '3']:
                     keyboard.press('c')
                     session_log.updateActionLogSession('call', str(screen_area))
                 else:
@@ -54,7 +54,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif image_processing.searchLastOpponentAction(screen_area) in['1','2','3']:
+                elif image_processing.searchLastOpponentAction(screen_area) in['1', '2', '3']:
                     keyboard.press('c')
                     session_log.updateActionLogSession('call', str(screen_area))
                 else:
@@ -81,17 +81,19 @@ def checkStraightDraw(hand, screen_area, hand_value):
     if arr_length > 4:
         first = arr[:-1]
         second = arr[1:]
-        if first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)):
-            if len(hand_value) > 0:
-                hand_value = hand_value +'.staight_draw'
+        if list(range(min(arr), max(arr) + 1)) == arr:
+            hand_value = 'straight'
+        elif first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)):
+            if hand_value != 'trash':
+                hand_value = hand_value +'.straight_draw'
             else:
-                hand_value = 'staight_draw'
+                hand_value = 'straight_draw'
     elif arr_length == 4:
         if arr == list(range(min(arr), max(arr) + 1)):
-            if len(hand_value) > 0:
-                hand_value = hand_value +'.staight_draw'
+            if hand_value != 'trash':
+                hand_value = hand_value +'.straight_draw'
             else:
-                hand_value = 'staight_draw'
+                hand_value = 'straight_draw'
     session_log.updateHandValue(screen_area, hand_value)
 
 def checkFlushDraw(hand, screen_area, hand_value):
@@ -112,7 +114,7 @@ def checkFlushDraw(hand, screen_area, hand_value):
             counter[item] = counter.get(item, 0) + 1
         doubles = {element: count for element, count in counter.items() if count > 3}
         if len(doubles) > 0:
-            if len(hand_value) > 0:
+            if hand_value != 'trash':
                 hand_value = hand_value +'.flush_draw'
                 session_log.updateHandValue(screen_area, hand_value)
                 return True
@@ -143,7 +145,7 @@ def checkPair(hand, screen_area):
     for item in hand:
         counter[item] = counter.get(item, 0) + 1
     doubles = {element: count for element, count in counter.items() if count > 1}
-    hand_value = ''
+    hand_value = 'trash'
     if len(doubles) == 1:
         double_element = list(doubles.keys())[0]
         if double_element in [hand[0], hand[1]] and ranks.index(double_element) == max(ts):

@@ -19,13 +19,10 @@ import flop
 # if hand_value == True:
 #     print('true')
 # print(flop.checkPair('3d6d6s5cQh', '2'))
-# screen_area = '1'
-# hand = '3d6d6s5dQd'
-# hand_value = flop.checkPair(hand, screen_area)
-# if hand_value != True:
-#     hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
-# if hand_value != True:
-#     flop.checkStraightDraw(hand,screen_area, hand_value)
-hand_value = 'bottom_pairstrai.ght_draw'
-if hand_value.find('.') == -1:
-    print(1)
+screen_area = '1'
+hand = '3d6d4s5d7h'
+hand_value = flop.checkPair(hand, screen_area)
+if hand_value != True:
+    hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
+if hand_value != True:
+    flop.checkStraightDraw(hand,screen_area, hand_value)
