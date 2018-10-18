@@ -14,8 +14,21 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         hand = hand + flop_card
         session_log.updateHandAfterFlop(screen_area, hand)
         hand_value = checkPair(hand, screen_area)
-        hand_value = checkFlushDraw(hand, screen_area, hand_value)
-        checkStraightDraw(hand,screen_area, hand_value)
+        if hand_value != True:
+            hand_value = checkFlushDraw(hand, screen_area, hand_value)
+        if hand_value != True:
+            checkStraightDraw(hand,screen_area, hand_value)
+        if action == 'open' and int(stack) > 12:
+            if image_processing.checkIsCbetAvailable(str(screen_area)):
+                keyboard.press('b')
+                session_log.updateActionLogSession('cbet', str(screen_area))
+                return
+            else:
+                #получить hand_value
+                #определить размер рейза
+                #push-fold
+        else:
+            # получить hand_value
             # keyboard.press('q')
             # session_log.updateActionLogSession('push', str(screen_area))
             # return
@@ -57,14 +70,13 @@ def checkStraightDraw(hand, screen_area, hand_value):
                 hand_value = hand_value +'.staight_draw'
             else:
                 hand_value = 'staight_draw'
-            session_log.updateHandValue(screen_area, hand_value)
     elif arr_length == 4:
         if arr == list(range(min(arr), max(arr) + 1)):
-            return True
-        else:
-            return False
-    else:
-        return False
+            if len(hand_value) > 0:
+                hand_value = hand_value +'.staight_draw'
+            else:
+                hand_value = 'staight_draw'
+    session_log.updateHandValue(screen_area, hand_value)
 
 def checkFlushDraw(hand, screen_area, hand_value):
     if len(hand) == 10:
@@ -86,6 +98,8 @@ def checkFlushDraw(hand, screen_area, hand_value):
         if len(doubles) > 0:
             if len(hand_value) > 0:
                 hand_value = hand_value +'.flush_draw'
+                session_log.updateHandValue(screen_area, hand_value)
+                return True
             else:
                 hand_value = 'flush_draw'
             return hand_value
@@ -128,7 +142,6 @@ def checkPair(hand, screen_area):
             return False
     elif len(doubles) == 2:
         hand_value = 'two_pairs'
-    print(hand_value)
     if hand_value in ['top_pair', 'set', 'two_pairs']:
         session_log.updateHandValue(screen_area, hand_value)
         return True

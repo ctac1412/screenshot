@@ -14,4 +14,15 @@ import os
 import postflop
 import flop
 
-print(flop.checkPair('8', '3dQd6s5cQh'))
+# hand_value = flop.checkPair('3d6d6s5cQh', '2')
+#
+# if hand_value == True:
+#     print('true')
+# print(flop.checkPair('3d6d6s5cQh', '2'))
+screen_area = '1'
+hand = '3d6d6s5dQd'
+hand_value = flop.checkPair(hand, screen_area)
+if hand_value != True:
+    hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
+if hand_value != True:
+    flop.checkStraightDraw(hand,screen_area, hand_value)
