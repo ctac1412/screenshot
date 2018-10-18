@@ -14,5 +14,4 @@ import os
 import postflop
 import flop
 
-print(flop.checkPair('3dQd6s5cQh'))
-session_log.updateHandValue('1',flop.checkPair('3dQd6s5cQh'))
+print(flop.checkPair('8', '3dQd6s5cQh'))
