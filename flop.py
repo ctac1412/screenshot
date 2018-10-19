@@ -25,7 +25,12 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                 session_log.updateActionLogSession('cbet', str(screen_area))
                 return
             else:
-                if hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                if is_headsup == 0 and hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                    keyboard.press('q')
+                    session_log.updateActionLogSession('push', str(screen_area))
+                    return
+                elif is_headsup == 1 and  hand_value.find('.') != -1 or \
+                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
@@ -41,19 +46,25 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('fold', str(screen_area))
         else:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
-                if hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                if is_headsup == 0 and hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
                     keyboard.press('b')
-                    session_log.updateActionLogSession('cbet', str(screen_area))
+                    session_log.updateActionLogSession('push', str(screen_area))
                     return
+                elif is_headsup == 1 and  hand_value.find('.') != -1 or \
+                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
+                    keyboard.press('b')
             else:
                 if hand_value in['trash']:
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
-                elif hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                elif is_headsup == 0 and hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
+                elif is_headsup == 1 and  hand_value.find('.') != -1 or \
+                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
+                    keyboard.press('q')
                 elif image_processing.searchLastOpponentAction(screen_area) in['1', '2', '3']:
                     keyboard.press('c')
                     session_log.updateActionLogSession('call', str(screen_area))
@@ -69,8 +80,10 @@ def checkStraightDraw(hand, screen_area, hand_value):
         hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
     elif len(hand) == 8:
         hand = hand[0] + hand[2] + hand[4] + hand[6]
+    elif len(hand) == 12:
+        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10]
     else:
-        return False
+        return hand_value
     collection = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
     arr = []
     for val in hand:
@@ -101,8 +114,10 @@ def checkFlushDraw(hand, screen_area, hand_value):
         hand = hand[1] + hand[3] + hand[5] + hand[7] + hand[9]
     elif len(hand) == 8:
         hand = hand[1] + hand[3] + hand[5] + hand[7]
+    elif len(hand) == 12:
+        hand = hand[1] + hand[3] + hand[5] + hand[7] + hand[9] + hand[11]
     else:
-        return False
+        return hand_value
     suit_count = len(set(hand))
     if suit_count == 1:
         hand_value = 'flush'
@@ -125,6 +140,7 @@ def checkFlushDraw(hand, screen_area, hand_value):
         return hand_value
 
 def checkPair(hand, screen_area):
+    hand_value = 'trash'
     if len(hand) == 10:
         flop = [hand[4], hand[6], hand[8]]
         ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
@@ -139,13 +155,14 @@ def checkPair(hand, screen_area):
         for item in flop:
             ts.append(ranks.index(item))
         hand = hand[0] + hand[2] + hand[4] + hand[6]
+    elif len(hand) == 12:
+        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10]
     else:
-        return False
+        return hand_value
     counter = {}
     for item in hand:
         counter[item] = counter.get(item, 0) + 1
     doubles = {element: count for element, count in counter.items() if count > 1}
-    hand_value = 'trash'
     if len(doubles) == 1:
         double_element = list(doubles.keys())[0]
         if double_element in [hand[0], hand[1]] and ranks.index(double_element) == max(ts):

@@ -11,6 +11,7 @@ import current_stack
 import introduction
 import bar as metka
 import os
+import postflop
 
 images_folder = "images/"
 folder_name = images_folder + str(datetime.datetime.now().date())
@@ -38,10 +39,8 @@ def start():
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, str(item['screen_area']), last_row_action, image_name, folder_name, flop_deck)
             elif last_row_action == 'cbet':
-                if introduction.checkIsFold(str(item['screen_area']), item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_name):
-                    return
-                keyboard.press('f')
-                session_log.updateActionLogSession('fold', str(item['screen_area']))
+                postflop.actionAfterCbet(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
+                                         image_path, str(item['screen_area']), image_name, folder_name, deck)
             else:
                 hand = session_log.getLastRowFromLogSession(str(item['screen_area']))
                 if image_processing.checkCurrentHand(str(item['screen_area']), hand[0]['hand']):
