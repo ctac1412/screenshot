@@ -154,22 +154,18 @@ def checkPair(hand, screen_area):
     hand_value = 'trash'
     if len(hand) == 10:
         flop = [hand[4], hand[6], hand[8]]
-        ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
-        ts = []
-        for item in flop:
-            ts.append(ranks.index(item))
         hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
     elif len(hand) == 8:
         flop = [hand[4], hand[6]]
-        ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
-        ts = []
-        for item in flop:
-            ts.append(ranks.index(item))
-        hand = hand[0] + hand[2] + hand[4] + hand[6]
     elif len(hand) == 12:
+        flop = [hand[4], hand[6], hand[8], hand[10]]
         hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10]
     else:
         return hand_value
+    ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
+    ts = []
+    for item in flop:
+        ts.append(ranks.index(item))
     counter = {}
     for item in hand:
         counter[item] = counter.get(item, 0) + 1
