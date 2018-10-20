@@ -26,6 +26,8 @@ def start():
         if metka.seacrhBar(str(item['screen_area'])):
             image_name = str(math.floor(time.time())) + ".png"
             image_path = os.path.join(images_folder, str(datetime.datetime.now().date()), str(item['screen_area']), image_name)
+            image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
+                                     image_path, item['screen_area'])
             last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
             if last_row_action in ['push', 'fold', 'end']:
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
@@ -40,7 +42,7 @@ def start():
                                          image_path, str(item['screen_area']), last_row_action, image_name, folder_name, flop_deck)
             elif last_row_action == 'cbet':
                 postflop.actionAfterCbet(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
-                                         image_path, str(item['screen_area']), image_name, folder_name, deck)
+                                         image_path, str(item['screen_area']), deck)
             else:
                 hand = session_log.getLastRowFromLogSession(str(item['screen_area']))
                 if image_processing.checkCurrentHand(str(item['screen_area']), hand[0]['hand']):
