@@ -117,11 +117,11 @@ def updateHandValue(screen_area, hand_value):
 def getHandValue(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query(
-        "select hand_value from session_log where screen_area = " + screen_area + " order by id desc limit 1")
+        "select trim(hand_value) as hand_value from session_log where screen_area = " + screen_area + " order by id desc limit 1")
     return data[0]['hand_value']
 
 def getActualHand(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query(
-        "select hand from session_log where screen_area = " + screen_area + " order by id desc limit 1")
+        "select trim(hand) as hand from session_log where screen_area = " + screen_area + " order by id desc limit 1")
     return data[0]['hand']

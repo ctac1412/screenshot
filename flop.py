@@ -12,13 +12,16 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         flop_area = getFlopArea(str(screen_area))
         flop_card = image_processing.searchCards(str(flop_area), flop_deck, 6)
         hand = hand + flop_card
+        print(hand)
+        print(is_headsup)
         session_log.updateHandAfterFlop(screen_area, hand)
         hand_value = checkPair(hand, screen_area)
         if hand_value != True:
             hand_value = checkFlushDraw(hand, screen_area, hand_value)
         if hand_value != True:
-            checkStraightDraw(hand,screen_area, hand_value)
+            checkStraightDraw(hand, screen_area, hand_value)
         hand_value = session_log.getHandValue(screen_area)
+        print(hand_value)
         if action == 'open' and int(stack) > 12:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
                 keyboard.press('b')
@@ -29,7 +32,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif is_headsup == 1 and  hand_value.find('.') != -1 or \
+                elif is_headsup == 1 and hand_value.find('.') != -1 or \
                         hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
@@ -46,13 +49,20 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('fold', str(screen_area))
         else:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
+                print('checkIsCbetAvailable')
                 if is_headsup == 0 and hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
                     keyboard.press('b')
-                    session_log.updateActionLogSession('push', str(screen_area))
+                    session_log.updateActionLogSession('cbet', str(screen_area))
                     return
                 elif is_headsup == 1 and  hand_value.find('.') != -1 or \
                         hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
                     keyboard.press('b')
+                    session_log.updateActionLogSession('cbet', str(screen_area))
+                    return
+                elif hand_value in['trash']:
+                    keyboard.press('f')
+                    session_log.updateActionLogSession('fold', str(screen_area))
+                    return
             else:
                 if hand_value in['trash']:
                     keyboard.press('f')
@@ -138,6 +148,7 @@ def checkFlushDraw(hand, screen_area, hand_value):
             return hand_value
     else:
         return hand_value
+    return hand_value
 
 def checkPair(hand, screen_area):
     hand_value = 'trash'
@@ -173,8 +184,6 @@ def checkPair(hand, screen_area):
             hand_value = 'bottom_pair'
         elif double_element in [hand[0], hand[1]]:
             hand_value = 'middle_pair'
-        else:
-            return False
     elif len(doubles) == 2:
         hand_value = 'two_pairs'
     if hand_value in ['top_pair', 'set', 'two_pairs']:

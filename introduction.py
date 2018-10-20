@@ -67,6 +67,8 @@ def checkIsActionButtons(screen_area):
 
 def checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path):
     last_hand = session_log.getLastRowFromLogSession(str(screen_area))[0]['hand']
+    if len(last_hand) > 4:
+        last_hand = last_hand[:4]
     image_processing.imaging(x_coordinate, y_coordinate, width, height, image_path, str(screen_area))
     cur_hand = image_processing.searchCards(str(screen_area), image_processing.getCards(), 4)
     if last_hand != cur_hand:
