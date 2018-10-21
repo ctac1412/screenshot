@@ -39,14 +39,12 @@ def turnAction(screen_area, is_headsup, hand):
         session_log.updateActionLogSession('push', str(screen_area))
         return True
     elif image_processing.checkIsCbetAvailable(str(screen_area)):
-        #изменить метку
         keyboard.press('h')
-        session_log.updateActionLogSession('check', str(screen_area))
+        session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
     elif image_processing.searchLastOpponentAction(screen_area) in ['1', '2', '3']:
-        # изменить метку
         keyboard.press('c')
-        session_log.updateActionLogSession('call', str(screen_area))
+        session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
     else:
         keyboard.press('f')
@@ -102,9 +100,21 @@ def checkIsRaiseCbet(screen_area):
         session_log.updateActionLogSession('push', str(screen_area))
         return True
     elif opponent_reaction in ['1', '2', '3'] and hand_value in ['middle_pair', 'straight_draw', 'flush_draw']:
-        #изменить метку
         keyboard.press('c')
-        session_log.updateActionLogSession('call', str(screen_area))
+        session_log.updateActionLogSession('cc_postflop', str(screen_area))
+        return True
+    else:
+        keyboard.press('f')
+        session_log.updateActionLogSession('fold', str(screen_area))
+        return True
+
+def actionAfterCCPostflop(screen_area, deck):
+    if checkIsRiver(screen_area, deck): return
+    if checkIsTurn(screen_area, deck): return
+    opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
+    if opponent_reaction in ['1', '2', '3']:
+        keyboard.press('c')
+        session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
     else:
         keyboard.press('f')
