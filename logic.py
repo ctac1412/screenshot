@@ -40,10 +40,12 @@ def getActionFromPreflopChart(screen_area):
     row = session_log.getLastRowFromLogSession(screen_area)
     last_opponent_action = row[0]['last_opponent_action']
     hand = handConverting(row[0]['hand'])
-    stack = convertStack(int(row[0]['current_stack']))
+    stack = int(row[0]['current_stack'])
     position = row[0]['current_position']
     if stack == 6:
         return sklansky_chubukov.getAction(hand, int(row[0]['current_stack']), last_opponent_action, position)
+    elif stack == 0:
+        return 'call'
     if last_opponent_action is None:
         last_opponent_action = ' is null'
     else:
@@ -68,6 +70,6 @@ def convertStack(stack):
         stack = 13
     elif stack in range(7, 10):
         stack = 10
-    elif stack in range(0, 7):
+    elif stack in range(1, 7):
         stack = 6
     return stack

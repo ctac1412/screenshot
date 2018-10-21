@@ -19,19 +19,19 @@ import flop
 # if hand_value == True:
 #     print('true')
 # print(flop.checkPair('3d6d6s5cQh', '2'))
-screen_area = '1'
-hand = '2sQs7s9d9h'
-print(hand)
-session_log.updateHandAfterFlop(screen_area, hand)
-hand_value = flop.checkPair(hand, screen_area)
-print(hand_value)
-if hand_value != True:
-    hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
-    print(hand_value)
-if hand_value != True:
-    print(hand_value)
-    flop.checkStraightDraw(hand,screen_area, hand_value)
-hand_value = session_log.getHandValue(screen_area)
+# screen_area = '1'
+# hand = '8s7d7c8c'
+# print(hand)
+# # session_log.updateHandAfterFlop(screen_area, hand)
+# hand_value = flop.checkPair(hand, screen_area)
+# print(hand_value)
+# if hand_value != True:
+#     hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
+#     print(hand_value)
+# if hand_value != True:
+#     print(hand_value)
+#     flop.checkStraightDraw(hand,screen_area, hand_value)
+# hand_value = session_log.getHandValue(screen_area)
 #
 # lst = ['top_pair', 'two_pairs', 'set', 'flush', 'straight']
 # print(hand_value in lst )

@@ -13,7 +13,6 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         flop_card = image_processing.searchCards(str(flop_area), flop_deck, 6)
         hand = hand + flop_card
         print(hand)
-        print(is_headsup)
         session_log.updateHandAfterFlop(screen_area, hand)
         hand_value = checkPair(hand, screen_area)
         if hand_value != True:
@@ -54,15 +53,15 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('b')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
-                elif is_headsup == 1 and  hand_value.find('.') != -1 or \
+                elif is_headsup == 1 and hand_value.find('.') != -1 or \
                         hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
                     keyboard.press('b')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
-                elif hand_value in['trash']:
-                    keyboard.press('f')
-                    session_log.updateActionLogSession('fold', str(screen_area))
-                    return
+                else:
+                    keyboard.press('h')
+                    session_log.updateActionLogSession('cc_postflop', str(screen_area))
+                    return True
             else:
                 if hand_value in['trash']:
                     keyboard.press('f')
@@ -92,6 +91,8 @@ def checkStraightDraw(hand, screen_area, hand_value):
         hand = hand[0] + hand[2] + hand[4] + hand[6]
     elif len(hand) == 12:
         hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10]
+    elif len(hand) == 14:
+        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10] + hand[12]
     else:
         return hand_value
     collection = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
@@ -126,6 +127,8 @@ def checkFlushDraw(hand, screen_area, hand_value):
         hand = hand[1] + hand[3] + hand[5] + hand[7]
     elif len(hand) == 12:
         hand = hand[1] + hand[3] + hand[5] + hand[7] + hand[9] + hand[11]
+    elif len(hand) == 14:
+        hand = hand[1] + hand[3] + hand[5] + hand[7] + hand[9] + hand[11] + hand[13]
     else:
         return hand_value
     suit_count = len(set(hand))
@@ -157,9 +160,13 @@ def checkPair(hand, screen_area):
         hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
     elif len(hand) == 8:
         flop = [hand[4], hand[6]]
+        hand = hand[0] + hand[2] + hand[4] + hand[6]
     elif len(hand) == 12:
         flop = [hand[4], hand[6], hand[8], hand[10]]
         hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10]
+    elif len(hand) == 14:
+        flop = [hand[4], hand[6], hand[8], hand[10], hand[12]]
+        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10] + hand[12]
     else:
         return hand_value
     ranks = [str(n) for n in range(2, 10)] + list('TJQKA')

@@ -12,7 +12,7 @@ def checkIsTurn(screen_area, deck):
     is_headsup = last_row[0][4]
     element_area = introduction.saveElement(screen_area, 'turn_area')
     if image_processing.searchElement(element_area, ['turn'], 'green_board/') is False:
-        turn = image_processing.searchCards(screen_area, deck, 2)
+        turn = image_processing.searchCards(element_area, deck, 2)
         session_log.updateHandAfterTurn(screen_area, turn)
         if turnAction(screen_area, is_headsup, hand):
             return True
@@ -62,7 +62,7 @@ def checkIsRiver(screen_area, deck):
     hand = last_row[0][0]
     element_area = introduction.saveElement(screen_area, 'river_area')
     if image_processing.searchElement(element_area, ['river'], 'green_board/') is False:
-        turn = image_processing.searchCards(screen_area, deck, 2)
+        turn = image_processing.searchCards(element_area, deck, 2)
         session_log.updateHandAfterTurn(screen_area, turn)
         if riverAction(screen_area, hand):
             return True
