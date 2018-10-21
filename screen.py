@@ -4,7 +4,6 @@ import math
 import image_processing
 import session_log
 import logic
-import keyboard
 import mouse
 import determine_position
 import current_stack
@@ -17,7 +16,6 @@ images_folder = "images/"
 folder_name = images_folder + str(datetime.datetime.now().date())
 screen_data = image_processing.getScreenData()
 deck = image_processing.getCards()
-flop_deck = image_processing.getFlopCards()
 stack_collection = image_processing.getStackImages()
 
 def start():
@@ -39,7 +37,7 @@ def start():
                 logic.getDecision(item['screen_area'])
             elif last_row_action in ['open', 'call', 'check']:
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
-                                         image_path, str(item['screen_area']), last_row_action, image_name, folder_name, flop_deck)
+                                         image_path, str(item['screen_area']), last_row_action, image_name, folder_name, deck)
             elif last_row_action == 'cbet':
                 postflop.actionAfterCbet(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, str(item['screen_area']), deck)

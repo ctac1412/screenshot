@@ -90,6 +90,7 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
                 last_opponnet_action = last_opponnet_action['opponent_action']
         else:
             last_opponnet_action = None
+        print(position)
         insertIntoLogSession(screen_area, hand, position, str(stack), is_headsup=is_headsup,
                              last_opponent_action=last_opponnet_action)
     except Exception as e:
