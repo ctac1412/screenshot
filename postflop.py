@@ -23,11 +23,7 @@ def turnAction(screen_area, is_headsup, hand):
     if hand_value != True:
         flop.checkStraightDraw(hand, screen_area, hand_value)
     hand_value = session_log.getHandValue(screen_area)
-    if hand_value in['trash']:
-        keyboard.press('f')
-        session_log.updateActionLogSession('fold', str(screen_area))
-        return True
-    elif is_headsup == 0 and hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+    if is_headsup == 0 and hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
@@ -114,10 +110,13 @@ def checkIsRaiseCbet(screen_area):
 def actionAfterCCPostflop(screen_area, deck):
     if checkIsRiver(screen_area, deck): return
     if checkIsTurn(screen_area, deck): return
+    if getOpponentFlopReaction(screen_area): return
+
+def getOpponentFlopReaction(screen_area):
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    if opponent_reaction in ['1', '2', '3']:
+    if opponent_reaction in ['1', '2']:
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
