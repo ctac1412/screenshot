@@ -12,6 +12,9 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         flop_area = getFlopArea(str(screen_area))
         flop_card = image_processing.searchCards(str(flop_area), flop_deck, 6)
         hand = hand + flop_card
+        opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
+        if not isinstance(opponent_reaction, str):
+            opponent_reaction = opponent_reaction['alias']
         print(hand)
         session_log.updateHandAfterFlop(screen_area, hand)
         hand_value = checkPair(hand, screen_area)
@@ -40,9 +43,9 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
-                elif image_processing.searchLastOpponentAction(screen_area)['alias'] in['1', '2', '3']:
+                elif opponent_reaction in ['1', '2', '3']:
                     keyboard.press('c')
-                    session_log.updateActionLogSession('call', str(screen_area))
+                    session_log.updateActionLogSession('cc_postflop', str(screen_area))
                 else:
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
@@ -73,7 +76,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                 elif is_headsup == 1 and  hand_value.find('.') != -1 or \
                         hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
                     keyboard.press('q')
-                elif image_processing.searchLastOpponentAction(screen_area)['alias'] in['1', '2', '3']:
+                elif opponent_reaction in ['1', '2', '3']:
                     keyboard.press('c')
                     session_log.updateActionLogSession('call', str(screen_area))
                 else:
