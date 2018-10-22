@@ -1,5 +1,3 @@
-import postgresql
-import db_conf
 import session_log
 import introduction
 import image_processing
