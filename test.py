@@ -51,3 +51,4 @@ import flop
 #     keyboard.press('f')
 #     session_log.updateActionLogSession('fold', str(screen_area))
 # print(hand_value)
+print(image_processing.searchLastOpponentAction('1'))

@@ -42,7 +42,7 @@ def turnAction(screen_area, is_headsup, hand):
         keyboard.press('h')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
-    elif image_processing.searchLastOpponentAction(screen_area) in ['1', '2', '3']:
+    elif image_processing.searchLastOpponentAction(screen_area)['alias'] in ['1', '2', '3']:
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
@@ -82,7 +82,7 @@ def riverAction(screen_area, hand):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif image_processing.searchLastOpponentAction(screen_area) in ['1', '2', '3'] and hand_value in['middle_pair']:
+    elif image_processing.searchLastOpponentAction(screen_area)['alias'] in ['1', '2', '3'] and hand_value in['middle_pair']:
         keyboard.press('c')
         session_log.updateActionLogSession('end', str(screen_area))
         return True
@@ -99,7 +99,7 @@ def checkIsRaiseCbet(screen_area):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif opponent_reaction in ['1', '2', '3'] and hand_value in ['middle_pair', 'straight_draw', 'flush_draw']:
+    elif opponent_reaction['alias'] in ['1', '2', '3'] and hand_value in ['middle_pair', 'straight_draw', 'flush_draw']:
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
@@ -112,7 +112,7 @@ def actionAfterCCPostflop(screen_area, deck):
     if checkIsRiver(screen_area, deck): return
     if checkIsTurn(screen_area, deck): return
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
-    if opponent_reaction in ['1', '2', '3']:
+    if opponent_reaction['alias'] in ['1', '2', '3']:
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
