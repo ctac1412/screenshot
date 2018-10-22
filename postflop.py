@@ -5,13 +5,13 @@ import keyboard
 import flop
 
 def checkIsTurn(screen_area, deck):
-    last_row = session_log.getLastRowFromLogSession(str(screen_area))
-    hand = last_row[0][0]
-    is_headsup = last_row[0][4]
     element_area = introduction.saveElement(screen_area, 'turn_area')
     if image_processing.searchElement(element_area, ['turn'], 'green_board/') is False:
         turn = image_processing.searchCards(element_area, deck, 2)
         session_log.updateHandAfterTurn(screen_area, turn)
+        last_row = session_log.getLastRowFromLogSession(str(screen_area))
+        hand = last_row[0][0]
+        is_headsup = last_row[0][4]
         if turnAction(screen_area, is_headsup, hand):
             return True
 
@@ -23,12 +23,12 @@ def turnAction(screen_area, is_headsup, hand):
     if hand_value != True:
         flop.checkStraightDraw(hand, screen_area, hand_value)
     hand_value = session_log.getHandValue(screen_area)
-    if is_headsup == 0 and hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+    if is_headsup == 0 and (hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif is_headsup == 1 and hand_value.find('.') != -1 or \
-            hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
+    elif is_headsup == 1 and (hand_value.find('.') != -1 or
+            hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair']):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
@@ -36,7 +36,7 @@ def turnAction(screen_area, is_headsup, hand):
         keyboard.press('h')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
-    elif not isinstance (image_processing.searchLastOpponentAction(screen_area), str):
+    elif not isinstance (image_processing.searchLastOpponentAction(screen_area), str) and hand_value != 'trash':
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
@@ -52,12 +52,12 @@ def actionAfterCbet(x_coordinate, y_coordinate, width, height, image_path, scree
     if checkIsRaiseCbet(screen_area): return
 
 def checkIsRiver(screen_area, deck):
-    last_row = session_log.getLastRowFromLogSession(str(screen_area))
-    hand = last_row[0][0]
     element_area = introduction.saveElement(screen_area, 'river_area')
     if image_processing.searchElement(element_area, ['river'], 'green_board/') is False:
         turn = image_processing.searchCards(element_area, deck, 2)
         session_log.updateHandAfterTurn(screen_area, turn)
+        last_row = session_log.getLastRowFromLogSession(str(screen_area))
+        hand = last_row[0][0]
         if riverAction(screen_area, hand):
             return True
 

@@ -51,12 +51,12 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('fold', str(screen_area))
         else:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
-                if is_headsup == 0 and hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                if is_headsup == 0 and (hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1):
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
-                elif is_headsup == 1 and hand_value.find('.') != -1 or \
-                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
+                elif is_headsup == 1 and (hand_value.find('.') != -1 or
+                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']):
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
@@ -69,14 +69,14 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
-                elif is_headsup == 0 and hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                elif is_headsup == 0 and (hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif is_headsup == 1 and  hand_value.find('.') != -1 or \
-                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']:
+                elif is_headsup == 1 and  (hand_value.find('.') != -1 or
+                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']):
                     keyboard.press('q')
-                elif opponent_reaction in ['1', '2']:
+                elif opponent_reaction in ['1', '2'] and is_headsup == 1:
                     keyboard.press('c')
                     session_log.updateActionLogSession('call', str(screen_area))
                 else:

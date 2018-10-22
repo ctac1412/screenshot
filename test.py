@@ -51,4 +51,8 @@ import flop
 #     keyboard.press('f')
 #     session_log.updateActionLogSession('fold', str(screen_area))
 # print(hand_value)
-print(image_processing.searchLastOpponentAction('1'))
+is_headsup = 0
+hand_value = session_log.getHandValue('1')
+if is_headsup == 1 and (hand_value.find('.') != -1 or
+            hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']):
+    print(1)
