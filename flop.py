@@ -48,7 +48,6 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('fold', str(screen_area))
         else:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
-                print('checkIsCbetAvailable')
                 if is_headsup == 0 and hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
                     keyboard.press('b')
                     session_log.updateActionLogSession('cbet', str(screen_area))

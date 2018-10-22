@@ -45,7 +45,7 @@ def getActionFromPreflopChart(screen_area):
     if stack == 6:
         return sklansky_chubukov.getAction(hand, int(row[0]['current_stack']), last_opponent_action, position)
     elif stack == 0:
-        return 'call'
+        return 'open'
     if last_opponent_action is None:
         last_opponent_action = ' is null'
     else:
