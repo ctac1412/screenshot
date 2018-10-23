@@ -12,9 +12,10 @@ def checkIsTurn(screen_area, deck):
         last_row = session_log.getLastRowFromLogSession(str(screen_area))
         hand = last_row[0][0]
         is_headsup = last_row[0][4]
+        print('turn - ' + turn)
         if turnAction(screen_area, is_headsup, hand):
             return True
-
+    return False
 
 def turnAction(screen_area, is_headsup, hand):
     hand_value = flop.checkPair(hand, screen_area)
@@ -48,18 +49,21 @@ def turnAction(screen_area, is_headsup, hand):
 
 def actionAfterCbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck):
     if introduction.checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
+    if checkIsRiver(screen_area, deck): return
     if checkIsTurn(screen_area, deck): return
     if checkIsRaiseCbet(screen_area): return
 
 def checkIsRiver(screen_area, deck):
     element_area = introduction.saveElement(screen_area, 'river_area')
     if image_processing.searchElement(element_area, ['river'], 'green_board/') is False:
-        turn = image_processing.searchCards(element_area, deck, 2)
-        session_log.updateHandAfterTurn(screen_area, turn)
+        river = image_processing.searchCards(element_area, deck, 2)
+        session_log.updateHandAfterTurn(screen_area, river)
         last_row = session_log.getLastRowFromLogSession(str(screen_area))
         hand = last_row[0][0]
+        print('river - ' + river)
         if riverAction(screen_area, hand):
             return True
+    return False
 
 def riverAction(screen_area, hand):
     hand_value = flop.checkPair(hand, screen_area)
@@ -114,9 +118,10 @@ def actionAfterCCPostflop(screen_area, deck):
 
 def getOpponentFlopReaction(screen_area):
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
+    hand_value = session_log.getHandValue(screen_area)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    if opponent_reaction in ['1', '2']:
+    if opponent_reaction in ['1', '2'] and hand_value != 'trash':
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True

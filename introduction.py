@@ -13,9 +13,9 @@ import os
 images_folder = "images"
 
 def actionAfterOpen(x_coordinate, y_coordinate, width, height, image_path, screen_area, action, image_name, folder_name, flop_deck):
+    if checkIsFlop(screen_area, image_name, folder_name, flop_deck): return
     if action == 'open':
         if checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
-    if checkIsFlop(screen_area, image_name, folder_name, flop_deck): return
     if checkIsActionButtons(screen_area): return
 
 def saveElement(screen_area, element_name):

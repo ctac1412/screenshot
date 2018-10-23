@@ -51,8 +51,14 @@ import flop
 #     keyboard.press('f')
 #     session_log.updateActionLogSession('fold', str(screen_area))
 # print(hand_value)
-is_headsup = 0
-hand_value = session_log.getHandValue('1')
-if is_headsup == 1 and (hand_value.find('.') != -1 or
-            hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']):
-    print(1)
+def checkIsRiver(screen_area, deck):
+    element_area = introduction.saveElement(screen_area, 'river_area')
+    if image_processing.searchElement(element_area, ['river'], 'green_board/') is False:
+        river = image_processing.searchCards(element_area, deck, 2)
+        session_log.updateHandAfterTurn(screen_area, river)
+        last_row = session_log.getLastRowFromLogSession(str(screen_area))
+        hand = last_row[0][0]
+        print(hand)
+        # if postflop.riverAction(screen_area, hand):
+        #     return True
+print(introduction.checkIsFlop('1','test','test',image_processing.getCards()))
