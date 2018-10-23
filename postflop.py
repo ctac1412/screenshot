@@ -8,7 +8,8 @@ def checkIsTurn(screen_area, deck):
     element_area = introduction.saveElement(screen_area, 'turn_area')
     if image_processing.searchElement(element_area, ['turn'], 'green_board/') is False:
         turn = image_processing.searchCards(element_area, deck, 2)
-        session_log.updateHandAfterTurn(screen_area, turn)
+        if len(session_log.getActualHand(screen_area)) == 10:
+            session_log.updateHandAfterTurn(screen_area, turn)
         last_row = session_log.getLastRowFromLogSession(str(screen_area))
         hand = last_row[0][0]
         is_headsup = last_row[0][4]
@@ -49,7 +50,6 @@ def turnAction(screen_area, is_headsup, hand):
 
 def actionAfterCbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck):
     if introduction.checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
-    if checkIsRiver(screen_area, deck): return
     if checkIsTurn(screen_area, deck): return
     if checkIsRaiseCbet(screen_area): return
 
