@@ -14,51 +14,15 @@ import os
 import postflop
 import flop
 
-# hand_value = flop.checkPair('3d6d6s5cQh', '2')
-#
-# if hand_value == True:
-#     print('true')
-# print(flop.checkPair('3d6d6s5cQh', '2'))
-# screen_area = '1'
-# hand = '8s7d7c8c'
-# print(hand)
-# # session_log.updateHandAfterFlop(screen_area, hand)
-# hand_value = flop.checkPair(hand, screen_area)
-# print(hand_value)
-# if hand_value != True:
-#     hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
-#     print(hand_value)
-# if hand_value != True:
-#     print(hand_value)
-#     flop.checkStraightDraw(hand,screen_area, hand_value)
-# hand_value = session_log.getHandValue(screen_area)
-#
-# lst = ['top_pair', 'two_pairs', 'set', 'flush', 'straight']
-# print(hand_value in lst )
-# if hand_value in lst:
-#     print(1)
-# is_headsup = 0
-# if is_headsup == 0 and hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight']:
-#     keyboard.press('b')
-#     session_log.updateActionLogSession('cbet', str(screen_area))
-#     session_log.updateActionLogSession('push', str(screen_area))
-# elif is_headsup == 1 and hand_value.find('.') != -1 or \
-#         hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw',
-#                        'flush_draw']:
-#     keyboard.press('b')
-#     session_log.updateActionLogSession('cbet', str(screen_area))
-# elif hand_value in ['trash']:
-#     keyboard.press('f')
-#     session_log.updateActionLogSession('fold', str(screen_area))
-# print(hand_value)
-def checkIsRiver(screen_area, deck):
-    element_area = introduction.saveElement(screen_area, 'river_area')
-    if image_processing.searchElement(element_area, ['river'], 'green_board/') is False:
-        river = image_processing.searchCards(element_area, deck, 2)
-        session_log.updateHandAfterTurn(screen_area, river)
-        last_row = session_log.getLastRowFromLogSession(str(screen_area))
-        hand = last_row[0][0]
-        print(hand)
-        # if postflop.riverAction(screen_area, hand):
-        #     return True
-print(introduction.checkIsFlop('1','test','test',image_processing.getCards()))
+
+# print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
+
+hand = '7c8dJc2sAs'
+screen_area = '1'
+hand_value = flop.checkPair(hand, screen_area)
+if hand_value != True:
+    hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
+if hand_value != True:
+    flop.checkStraightDraw(hand, screen_area, hand_value)
+hand_value = session_log.getHandValue(screen_area)
+print(hand_value)

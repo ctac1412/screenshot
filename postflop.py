@@ -7,13 +7,13 @@ import flop
 def checkIsTurn(screen_area, deck):
     element_area = introduction.saveElement(screen_area, 'turn_area')
     if image_processing.searchElement(element_area, ['turn'], 'green_board/') is False:
-        turn = image_processing.searchCards(element_area, deck, 2)
         if len(session_log.getActualHand(screen_area)) == 10:
+            turn = image_processing.searchCards(element_area, deck, 2)
             session_log.updateHandAfterTurn(screen_area, turn)
+            print('turn - ' + turn)
         last_row = session_log.getLastRowFromLogSession(str(screen_area))
         hand = last_row[0][0]
         is_headsup = last_row[0][4]
-        print('turn - ' + turn)
         if turnAction(screen_area, is_headsup, hand):
             return True
     return False

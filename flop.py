@@ -138,12 +138,16 @@ def checkFlushDraw(hand, screen_area, hand_value):
         hand_value = 'flush'
         session_log.updateHandValue(screen_area, hand_value)
         return True
-    elif suit_count == 2:
+    elif suit_count <= 3:
         counter = {}
         for item in hand:
             counter[item] = counter.get(item, 0) + 1
         doubles = {element: count for element, count in counter.items() if count > 3}
-        if len(doubles) > 0:
+        if doubles and list(doubles.values())[0] >= 4:
+            hand_value = 'flush'
+            session_log.updateHandValue(screen_area, hand_value)
+            return True
+        elif len(doubles) > 0:
             if hand_value != 'trash':
                 hand_value = hand_value +'.flush_draw'
                 session_log.updateHandValue(screen_area, hand_value)
