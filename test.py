@@ -17,8 +17,8 @@ import flop
 
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
-hand = '7c8dJc2sAs'
-screen_area = '1'
+hand = '3hQdTcAc7h'
+screen_area = '2'
 hand_value = flop.checkPair(hand, screen_area)
 if hand_value != True:
     hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
@@ -26,3 +26,7 @@ if hand_value != True:
     flop.checkStraightDraw(hand, screen_area, hand_value)
 hand_value = session_log.getHandValue(screen_area)
 print(hand_value)
+
+# low_straight = ['0', '1', '2', '3', '12']
+# # test = ['a', 'c']
+# print(set(low_straight).issubset([0, 1, 2, 3, 9,10, 12]))

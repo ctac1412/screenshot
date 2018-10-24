@@ -98,6 +98,7 @@ def checkStraightDraw(hand, screen_area, hand_value):
     else:
         return hand_value
     collection = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+    low_straight = [0, 1, 2, 3, 12]
     arr = []
     for val in hand:
         arr.append(collection.index(val))
@@ -107,7 +108,7 @@ def checkStraightDraw(hand, screen_area, hand_value):
     if arr_length > 4:
         first = arr[:-1]
         second = arr[1:]
-        if list(range(min(arr), max(arr) + 1)) == arr:
+        if list(range(min(arr), max(arr) + 1)) == arr or set(low_straight).issubset(arr):
             hand_value = 'straight'
         elif first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)):
             if hand_value != 'trash':
@@ -143,7 +144,7 @@ def checkFlushDraw(hand, screen_area, hand_value):
         for item in hand:
             counter[item] = counter.get(item, 0) + 1
         doubles = {element: count for element, count in counter.items() if count > 3}
-        if doubles and list(doubles.values())[0] >= 4:
+        if doubles and list(doubles.values())[0] >= 5:
             hand_value = 'flush'
             session_log.updateHandValue(screen_area, hand_value)
             return True
@@ -194,7 +195,9 @@ def checkPair(hand, screen_area):
         elif double_element in [hand[0], hand[1]]:
             hand_value = 'middle_pair'
     elif len(doubles) == 2:
-        hand_value = 'two_pairs'
+        double_element = list(doubles.keys())[0]
+        if double_element in [hand[0], hand[1]]:
+            hand_value = 'two_pairs'
     if hand_value in ['top_pair', 'set', 'two_pairs']:
         session_log.updateHandValue(screen_area, hand_value)
         return True

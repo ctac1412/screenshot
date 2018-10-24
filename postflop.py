@@ -10,7 +10,6 @@ def checkIsTurn(screen_area, deck):
         if len(session_log.getActualHand(screen_area)) == 10:
             turn = image_processing.searchCards(element_area, deck, 2)
             session_log.updateHandAfterTurn(screen_area, turn)
-            print('turn - ' + turn)
         last_row = session_log.getLastRowFromLogSession(str(screen_area))
         hand = last_row[0][0]
         is_headsup = last_row[0][4]
@@ -60,7 +59,6 @@ def checkIsRiver(screen_area, deck):
         session_log.updateHandAfterTurn(screen_area, river)
         last_row = session_log.getLastRowFromLogSession(str(screen_area))
         hand = last_row[0][0]
-        print('river - ' + river)
         if riverAction(screen_area, hand):
             return True
     return False
