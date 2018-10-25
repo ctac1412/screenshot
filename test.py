@@ -17,7 +17,7 @@ import flop
 
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
-hand = '2s3c4s5h9dAc8h'
+hand = '6s9c2h9s9d'
 screen_area = '2'
 hand_value = flop.checkPair(hand, screen_area)
 if hand_value != True:
@@ -26,6 +26,5 @@ if hand_value != True:
     flop.checkStraightDraw(hand, screen_area, hand_value)
 hand_value = session_log.getHandValue(screen_area)
 print(hand_value)
-
 
 

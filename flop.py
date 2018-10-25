@@ -30,6 +30,10 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
+                elif hand_value == 'trash' and is_headsup == 0:
+                    keyboard.press('h')
+                    session_log.updateActionLogSession('cc_postflop', str(screen_area))
+                    return
                 else:
                     keyboard.press('b')
                     session_log.updateActionLogSession('cbet', str(screen_area))
