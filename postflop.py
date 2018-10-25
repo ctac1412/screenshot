@@ -95,8 +95,7 @@ def checkIsRaiseCbet(screen_area):
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    if opponent_reaction in ['push'] and hand_value.find('.') != -1 or \
-            hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight']:
+    if hand_value.find('.') != -1 or hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight']:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True

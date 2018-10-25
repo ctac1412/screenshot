@@ -15,7 +15,6 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
         if not isinstance(opponent_reaction, str):
             opponent_reaction = opponent_reaction['alias']
-        print(hand)
         session_log.updateHandAfterFlop(screen_area, hand)
         hand_value = checkPair(hand, screen_area)
         if hand_value != True:
@@ -23,12 +22,18 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         if hand_value != True:
             checkStraightDraw(hand, screen_area, hand_value)
         hand_value = session_log.getHandValue(screen_area)
+        print(hand)
         print(hand_value)
         if action == 'open' and int(stack) > 12:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
-                keyboard.press('b')
-                session_log.updateActionLogSession('cbet', str(screen_area))
-                return
+                if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                    keyboard.press('v')
+                    session_log.updateActionLogSession('cbet', str(screen_area))
+                    return
+                else:
+                    keyboard.press('b')
+                    session_log.updateActionLogSession('cbet', str(screen_area))
+                    return
             else:
                 if is_headsup == 0 and hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
                     keyboard.press('q')
@@ -76,7 +81,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                 elif is_headsup == 1 and  (hand_value.find('.') != -1 or
                         hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']):
                     keyboard.press('q')
-                elif opponent_reaction in ['1', '2'] and is_headsup == 1:
+                elif opponent_reaction in ['1', '2']:
                     keyboard.press('c')
                     session_log.updateActionLogSession('call', str(screen_area))
                 else:
@@ -105,22 +110,45 @@ def checkStraightDraw(hand, screen_area, hand_value):
     arr = list(set(arr))
     arr = sorted(arr)
     arr_length = len(arr)
-    if arr_length > 4:
+    if arr_length == 5:
         first = arr[:-1]
         second = arr[1:]
         if list(range(min(arr), max(arr) + 1)) == arr or set(low_straight).issubset(arr):
             hand_value = 'straight'
         elif first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)):
             if hand_value != 'trash':
-                hand_value = hand_value +'.straight_draw'
+                hand_value = hand_value + '.straight_draw'
             else:
                 hand_value = 'straight_draw'
+    elif arr_length == 6:
+        first = arr[:-1]
+        second = arr[1:]
+        third = arr[:-2]
+        fourth = arr[1:-1]
+        fifth = arr[2:]
+        if list(range(min(arr), max(arr) + 1)) == arr or set(low_straight).issubset(arr):
+            hand_value = 'straight'
+        elif first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)):
+            hand_value = 'straight'
+        elif third == list(range(min(third), max(third) + 1)):
+            hand_value = 'straight_draw'
+        elif fourth == list(range(min(fourth), max(fourth) + 1)):
+            hand_value = 'straight_draw'
+        elif fifth == list(range(min(fifth), max(fifth) + 1)):
+            hand_value = 'straight_draw'
     elif arr_length == 4:
         if arr == list(range(min(arr), max(arr) + 1)):
             if hand_value != 'trash':
-                hand_value = hand_value +'.straight_draw'
+                hand_value = hand_value + '.straight_draw'
             else:
                 hand_value = 'straight_draw'
+    elif arr_length == 7:
+        first = arr[:-2]
+        second = arr[1:-1]
+        third = arr[2:]
+        if first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)) or \
+                third == list(range(min(third), max(third) + 1)) or set(low_straight).issubset(arr):
+            hand_value = 'straight'
     session_log.updateHandValue(screen_area, hand_value)
 
 def checkFlushDraw(hand, screen_area, hand_value):
@@ -150,7 +178,7 @@ def checkFlushDraw(hand, screen_area, hand_value):
             return True
         elif len(doubles) > 0:
             if hand_value != 'trash':
-                hand_value = hand_value +'.flush_draw'
+                hand_value = hand_value + '.flush_draw'
                 session_log.updateHandValue(screen_area, hand_value)
                 return True
             else:
