@@ -93,9 +93,14 @@ def riverAction(screen_area, hand):
 def checkIsRaiseCbet(screen_area):
     hand_value = session_log.getHandValue(screen_area)
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
+    stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
     if hand_value.find('.') != -1 or hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight']:
+        keyboard.press('q')
+        session_log.updateActionLogSession('push', str(screen_area))
+        return True
+    elif int(stack) <= 10 and hand_value in ['middle_pair', 'straight_draw', 'flush_draw']:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
