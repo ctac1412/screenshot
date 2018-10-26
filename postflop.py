@@ -29,7 +29,7 @@ def turnAction(screen_area, is_headsup, hand):
         session_log.updateActionLogSession('push', str(screen_area))
         return True
     elif is_headsup == 1 and (hand_value.find('.') != -1 or
-            hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair']):
+            hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight']):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True

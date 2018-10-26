@@ -28,6 +28,8 @@ def searchCards(screen_area, deck, list_length):
         except Exception as e:
             error_log.errorLog('searchCards', str(e))
             print(e)
+    if len(hand) < 4:
+        hand = '72o'
     return hand
 
 def insertImagePathIntoDb(image_path, screen_area):
