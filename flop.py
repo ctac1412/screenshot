@@ -135,11 +135,20 @@ def checkStraightDraw(hand, screen_area, hand_value):
         elif first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)):
             hand_value = 'straight'
         elif third == list(range(min(third), max(third) + 1)):
-            hand_value = 'straight_draw'
+            if hand_value != 'trash':
+                hand_value = hand_value + '.straight_draw'
+            else:
+                hand_value = 'straight_draw'
         elif fourth == list(range(min(fourth), max(fourth) + 1)):
-            hand_value = 'straight_draw'
+            if hand_value != 'trash':
+                hand_value = hand_value + '.straight_draw'
+            else:
+                hand_value = 'straight_draw'
         elif fifth == list(range(min(fifth), max(fifth) + 1)):
-            hand_value = 'straight_draw'
+            if hand_value != 'trash':
+                hand_value = hand_value + '.straight_draw'
+            else:
+                hand_value = 'straight_draw'
     elif arr_length == 4:
         if arr == list(range(min(arr), max(arr) + 1)):
             if hand_value != 'trash':
