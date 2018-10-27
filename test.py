@@ -13,7 +13,7 @@ import bar as metka
 import os
 import postflop
 import flop
-
+import error_log
 
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
@@ -25,6 +25,10 @@ import flop
 # if hand_value != True:
 #     flop.checkStraightDraw(hand, screen_area, hand_value)
 # hand_value = session_log.getHandValue(screen_area)
-print(type(int(session_log.getLastRowFromLogSession('2')[0]['current_stack'])))
+# print(type(int(session_log.getLastRowFromLogSession('2')[0]['current_stack'])))
+
+
+error_log.errorLog('test', 'test')
+
 
 
