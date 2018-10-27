@@ -91,7 +91,7 @@ def riverAction(screen_area, hand, stack):
         keyboard.press('c')
         session_log.updateActionLogSession('end', str(screen_area))
         return True
-    elif stack <= 10 and hand_value in['middle_pair']:
+    elif int(stack) <= 10 and hand_value in['middle_pair']:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
     elif hand_value in['middle_pair']:
@@ -113,6 +113,7 @@ def checkIsRaiseCbet(screen_area):
         session_log.updateActionLogSession('push', str(screen_area))
         return True
     elif int(stack) <= 10 and hand_value in ['middle_pair', 'straight_draw', 'flush_draw']:
+        print(stack)
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
@@ -125,10 +126,11 @@ def checkIsRaiseCbet(screen_area):
         session_log.updateActionLogSession('fold', str(screen_area))
         return True
 
-def actionAfterCCPostflop(screen_area, deck):
+def actionAfterCCPostflop(screen_area, deck, x_coordinate, y_coordinate, width, height, image_path):
     if checkIsRiver(screen_area, deck): return
     if checkIsTurn(screen_area, deck): return
     if getOpponentFlopReaction(screen_area): return
+    if introduction.checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
 
 def getOpponentFlopReaction(screen_area):
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
