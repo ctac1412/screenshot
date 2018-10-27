@@ -44,7 +44,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
                 elif is_headsup == 1 and (hand_value.find('.') != -1 or
-                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']):
+                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'straight_draw', 'flush_draw']):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
@@ -95,7 +95,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     return
                 elif opponent_reaction in ['1', '2']:
                     keyboard.press('c')
-                    session_log.updateActionLogSession('call', str(screen_area))
+                    session_log.updateActionLogSession('cc_postflop', str(screen_area))
                 else:
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))

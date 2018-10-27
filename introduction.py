@@ -101,4 +101,6 @@ def getReactionToOpponent(row):
                     last_opponent_action + ' and stack = ' + str(stack) + " and action = '" + row[0]['action'] + '\'')
     return data
 
-
+def reactionToOpponentSitOut(screen_area):
+    keyboard.press('q')
+    session_log.updateActionLogSession('push', str(screen_area))
