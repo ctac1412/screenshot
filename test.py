@@ -28,7 +28,7 @@ import error_log
 # print(type(int(session_log.getLastRowFromLogSession('2')[0]['current_stack'])))
 
 
-error_log.errorLog('test', 'test')
+postflop.getOpponentReaction('1')
 
 
 

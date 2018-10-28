@@ -89,6 +89,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                 elif is_headsup == 1 and  (hand_value.find('.') != -1 or
                         hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'straight_draw', 'flush_draw']):
                     keyboard.press('q')
+                    session_log.updateActionLogSession('push', str(screen_area))
                 elif int(stack) <= 10 and hand_value in['middle_pair', 'straight_draw', 'flush_draw']:
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))

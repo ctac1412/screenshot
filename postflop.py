@@ -87,15 +87,16 @@ def riverAction(screen_area, hand, stack):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif opponent_reaction in ['1', '2', '3'] and hand_value in['middle_pair']:
+    elif opponent_reaction in ['1', '2'] and hand_value in['middle_pair']:
         keyboard.press('c')
         session_log.updateActionLogSession('end', str(screen_area))
         return True
     elif int(stack) <= 10 and hand_value in['middle_pair']:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
-    elif hand_value in['middle_pair']:
+    elif hand_value in['middle_pair'] and image_processing.checkIsCbetAvailable(str(screen_area)):
         keyboard.press('h')
+        session_log.updateActionLogSession('end', str(screen_area))
         return True
     else:
         keyboard.press('f')
@@ -117,7 +118,7 @@ def checkIsRaiseCbet(screen_area):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif opponent_reaction in ['1', '2', '3'] and hand_value in ['middle_pair', 'straight_draw', 'flush_draw']:
+    elif opponent_reaction in ['1', '2'] and hand_value in ['middle_pair', 'straight_draw', 'flush_draw']:
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
@@ -129,10 +130,9 @@ def checkIsRaiseCbet(screen_area):
 def actionAfterCCPostflop(screen_area, deck, x_coordinate, y_coordinate, width, height, image_path):
     if checkIsRiver(screen_area, deck): return
     if checkIsTurn(screen_area, deck): return
-    if getOpponentFlopReaction(screen_area): return
     if introduction.checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
 
-def getOpponentFlopReaction(screen_area):
+def getOpponentReaction(screen_area):
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
     hand_value = session_log.getHandValue(screen_area)
     if not isinstance(opponent_reaction, str):
@@ -142,6 +142,7 @@ def getOpponentFlopReaction(screen_area):
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
     else:
+        print(2)
         keyboard.press('f')
         session_log.updateActionLogSession('fold', str(screen_area))
         return True
