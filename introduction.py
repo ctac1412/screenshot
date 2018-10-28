@@ -41,7 +41,10 @@ def checkIsFlop(screen_area, image_name, folder_name, flop_deck):
         stack = last_row[0][1]
         action = last_row[0][3]
         is_headsup = last_row[0][4]
-        flop.makeFlopDecision(str(screen_area), hand, image_name, folder_name, stack, action, is_headsup, flop_deck)
+        if len(hand) == 4:
+            flop.makeFlopDecision(str(screen_area), hand, image_name, folder_name, stack, action, is_headsup, flop_deck)
+        else:
+            session_log.updateActionLogSession('end', str(screen_area))
         return True
 
 def checkIsActionButtons(screen_area):

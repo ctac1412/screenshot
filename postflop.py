@@ -19,6 +19,9 @@ def checkIsTurn(screen_area, deck):
     return False
 
 def turnAction(screen_area, is_headsup, hand, stack):
+    opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
+    if not isinstance(opponent_reaction, str):
+        opponent_reaction = opponent_reaction['alias']
     hand_value = flop.checkPair(hand, screen_area)
     if hand_value != True:
         hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
@@ -41,7 +44,7 @@ def turnAction(screen_area, is_headsup, hand, stack):
         keyboard.press('h')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
-    elif not isinstance (image_processing.searchLastOpponentAction(screen_area), str) and hand_value != 'trash':
+    elif opponent_reaction in ['1', '2'] and hand_value != 'trash':
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
@@ -130,11 +133,14 @@ def checkIsRaiseCbet(screen_area):
 def actionAfterCCPostflop(screen_area, deck, x_coordinate, y_coordinate, width, height, image_path):
     if checkIsRiver(screen_area, deck): return
     if checkIsTurn(screen_area, deck): return
+    if getOpponentFlopReaction(screen_area): return
     if introduction.checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
 
-def getOpponentReaction(screen_area):
-    opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
+def getOpponentFlopReaction(screen_area):
     hand_value = session_log.getHandValue(screen_area)
+    if hand_value is None:
+        return False
+    opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
     if opponent_reaction in ['1', '2'] and hand_value != 'trash':
@@ -142,7 +148,6 @@ def getOpponentReaction(screen_area):
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
     else:
-        print(2)
         keyboard.press('f')
         session_log.updateActionLogSession('fold', str(screen_area))
         return True

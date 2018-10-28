@@ -22,6 +22,7 @@ class Window(tkinter.Tk, threading.Thread):
         tkinter.Button(text="stop", command=self.Stop,width=10).grid(row = 1, column = 2)
         tkinter.Button(text='Exit', command=lambda: self.destroy()).grid(row=1, column=3)
         tkinter.Button(text='Update', command=lambda:updateCurrentStackLogSession(change())).grid(row=5, column=1)
+        tkinter.Button(text='Truncate', command=lambda: truncateScreenshotTable()).grid(row=5, column=2)
 
         self.first = tkinter.IntVar()
         tkinter.Checkbutton(text="1", variable=self.first, onvalue=1, offvalue=0).grid(row=3,
@@ -51,6 +52,9 @@ class Window(tkinter.Tk, threading.Thread):
                         "UPDATE screen_coordinates SET active = CASE active WHEN 0 THEN 1 WHEN 1 THEN 0 ELSE active END "
                         "where screen_area = " + str(item))
 
+        def truncateScreenshotTable():
+            db = postgresql.open(db_conf.connectionString())
+            db.query("truncate screenshots restart identity")
 
 
         self.first.set(getCurrenValue(1))  # Устанавливаем значение переменной
