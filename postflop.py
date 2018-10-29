@@ -90,7 +90,7 @@ def riverAction(screen_area, hand, stack):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif opponent_reaction in ['1', '2'] and hand_value in['middle_pair']:
+    elif opponent_reaction in ['1', '2'] and (hand_value in['middle_pair'] or hand_value.find('middle_pair.') != -1):
         keyboard.press('c')
         session_log.updateActionLogSession('end', str(screen_area))
         return True
@@ -117,7 +117,6 @@ def checkIsRaiseCbet(screen_area):
         session_log.updateActionLogSession('push', str(screen_area))
         return True
     elif int(stack) <= 10 and hand_value in ['middle_pair', 'straight_draw', 'flush_draw']:
-        print(stack)
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
