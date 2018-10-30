@@ -171,6 +171,8 @@ def checkStraightDraw(hand, screen_area, hand_value):
         if first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)) or \
                 third == list(range(min(third), max(third) + 1)) or set(low_straight).issubset(arr):
             hand_value = 'straight'
+    if hand_value != 'straight' or hand_value.find('.') != -1:
+        hand_value = checkGutShot(hand, hand_value)
     session_log.updateHandValue(screen_area, hand_value)
 
 def checkFlushDraw(hand, screen_area, hand_value):
@@ -266,5 +268,30 @@ def saveFlopImage(screen_area,image_name,folder_name):
 def getFlopData(screen_area):
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
-                    "where screen_area = "  + screen_area)
+                    "where screen_area = " + screen_area)
     return data
+
+def checkGutShot(hand, hand_value):
+    hand_length = len(hand)
+    if hand_length == 10:
+        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
+    elif hand_length == 12:
+        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10]
+    collection = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+    arr = []
+    for val in hand:
+        arr.append(collection.index(val))
+    arr = list(set(arr))
+    arr = sorted(arr)
+    print(arr)
+    if hand_length == 10 and (arr[-2:][0] - arr[0] == 4 or arr[-1:][0] - arr[1] == 4):
+        if hand_value != 'trash':
+            hand_value = hand_value + '.gutshot'
+        else:
+            hand_value = 'gutshot'
+    elif hand_length == 12 and (arr[-3:][0] - arr[0] == 4 or arr[-2:][0] - arr[1] == 4 or arr[-1:][0] - arr[2] == 4):
+        if hand_value != 'trash':
+            hand_value = hand_value + '.gutshot'
+        else:
+            hand_value = 'gutshot'
+    return hand_value

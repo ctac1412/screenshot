@@ -13,7 +13,6 @@ import bar as metka
 import os
 import postflop
 import flop
-import error_log
 
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
@@ -28,12 +27,7 @@ import error_log
 # print(type(int(session_log.getLastRowFromLogSession('2')[0]['current_stack'])))
 
 
-stack = 0
-
-if 0 < stack <= 6:
-    print(1)
-elif stack == 0:
-    print(2)
-
+hand = '6s5d2c8h4hJd'
+print(flop.checkGutShot(hand, 'test'))
 
 
