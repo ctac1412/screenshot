@@ -28,7 +28,12 @@ import error_log
 # print(type(int(session_log.getLastRowFromLogSession('2')[0]['current_stack'])))
 
 
-postflop.getOpponentReaction('1')
+stack = 0
+
+if 0 < stack <= 6:
+    print(1)
+elif stack == 0:
+    print(2)
 
 
 
