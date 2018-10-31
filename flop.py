@@ -277,13 +277,22 @@ def checkGutShot(hand, hand_value):
         arr.append(collection.index(val))
     arr = list(set(arr))
     arr = sorted(arr)
-    print(arr)
+    low_straight = [0, 1, 2, 3, 12]
+    count = 0
+    for item in arr:
+        if item in low_straight:
+            count += 1
     if len(arr) == 5 and (arr[-2:][0] - arr[0] == 4 or arr[-1:][0] - arr[1] == 4):
         if hand_value != 'trash':
             hand_value = hand_value + '.gutshot'
         else:
             hand_value = 'gutshot'
     elif len(arr) == 6 and (arr[-3:][0] - arr[0] == 4 or arr[-2:][0] - arr[1] == 4 or arr[-1:][0] - arr[2] == 4):
+        if hand_value != 'trash':
+            hand_value = hand_value + '.gutshot'
+        else:
+            hand_value = 'gutshot'
+    elif count == 4:
         if hand_value != 'trash':
             hand_value = hand_value + '.gutshot'
         else:
