@@ -39,16 +39,11 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
             else:
-                if is_headsup == 0 and (hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1):
+                if hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif is_headsup == 1 and (hand_value.find('.') != -1 or
-                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight']):
-                    keyboard.press('q')
-                    session_log.updateActionLogSession('push', str(screen_area))
-                    return
-                elif int(stack) <= 10 and hand_value in['middle_pair', 'straight_draw', 'flush_draw']:
+                elif int(stack) <= 10 and hand_value in['middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs']:
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
@@ -69,7 +64,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
                 elif is_headsup == 1 and (hand_value.find('.') != -1 or
-                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw']):
+                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs']):
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
@@ -90,7 +85,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                         hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'straight_draw', 'flush_draw']):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
-                elif int(stack) <= 10 and hand_value in['middle_pair', 'straight_draw', 'flush_draw']:
+                elif int(stack) <= 10 and hand_value in['middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs']:
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
@@ -171,7 +166,7 @@ def checkStraightDraw(hand, screen_area, hand_value):
         if first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)) or \
                 third == list(range(min(third), max(third) + 1)) or set(low_straight).issubset(arr):
             hand_value = 'straight'
-    if hand_value != 'straight' or hand_value.find('.') != -1:
+    if hand_value != 'straight' or hand_value.find('.') == -1:
         hand_value = checkGutShot(hand, hand_value)
     session_log.updateHandValue(screen_area, hand_value)
 
@@ -248,8 +243,12 @@ def checkPair(hand, screen_area):
             hand_value = 'middle_pair'
     elif len(doubles) == 2:
         double_element = list(doubles.keys())[0]
-        if double_element in [hand[0], hand[1]]:
+        if double_element in [hand[0], hand[1]] and ranks.index(double_element) == max(ts):
             hand_value = 'two_pairs'
+        elif sorted(list(doubles.keys())) == sorted([hand[0], hand[1]]):
+            hand_value = 'two_pairs'
+        elif double_element in [hand[0], hand[1]]:
+            hand_value = 'low_two_pairs'
     if hand_value in ['top_pair', 'set', 'two_pairs']:
         session_log.updateHandValue(screen_area, hand_value)
         return True
@@ -272,11 +271,6 @@ def getFlopData(screen_area):
     return data
 
 def checkGutShot(hand, hand_value):
-    hand_length = len(hand)
-    if hand_length == 10:
-        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8]
-    elif hand_length == 12:
-        hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10]
     collection = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
     arr = []
     for val in hand:
@@ -284,12 +278,12 @@ def checkGutShot(hand, hand_value):
     arr = list(set(arr))
     arr = sorted(arr)
     print(arr)
-    if hand_length == 10 and (arr[-2:][0] - arr[0] == 4 or arr[-1:][0] - arr[1] == 4):
+    if len(arr) == 5 and (arr[-2:][0] - arr[0] == 4 or arr[-1:][0] - arr[1] == 4):
         if hand_value != 'trash':
             hand_value = hand_value + '.gutshot'
         else:
             hand_value = 'gutshot'
-    elif hand_length == 12 and (arr[-3:][0] - arr[0] == 4 or arr[-2:][0] - arr[1] == 4 or arr[-1:][0] - arr[2] == 4):
+    elif len(arr) == 6 and (arr[-3:][0] - arr[0] == 4 or arr[-2:][0] - arr[1] == 4 or arr[-1:][0] - arr[2] == 4):
         if hand_value != 'trash':
             hand_value = hand_value + '.gutshot'
         else:
