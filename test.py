@@ -26,13 +26,6 @@ import flop
 # hand_value = session_log.getHandValue(screen_area)
 # print(hand_value)
 
-low_straight = [0, 1, 2, 3, 12]
-lst = [0, 2, 3, 6, 12]
-count = 0
-for item in lst:
-    if item in low_straight:
-        count += 1
-if count == 4:
-    hand_value = 'gutshot'
+print(postflop.riverAction('1', '8c7d2s7cQd2cAh', 13))
 
 

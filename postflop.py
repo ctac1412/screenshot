@@ -12,13 +12,12 @@ def checkIsTurn(screen_area, deck):
             session_log.updateHandAfterTurn(screen_area, turn)
         last_row = session_log.getLastRowFromLogSession(str(screen_area))
         hand = last_row[0][0]
-        is_headsup = last_row[0][4]
         stack = last_row[0][1]
-        if turnAction(screen_area, is_headsup, hand, stack):
+        if turnAction(screen_area, hand, stack):
             return True
     return False
 
-def turnAction(screen_area, is_headsup, hand, stack):
+def turnAction(screen_area, hand, stack):
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
@@ -85,7 +84,7 @@ def riverAction(screen_area, hand, stack):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif opponent_reaction in ['1', '2', '3'] and (hand_value in['middle_pair', 'low_two_pairs'] or hand_value.find('middle_pair.') != -1):
+    elif opponent_reaction in ['1', '2'] and (hand_value in['middle_pair', 'low_two_pairs'] or hand_value.find('middle_pair.') != -1):
         keyboard.press('c')
         session_log.updateActionLogSession('end', str(screen_area))
         return True
