@@ -80,9 +80,10 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
             opponent_data = headsup.searchOpponentCard(str(screen_area), stack_collection)
             is_headsup = opponent_data[0]
             opponent_data.pop(0)
-            opponent_actual_stack = max(opponent_data)
-            if int(opponent_actual_stack) < int(stack):
-                stack = opponent_actual_stack
+            if len(opponent_data) > 0:
+                opponent_actual_stack = max(opponent_data)
+                if int(opponent_actual_stack) < int(stack):
+                    stack = opponent_actual_stack
         stack = logic.convertStack(stack)
         if position == 'big_blind' or position == 'small_blind' and is_headsup == 0:
             last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
@@ -125,3 +126,8 @@ def getActualHand(screen_area):
     data = db.query(
         "select trim(hand) as hand from session_log where screen_area = " + screen_area + " order by id desc limit 1")
     return data[0]['hand']
+
+def updateIsHeadsupPostflop(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    db.query("UPDATE session_log SET is_headsup = 1 from(SELECT id FROM session_log where screen_area = " +
+             screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")

@@ -8,13 +8,13 @@ import time
 import datetime
 import current_stack
 
-def searchOpponentCard(screen_area, stack_collection):
+def searchOpponentCard(screen_area, stack_collection=0, is_postflop=False):
     try:
         folder_name = 'images/' + str(datetime.datetime.now().date())
         opponent_area = saveOpponentCardImage(str(screen_area), folder_name)[0]
         check_is_headsup = 0
         card_area = getOpponentCardArea(str(screen_area))
-        opponent_stack = []
+        opponent_data = []
         last_screen = image_processing.getLastScreen(card_area, '2')
         last_screen = last_screen[::-1]
         for item in last_screen:
@@ -25,13 +25,14 @@ def searchOpponentCard(screen_area, stack_collection):
             threshold = 0.98
             loc = np.where(res >= threshold)
             if len(loc[0]) != 0:
-                check_is_headsup +=1
-                opponent_stack.append(current_stack.searchOpponentStack(screen_area, opponent_area, stack_collection))
+                check_is_headsup += 1
+                if is_postflop is False:
+                    opponent_data.append(current_stack.searchOpponentStack(screen_area, opponent_area, stack_collection))
             opponent_area += 1
         if check_is_headsup != 1:
             check_is_headsup = 0
-        opponent_stack.insert(0, check_is_headsup)
-        return opponent_stack
+        opponent_data.insert(0, check_is_headsup)
+        return opponent_data
     except Exception as e:
         print(e)
 

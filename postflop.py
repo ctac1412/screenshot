@@ -67,10 +67,10 @@ def checkIsRiver(screen_area, deck):
     return False
 
 def riverAction(screen_area, hand, stack):
-    hand_value = flop.checkPair(hand, screen_area)
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
+    hand_value = flop.checkPair(hand, screen_area)
     if hand_value != True:
         hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
     if hand_value != True:
@@ -86,14 +86,14 @@ def riverAction(screen_area, hand, stack):
         return True
     elif opponent_reaction in ['1', '2'] and (hand_value in['middle_pair', 'low_two_pairs'] or hand_value.find('middle_pair.') != -1):
         keyboard.press('c')
-        session_log.updateActionLogSession('end', str(screen_area))
+        session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
     elif int(stack) <= 10 and hand_value in['middle_pair', 'low_two_pairs']:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
     elif hand_value in['middle_pair', 'low_two_pairs'] and image_processing.checkIsCbetAvailable(str(screen_area)):
         keyboard.press('h')
-        session_log.updateActionLogSession('end', str(screen_area))
+        session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
     else:
         keyboard.press('f')

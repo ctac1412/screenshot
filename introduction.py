@@ -9,6 +9,7 @@ import db_conf
 import keyboard
 import flop
 import os
+import headsup
 
 images_folder = "images"
 
@@ -41,6 +42,8 @@ def checkIsFlop(screen_area, image_name, folder_name, flop_deck):
         stack = last_row[0][1]
         action = last_row[0][3]
         is_headsup = last_row[0][4]
+        if is_headsup == 0 and headsup.searchOpponentCard(screen_area, is_postflop=True)[0] == 1:
+            is_headsup = 1
         if len(hand) == 4:
             flop.makeFlopDecision(str(screen_area), hand, image_name, folder_name, stack, action, is_headsup, flop_deck)
         else:

@@ -22,8 +22,6 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         if hand_value != True:
             checkStraightDraw(hand, screen_area, hand_value)
         hand_value = session_log.getHandValue(screen_area)
-        print(hand)
-        print(hand_value)
         if action == 'open' and int(stack) > 12:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
                 if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
@@ -248,6 +246,11 @@ def checkPair(hand, screen_area):
         elif sorted(list(doubles.keys())) == sorted([hand[0], hand[1]]):
             hand_value = 'two_pairs'
         elif double_element in [hand[0], hand[1]]:
+            hand_value = 'low_two_pairs'
+    elif len(doubles) == 3:
+        if hand[0] in list(doubles.keys()) and hand[1] in list(doubles.keys()):
+            hand_value = 'two_pairs'
+        else:
             hand_value = 'low_two_pairs'
     if hand_value in ['top_pair', 'set', 'two_pairs']:
         session_log.updateHandValue(screen_area, hand_value)
