@@ -164,7 +164,7 @@ def checkStraightDraw(hand, screen_area, hand_value):
         if first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)) or \
                 third == list(range(min(third), max(third) + 1)) or set(low_straight).issubset(arr):
             hand_value = 'straight'
-    if hand_value != 'straight' or hand_value.find('.') == -1:
+    if hand_value not in ['straight', 'straight_draw'] or hand_value.find('.') == -1:
         hand_value = checkGutShot(hand, hand_value)
     session_log.updateHandValue(screen_area, hand_value)
 
@@ -193,7 +193,7 @@ def checkFlushDraw(hand, screen_area, hand_value):
             hand_value = 'flush'
             session_log.updateHandValue(screen_area, hand_value)
             return True
-        elif len(doubles) > 0:
+        elif len(doubles) > 0 and list(doubles)[0] in (hand[0], hand[1]):
             if hand_value != 'trash':
                 hand_value = hand_value + '.flush_draw'
                 session_log.updateHandValue(screen_area, hand_value)
