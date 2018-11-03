@@ -22,7 +22,11 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         if hand_value != True:
             checkStraightDraw(hand, screen_area, hand_value)
         hand_value = session_log.getHandValue(screen_area)
-        if action == 'open' and int(stack) > 12:
+        if hand_value == 'weak_top_pair':
+            keyboard.press('q')
+            session_log.updateActionLogSession('push', str(screen_area))
+            return
+        elif action == 'open' and int(stack) > 12:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
                 if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
                     keyboard.press('v')
@@ -231,8 +235,12 @@ def checkPair(hand, screen_area):
     doubles = {element: count for element, count in counter.items() if count > 1}
     if len(doubles) == 1:
         double_element = list(doubles.keys())[0]
-        if double_element in [hand[0], hand[1]] and ranks.index(double_element) == max(ts):
-            hand_value = 'top_pair'
+        index_double_element = ranks.index(double_element)
+        if double_element in [hand[0], hand[1]] and index_double_element == max(ts):
+            if index_double_element <= 8:
+                hand_value = 'weak_top_pair'
+            else:
+                hand_value = 'top_pair'
         elif list(doubles.values())[0] > 2 and double_element in [hand[0], hand[1]]:
             hand_value = 'set'
         elif double_element in [hand[0], hand[1]] and ranks.index(double_element) == min(ts):

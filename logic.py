@@ -16,10 +16,7 @@ def getDecision(screen_area):
         elif action == 'fold':
             keyboard.press('f')
         elif action == 'open':
-            if session_log.getLastRowFromLogSession(str(screen_area))[0]['is_headsup'] == 1:
-                keyboard.press('o')
-            else:
-                keyboard.press('r')
+            keyboard.press('r')
         elif action == 'call':
             keyboard.press('c')
         elif action == 'check':
