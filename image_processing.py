@@ -12,22 +12,22 @@ images_folder = "images"
 
 def searchCards(screen_area, deck, list_length):
     hand = ''
-    threshold = 0.98
-    for value in deck:
-        try:
-            path = getLastScreen(screen_area)
-            path = path[0]['image_path']
+    try:
+        for item in getLastScreen(str(screen_area)):
+            path = item['image_path']
             img_rgb = cv2.imread(path, 0)
-            template = cv2.imread(str(value['image_path']), 0)
-            res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-            loc = np.where(res >= threshold)
-            if len(loc[0]) != 0:
-                hand += value['alias']
-            if len(hand) == list_length:
-                return hand
-        except Exception as e:
-            error_log.errorLog('searchCards', str(e))
-            print(e)
+            threshold = 0.98
+            for value in deck:
+                template = cv2.imread(str(value['image_path']), 0)
+                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+                loc = np.where(res >= threshold)
+                if len(loc[0]) != 0:
+                    hand += value['alias']
+                if len(hand) == list_length:
+                    return hand
+    except Exception as e:
+        error_log.errorLog('searchCards', str(e))
+        print(e)
     if len(hand) < 4:
         hand = '72o'
     return hand
@@ -124,10 +124,10 @@ def searchElement(screen_area, elements, folder):
 def searchLastOpponentAction(screen_area):
     element_area = introduction.saveElement(screen_area, 'limp_area')
     threshold = 0.98
+    path = getLastScreen(element_area)
+    path = path[0]['image_path']
+    img_rgb = cv2.imread(path, 0)
     for item in getActionsButtons():
-        path = getLastScreen(element_area)
-        path = path[0]['image_path']
-        img_rgb = cv2.imread(path, 0)
         template = cv2.imread(str(item['image_path']), 0)
         res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
         loc = np.where(res >= threshold)

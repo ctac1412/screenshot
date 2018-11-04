@@ -13,9 +13,9 @@ def searchCurrentStack(screen_area, stack_collection):
     try:
         current_stack = 22
         for item in image_processing.getLastScreen(str(screen_area)):
+            path = item['image_path']
+            img_rgb = cv2.imread(path, 0)
             for value in stack_collection:
-                path = item['image_path']
-                img_rgb = cv2.imread(path, 0)
                 template = cv2.imread(str(value['image_path']), 0)
                 res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
                 threshold = 0.98
@@ -34,9 +34,9 @@ def searchOpponentStack(screen_area, opponent_area, stack_collection):
         opponent_stack = 22
         screen_area = getOpponentStackArea(str(screen_area))
         for item in image_processing.getLastScreen(str(screen_area)):
+            path = item['image_path']
+            img_rgb = cv2.imread(path, 0)
             for value in stack_collection:
-                path = item['image_path']
-                img_rgb = cv2.imread(path, 0)
                 template = cv2.imread(str(value['image_path']), 0)
                 res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
                 threshold = 0.98
