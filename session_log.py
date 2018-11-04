@@ -85,7 +85,7 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
                 if int(opponent_actual_stack) < int(stack):
                     stack = opponent_actual_stack
         stack = logic.convertStack(stack)
-        if position == 'big_blind' or position == 'small_blind' and is_headsup == 0:
+        if position == 'big_blind' or (position == 'small_blind' and is_headsup == 0):
             last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
             if not isinstance(last_opponnet_action, str):
                 last_opponnet_action = last_opponnet_action['opponent_action']

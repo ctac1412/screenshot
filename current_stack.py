@@ -10,21 +10,23 @@ import datetime
 import os
 
 def searchCurrentStack(screen_area, stack_collection):
-    current_stack = 22
-    for value in stack_collection:
-        path = image_processing.getLastScreen(str(getStackArea(str(screen_area))))
-        path = path[0]['image_path']
-        img_rgb = cv2.imread(path, 0)
-        template = cv2.imread(str(value['image_path']), 0)
-
-        res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-        threshold = 0.98
-        loc = np.where(res >= threshold)
-        if len(loc[0]) != 0:
-            current_stack = value['stack_value']
-            break
-    return current_stack
-
+    try:
+        current_stack = 22
+        for item in image_processing.getLastScreen(str(screen_area)):
+            for value in stack_collection:
+                path = item['image_path']
+                img_rgb = cv2.imread(path, 0)
+                template = cv2.imread(str(value['image_path']), 0)
+                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+                threshold = 0.98
+                loc = np.where(res >= threshold)
+                if len(loc[0]) != 0:
+                    current_stack = value['stack_value']
+                    break
+        return current_stack
+    except Exception as e:
+        error_log.errorLog('searchCurrentStack', str(e))
+        print(e)
 def searchOpponentStack(screen_area, opponent_area, stack_collection):
     try:
         folder_name = 'images/' + str(datetime.datetime.now().date())
