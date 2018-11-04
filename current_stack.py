@@ -12,7 +12,7 @@ import os
 def searchCurrentStack(screen_area, stack_collection):
     try:
         current_stack = 22
-        for item in image_processing.getLastScreen(str(screen_area)):
+        for item in image_processing.getLastScreen(getStackArea(screen_area)):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in stack_collection:
@@ -21,8 +21,8 @@ def searchCurrentStack(screen_area, stack_collection):
                 threshold = 0.98
                 loc = np.where(res >= threshold)
                 if len(loc[0]) != 0:
-                    current_stack = value['stack_value']
-                    break
+                    current_stack = int(value['stack_value'])
+                    return current_stack
         return current_stack
     except Exception as e:
         error_log.errorLog('searchCurrentStack', str(e))
@@ -41,10 +41,9 @@ def searchOpponentStack(screen_area, opponent_area, stack_collection):
                 res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
                 threshold = 0.98
                 loc = np.where(res >= threshold)
-
                 if len(loc[0]) != 0:
                     opponent_stack = int(value['stack_value'])
-                    break
+                    return opponent_stack
         return opponent_stack
     except Exception as e:
         error_log.errorLog('searchOpponentStack', str(e))
