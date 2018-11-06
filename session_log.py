@@ -82,6 +82,8 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
             opponent_data.pop(0)
             if len(opponent_data) > 0:
                 opponent_actual_stack = max(opponent_data)
+                if int(opponent_actual_stack) == 666:
+                    opponent_actual_stack = current_stack.searchAllinStack(screen_area)
                 if int(opponent_actual_stack) < int(stack):
                     stack = opponent_actual_stack
         stack = logic.convertStack(stack)

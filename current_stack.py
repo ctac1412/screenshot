@@ -127,4 +127,46 @@ def saveOpponentStackImage(screen_area, folder_name, opponent_area):
         image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path, str(val['screen_area']))
         image_name += 1
 
+def getAllinStackArea(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select all_in_stack_area from screen_coordinates where screen_area = " + screen_area)
+    return data[0]['all_in_stack_area']
 
+def getAllinStackData(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
+                    "where screen_area = " + screen_area)
+    return data
+
+def saveAllinStackImage(screen_area):
+    try:
+        image_name = str(math.floor(time.time())) + ".png"
+        folder_name = 'images/' + str(datetime.datetime.now().date())
+        for val in getAllinStackData(str(getAllinStackArea(str(screen_area)))):
+            image_path = os.path.join(folder_name, str(getAllinStackArea(str(screen_area))), image_name)
+            image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
+                                     val['screen_area'])
+    except Exception as e:
+        error_log.errorLog('saveAllinStackImage', str(e))
+        print(e)
+
+def searchAllinStack(screen_area):
+    try:
+        saveAllinStackImage(screen_area)
+        all_in_stack = 22
+        screen_area = getAllinStackArea(str(screen_area))
+        for item in image_processing.getLastScreen(str(screen_area)):
+            path = item['image_path']
+            img_rgb = cv2.imread(path, 0)
+            for value in image_processing.getAllinStackImages():
+                template = cv2.imread(str(value['image_path']), 0)
+                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+                threshold = 0.98
+                loc = np.where(res >= threshold)
+                if len(loc[0]) != 0:
+                    all_in_stack = int(value['stack_value'])
+                    return all_in_stack
+        return all_in_stack
+    except Exception as e:
+        error_log.errorLog('searchAllinStack', str(e))
+        print(e)

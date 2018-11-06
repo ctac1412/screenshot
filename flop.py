@@ -168,7 +168,7 @@ def checkStraightDraw(hand, screen_area, hand_value):
         if first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)) or \
                 third == list(range(min(third), max(third) + 1)) or set(low_straight).issubset(arr):
             hand_value = 'straight'
-    if hand_value not in ['straight', 'straight_draw'] or hand_value.find('.') == -1:
+    if hand_value not in ['straight', 'straight_draw'] and hand_value.find('.') == -1:
         hand_value = checkGutShot(hand, hand_value)
     session_log.updateHandValue(screen_area, hand_value)
 
@@ -236,7 +236,7 @@ def checkPair(hand, screen_area):
     if len(doubles) == 1:
         double_element = list(doubles.keys())[0]
         index_double_element = ranks.index(double_element)
-        if double_element in [hand[0], hand[1]] and index_double_element == max(ts):
+        if double_element in [hand[0], hand[1]] and index_double_element >= max(ts):
             if index_double_element <= 8:
                 hand_value = 'weak_top_pair'
             else:

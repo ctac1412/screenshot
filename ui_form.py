@@ -14,13 +14,13 @@ class Window(tkinter.Tk, threading.Thread):
         self.wait = 1
         self.setDaemon(True)
         self.start()
-        self.geometry('200x200')
+        self.geometry('200x120+0+640')
         self.title('Calculator')
         self.columnconfigure(1, pad=5)
 
         tkinter.Button(text="start", command=self.Start,width=10).grid(row = 1, column = 1)
-        tkinter.Button(text="stop", command=self.Stop,width=10).grid(row = 1, column = 2)
-        tkinter.Button(text='Exit', command=lambda: self.destroy()).grid(row=1, column=3)
+        tkinter.Button(text="stop", command=self.Stop,width=10).grid(row = 1, column = 3)
+        tkinter.Button(text='Exit', command=lambda: self.destroy()).grid(row=1, column=2)
         tkinter.Button(text='Update', command=lambda:updateCurrentStackLogSession(change())).grid(row=5, column=1)
         tkinter.Button(text='Truncate', command=lambda: truncateScreenshotTable()).grid(row=5, column=2)
 

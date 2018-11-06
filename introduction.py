@@ -92,7 +92,6 @@ def getElementData(screen_area):
     return data
 
 def getReactionToOpponent(row):
-    db = postgresql.open(db_conf.connectionString())
     hand = logic.handConverting(row[0]['hand'])
     stack = logic.convertStack(int(row[0]['current_stack']))
     last_opponent_action = row[0]['last_opponent_action']
@@ -100,6 +99,7 @@ def getReactionToOpponent(row):
         last_opponent_action = ' is null'
     else:
         last_opponent_action = " = '" + last_opponent_action + '\''
+    db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(reaction_to_opponent) as reaction_to_opponent from preflop_chart "
                     "where hand = '" + hand + '\'' + " and position = '" + row[0]['current_position'] + '\'' +
                     " and is_headsup = '" + str(row[0]['is_headsup']) + '\'' + " and opponent_last_action" +

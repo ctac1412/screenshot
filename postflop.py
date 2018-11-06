@@ -126,8 +126,8 @@ def checkIsRaiseCbet(screen_area):
 def actionAfterCCPostflop(screen_area, deck, x_coordinate, y_coordinate, width, height, image_path):
     if checkIsRiver(screen_area, deck): return
     if checkIsTurn(screen_area, deck): return
-    if getOpponentFlopReaction(screen_area): return
     if introduction.checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
+    if getOpponentFlopReaction(screen_area): return
 
 def getOpponentFlopReaction(screen_area):
     hand_value = session_log.getHandValue(screen_area)
