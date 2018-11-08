@@ -3,6 +3,7 @@ import introduction
 import image_processing
 import keyboard
 import flop
+import current_stack
 
 def checkIsTurn(screen_area, deck):
     element_area = introduction.saveElement(screen_area, 'turn_area')
@@ -27,6 +28,16 @@ def turnAction(screen_area, hand, stack):
     if hand_value != True:
         flop.checkStraightDraw(hand, screen_area, hand_value)
     hand_value = session_log.getHandValue(screen_area)
+    if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] and image_processing.checkIsCbetAvailable(str(screen_area)):
+        action = current_stack.compareBankAndAvailableStack(screen_area, image_processing.getStackImages())
+        if action == 'turn_cbet':
+            keyboard.press('v')
+            session_log.updateActionLogSession('turn_cbet', str(screen_area))
+            return True
+        else:
+            keyboard.press('q')
+            session_log.updateActionLogSession('push', str(screen_area))
+            return True
     if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
@@ -53,6 +64,11 @@ def actionAfterCbet(x_coordinate, y_coordinate, width, height, image_path, scree
     if checkIsTurn(screen_area, deck): return
     if checkIsRaiseCbet(screen_area): return
 
+def actionAfterTurnCbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck):
+    if introduction.checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
+    if checkIsRiver(screen_area, deck): return
+    if checkIsRaiseCbet(screen_area): return
+
 def checkIsRiver(screen_area, deck):
     element_area = introduction.saveElement(screen_area, 'river_area')
     if image_processing.searchElement(element_area, ['river'], 'green_board/') is False:
@@ -62,11 +78,16 @@ def checkIsRiver(screen_area, deck):
         last_row = session_log.getLastRowFromLogSession(str(screen_area))
         hand = last_row[0][0]
         stack = last_row[0][1]
-        if riverAction(screen_area, hand, stack):
+        action = last_row[0][3]
+        if riverAction(screen_area, hand, stack, action):
             return True
     return False
 
-def riverAction(screen_area, hand, stack):
+def riverAction(screen_area, hand, stack, action):
+    if action == 'turn_cbet':
+        keyboard.press('q')
+        session_log.updateActionLogSession('push', str(screen_area))
+        return True
     opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']

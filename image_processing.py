@@ -81,6 +81,11 @@ def getAllinStackImages():
     data = db.query("select trim(image_path) as image_path, stack_value from all_in_stack order by id desc")
     return data
 
+def getBankStackImages():
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select trim(image_path) as image_path, stack_value from bank_stack order by id desc")
+    return data
+
 def getActionsButtons():
     db = postgresql.open(db_conf.connectionString())
     data = db.query("select trim(image_path) as image_path,trim(opponent_action) as opponent_action, "

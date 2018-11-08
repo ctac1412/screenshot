@@ -132,17 +132,11 @@ def getAllinStackArea(screen_area):
     data = db.query("select all_in_stack_area from screen_coordinates where screen_area = " + screen_area)
     return data[0]['all_in_stack_area']
 
-def getAllinStackData(screen_area):
-    db = postgresql.open(db_conf.connectionString())
-    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
-                    "where screen_area = " + screen_area)
-    return data
-
 def saveAllinStackImage(screen_area):
     try:
         image_name = str(math.floor(time.time())) + ".png"
         folder_name = 'images/' + str(datetime.datetime.now().date())
-        for val in getAllinStackData(str(getAllinStackArea(str(screen_area)))):
+        for val in getStackData(str(getAllinStackArea(str(screen_area)))):
             image_path = os.path.join(folder_name, str(getAllinStackArea(str(screen_area))), image_name)
             image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
                                      val['screen_area'])
@@ -170,3 +164,49 @@ def searchAllinStack(screen_area):
     except Exception as e:
         error_log.errorLog('searchAllinStack', str(e))
         print(e)
+
+def getBankStackArea(screen_area):
+    db = postgresql.open(db_conf.connectionString())
+    data = db.query("select bank_stack_area from screen_coordinates where screen_area = " + screen_area)
+    return data[0]['bank_stack_area']
+
+def saveBankStackImage(screen_area):
+    try:
+        image_name = str(math.floor(time.time())) + ".png"
+        folder_name = 'images/' + str(datetime.datetime.now().date())
+        for val in getStackData(str(getBankStackArea(str(screen_area)))):
+            image_path = os.path.join(folder_name, str(getBankStackArea(str(screen_area))), image_name)
+            image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
+                                     val['screen_area'])
+    except Exception as e:
+        error_log.errorLog('saveAllinStackImage', str(e))
+        print(e)
+
+def searchBankStack(screen_area):
+    try:
+        saveBankStackImage(screen_area)
+        bank_stack = 22
+        screen_area = getBankStackArea(str(screen_area))
+        for item in image_processing.getLastScreen(str(screen_area)):
+            path = item['image_path']
+            img_rgb = cv2.imread(path, 0)
+            for value in image_processing.getBankStackImages():
+                template = cv2.imread(str(value['image_path']), 0)
+                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+                threshold = 0.98
+                loc = np.where(res >= threshold)
+                if len(loc[0]) != 0:
+                    bank_stack = int(value['stack_value'])
+                    return bank_stack
+        return bank_stack
+    except Exception as e:
+        error_log.errorLog('searchBankStack', str(e))
+        print(e)
+
+def compareBankAndAvailableStack(screen_area, stack_collection):
+    stack = searchCurrentStack(screen_area, stack_collection)
+    bank = searchBankStack(screen_area)
+    if stack >= bank:
+        return 'turn_cbet'
+    elif stack < bank:
+        return 'push'

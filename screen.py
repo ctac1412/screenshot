@@ -39,6 +39,9 @@ def start():
             elif last_row_action == 'cbet':
                 postflop.actionAfterCbet(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, str(item['screen_area']), deck)
+            elif last_row_action == 'turn_cbet':
+                postflop.actionAfterTurnCbet(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
+                                         image_path, str(item['screen_area']), deck)
             elif last_row_action == 'cc_postflop':
                 postflop.actionAfterCCPostflop(str(item['screen_area']), deck, item['x_coordinate'], item['y_coordinate'],
                                                item['width'], item['height'], image_path)
