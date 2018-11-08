@@ -249,7 +249,7 @@ def checkPair(hand, screen_area):
             hand_value = 'middle_pair'
     elif len(doubles) == 2:
         double_element = list(doubles.keys())[0]
-        if double_element in [hand[0], hand[1]] and ranks.index(double_element) == max(ts):
+        if double_element in [hand[0], hand[1]] and ranks.index(double_element) >= max(ts):
             hand_value = 'two_pairs'
         elif sorted(list(doubles.keys())) == sorted([hand[0], hand[1]]):
             hand_value = 'two_pairs'
@@ -299,6 +299,11 @@ def checkGutShot(hand, hand_value):
         else:
             hand_value = 'gutshot'
     elif len(arr) == 6 and (arr[-3:][0] - arr[0] == 4 or arr[-2:][0] - arr[1] == 4 or arr[-1:][0] - arr[2] == 4):
+        if hand_value != 'trash':
+            hand_value = hand_value + '.gutshot'
+        else:
+            hand_value = 'gutshot'
+    elif len(arr) == 4 and arr[-1:][0] - arr[0] == 4:
         if hand_value != 'trash':
             hand_value = hand_value + '.gutshot'
         else:

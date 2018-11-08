@@ -38,7 +38,7 @@ def turnAction(screen_area, hand, stack):
             keyboard.press('q')
             session_log.updateActionLogSession('push', str(screen_area))
             return True
-    if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+    if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair'] or hand_value.find('.') != -1:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
@@ -84,7 +84,7 @@ def checkIsRiver(screen_area, deck):
     return False
 
 def riverAction(screen_area, hand, stack, action):
-    if action == 'turn_cbet':
+    if action in ['turn_cbet', 'river_cbet']:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
@@ -100,6 +100,10 @@ def riverAction(screen_area, hand, stack, action):
     if hand_value in['trash']:
         keyboard.press('f')
         session_log.updateActionLogSession('fold', str(screen_area))
+        return True
+    elif hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair'] and image_processing.checkIsCbetAvailable(str(screen_area)):
+        keyboard.press('v')
+        session_log.updateActionLogSession('river_cbet', str(screen_area))
         return True
     elif hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight']:
         keyboard.press('q')
