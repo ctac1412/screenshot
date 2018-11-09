@@ -10,6 +10,8 @@ import keyboard
 import flop
 import os
 import headsup
+import determine_position
+import current_stack
 
 images_folder = "images"
 
@@ -77,7 +79,13 @@ def checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_pa
     image_processing.imaging(x_coordinate, y_coordinate, width, height, image_path, str(screen_area))
     cur_hand = image_processing.searchCards(str(screen_area), image_processing.getCards(), 4)
     if last_hand != cur_hand:
+        folder_name = images_folder + str(datetime.datetime.now().date())
+        image_name = str(math.floor(time.time())) + ".png"
         session_log.updateActionLogSession('end', screen_area)
+        determine_position.saveBlindImage(screen_area, image_name, folder_name)
+        current_stack.saveStackImage(screen_area, image_name, folder_name)
+        session_log.checkConditionsBeforeInsert(cur_hand, screen_area, current_stack.getStackImages())
+        logic.getDecision(screen_area)
         return True
 
 def getElementArea(screen_area, element):
