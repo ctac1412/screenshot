@@ -31,7 +31,7 @@ def start():
                 hand = image_processing.searchCards(str(item['screen_area']), deck, 4)
                 determine_position.saveBlindImage(str(item['screen_area']), image_name, folder_name)
                 current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
-                session_log.checkConditionsBeforeInsert(hand, (item['screen_area']), stack_collection)
+                session_log.checkConditionsBeforeInsert(hand, item['screen_area'], stack_collection)
                 logic.getDecision(item['screen_area'])
             elif last_row_action in ['open', 'call', 'check']:
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],

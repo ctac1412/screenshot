@@ -81,18 +81,31 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
             is_headsup = opponent_data[0]
             opponent_data.pop(0)
             if len(opponent_data) > 0:
-                opponent_actual_stack = max(opponent_data)
-                if int(opponent_actual_stack) == 666:
-                    opponent_actual_stack = current_stack.searchAllinStack(screen_area)
+                opponent_actual_stack = sorted(opponent_data, reverse=True)
+                if int(opponent_actual_stack[0]) == 666:
+                    all_in_stack = current_stack.searchAllinStack(screen_area)
+                    opponent_actual_stack[0] = all_in_stack
+                opponent_actual_stack = max(opponent_actual_stack)
                 if int(opponent_actual_stack) < int(stack):
                     stack = opponent_actual_stack
         stack = logic.convertStack(stack)
         if position == 'big_blind' or (position == 'small_blind' and is_headsup == 0):
             last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
-            if not isinstance(last_opponnet_action, str):
-                last_opponnet_action = last_opponnet_action['opponent_action']
+            if isinstance(last_opponnet_action, str):
+                last_opponnet_action = 'push'
+            elif position == 'big_blind' and last_opponnet_action['alias'] == '1':
+                last_opponnet_action = 'min_raise'
+            elif position == 'big_blind' and last_opponnet_action['alias'] == '2':
+                last_opponnet_action = 'open'
+            elif position == 'small_blind' and last_opponnet_action['alias'] == '2':
+                last_opponnet_action = 'min_raise'
+            elif position == 'small_blind' and last_opponnet_action['alias'] == '3':
+                last_opponnet_action = 'open'
+            elif last_opponnet_action['alias'] in ['check', '0.5']:
+                last_opponnet_action = 'limp'
         else:
             last_opponnet_action = None
+        print(last_opponnet_action)
         insertIntoLogSession(screen_area, hand, position, str(stack), is_headsup=is_headsup,
                              last_opponent_action=last_opponnet_action)
     except Exception as e:
