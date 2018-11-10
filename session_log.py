@@ -90,24 +90,13 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
                     stack = opponent_actual_stack
         stack = logic.convertStack(stack)
         if position == 'big_blind' or (position == 'small_blind' and is_headsup == 0):
-            last_opponnet_action = image_processing.searchLastOpponentAction(screen_area)
-            if isinstance(last_opponnet_action, str):
-                last_opponnet_action = 'push'
-            elif position == 'big_blind' and last_opponnet_action['alias'] == '1':
-                last_opponnet_action = 'min_raise'
-            elif position == 'big_blind' and last_opponnet_action['alias'] == '2':
-                last_opponnet_action = 'open'
-            elif position == 'small_blind' and last_opponnet_action['alias'] == '2':
-                last_opponnet_action = 'min_raise'
-            elif position == 'small_blind' and last_opponnet_action['alias'] == '3':
-                last_opponnet_action = 'open'
-            elif last_opponnet_action['alias'] in ['check', '0.5']:
-                last_opponnet_action = 'limp'
+            last_opponent_action = image_processing.searchLastOpponentAction(screen_area)
+            last_opponent_action = getLastOpponentAction(position, last_opponent_action)
         else:
-            last_opponnet_action = None
-        print(last_opponnet_action)
+            last_opponent_action = None
+        print(last_opponent_action)
         insertIntoLogSession(screen_area, hand, position, str(stack), is_headsup=is_headsup,
-                             last_opponent_action=last_opponnet_action)
+                             last_opponent_action=last_opponent_action)
     except Exception as e:
         error_log.errorLog('checkConditionsBeforeInsert', str(e))
         print(e)
@@ -146,3 +135,18 @@ def updateIsHeadsupPostflop(screen_area):
     db = postgresql.open(db_conf.connectionString())
     db.query("UPDATE session_log SET is_headsup = 1 from(SELECT id FROM session_log where screen_area = " +
              screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")
+
+def getLastOpponentAction(position, last_opponent_action):
+    if isinstance(last_opponent_action, str):
+        last_opponent_action = 'push'
+    elif position == 'big_blind' and last_opponent_action['alias'] == '1':
+        last_opponent_action = 'min_raise'
+    elif position == 'big_blind' and last_opponent_action['alias'] == '2':
+        last_opponent_action = 'open'
+    elif position == 'small_blind' and last_opponent_action['alias'] == '2':
+        last_opponent_action = 'min_raise'
+    elif position == 'small_blind' and last_opponent_action['alias'] == '3':
+        last_opponent_action = 'open'
+    elif last_opponent_action['alias'] in ['check', '0.5']:
+        last_opponent_action = 'limp'
+    return last_opponent_action
