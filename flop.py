@@ -28,7 +28,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
             return
         elif action == 'open' and int(stack) > 12:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
-                if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'] or hand_value.find('.') != -1:
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
@@ -41,7 +41,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
             else:
-                if hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1:
+                if hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'] or hand_value.find('.') != -1:
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
@@ -61,12 +61,12 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('fold', str(screen_area))
         else:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
-                if is_headsup == 0 and (hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1):
+                if is_headsup == 0 and (hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'] or hand_value.find('.') != -1):
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
                 elif is_headsup == 1 and (hand_value.find('.') != -1 or
-                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs']):
+                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'full_house']):
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
@@ -79,12 +79,12 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
-                elif is_headsup == 0 and (hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight'] or hand_value.find('.') != -1):
+                elif is_headsup == 0 and (hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'] or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
                 elif is_headsup == 1 and  (hand_value.find('.') != -1 or
-                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'straight_draw', 'flush_draw']):
+                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'straight_draw', 'flush_draw', 'full_house']):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                 elif int(stack) <= 10 and hand_value in['middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs']:
@@ -248,11 +248,14 @@ def checkPair(hand, screen_area):
         elif double_element in [hand[0], hand[1]]:
             hand_value = 'middle_pair'
     elif len(doubles) == 2:
+        maximum = max(doubles, key=doubles.get)
         double_element = list(doubles.keys())[0]
         if double_element in [hand[0], hand[1]] and ranks.index(double_element) >= max(ts):
             hand_value = 'two_pairs'
         elif sorted(list(doubles.keys())) == sorted([hand[0], hand[1]]):
             hand_value = 'two_pairs'
+        elif maximum in [hand[0], hand[1]] and doubles[maximum] >= 3:
+            hand_value = 'full_house'
         elif double_element in [hand[0], hand[1]]:
             hand_value = 'low_two_pairs'
     elif len(doubles) == 3:

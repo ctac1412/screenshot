@@ -28,7 +28,7 @@ def turnAction(screen_area, hand, stack):
     if hand_value != True:
         flop.checkStraightDraw(hand, screen_area, hand_value)
     hand_value = session_log.getHandValue(screen_area)
-    if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight'] and image_processing.checkIsCbetAvailable(str(screen_area)):
+    if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'] and image_processing.checkIsCbetAvailable(str(screen_area)):
         action = current_stack.compareBankAndAvailableStack(screen_area, image_processing.getStackImages())
         if action == 'turn_cbet':
             keyboard.press('v')
@@ -38,7 +38,7 @@ def turnAction(screen_area, hand, stack):
             keyboard.press('q')
             session_log.updateActionLogSession('push', str(screen_area))
             return True
-    if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair'] or hand_value.find('.') != -1:
+    if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair', 'full_house'] or hand_value.find('.') != -1:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
@@ -101,11 +101,11 @@ def riverAction(screen_area, hand, stack, action):
         keyboard.press('f')
         session_log.updateActionLogSession('fold', str(screen_area))
         return True
-    elif hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair'] and image_processing.checkIsCbetAvailable(str(screen_area)):
+    elif hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair', 'full_house'] and image_processing.checkIsCbetAvailable(str(screen_area)):
         keyboard.press('v')
         session_log.updateActionLogSession('river_cbet', str(screen_area))
         return True
-    elif hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight']:
+    elif hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house']:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
@@ -116,7 +116,7 @@ def riverAction(screen_area, hand, stack, action):
     elif int(stack) <= 10 and hand_value in['middle_pair', 'low_two_pairs']:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
-    elif hand_value in['middle_pair', 'low_two_pairs'] and image_processing.checkIsCbetAvailable(str(screen_area)):
+    elif (hand_value in['middle_pair', 'low_two_pairs'] or hand_value.find('middle_pair.') != -1) and image_processing.checkIsCbetAvailable(str(screen_area)):
         keyboard.press('h')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
@@ -131,7 +131,7 @@ def checkIsRaiseCbet(screen_area):
     stack = session_log.getLastRowFromLogSession(screen_area)[0]['current_stack']
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    if hand_value.find('.') != -1 or hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight']:
+    if hand_value.find('.') != -1 or hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house']:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True

@@ -94,7 +94,6 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
             last_opponent_action = getLastOpponentAction(position, last_opponent_action)
         else:
             last_opponent_action = None
-        print(last_opponent_action)
         insertIntoLogSession(screen_area, hand, position, str(stack), is_headsup=is_headsup,
                              last_opponent_action=last_opponent_action)
     except Exception as e:
@@ -141,7 +140,7 @@ def getLastOpponentAction(position, last_opponent_action):
         last_opponent_action = 'push'
     elif position == 'big_blind' and last_opponent_action['alias'] == '1':
         last_opponent_action = 'min_raise'
-    elif position == 'big_blind' and last_opponent_action['alias'] == '2':
+    elif position == 'big_blind' and last_opponent_action['alias'] in ['2', '3']:
         last_opponent_action = 'open'
     elif position == 'small_blind' and last_opponent_action['alias'] == '2':
         last_opponent_action = 'min_raise'
@@ -149,4 +148,6 @@ def getLastOpponentAction(position, last_opponent_action):
         last_opponent_action = 'open'
     elif last_opponent_action['alias'] in ['check', '0.5']:
         last_opponent_action = 'limp'
+    else:
+        last_opponent_action = 'push'
     return last_opponent_action
