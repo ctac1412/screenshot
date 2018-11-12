@@ -19,7 +19,7 @@ import headsup
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
 # hand = 'TcQcJcJsThTs9h'
-hand = '9s7dTc7sTs7h'
+hand = '8s9h8c4d8d'
 screen_area = '1'
 hand_value = flop.checkPair(hand, screen_area)
 if hand_value != True:

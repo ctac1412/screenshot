@@ -29,7 +29,8 @@ def searchCards(screen_area, deck, list_length):
         error_log.errorLog('searchCards', str(e))
         print(e)
     if len(hand) < 4:
-        hand = '72o'
+        print(hand)
+        hand = '7h2d'
     return hand
 
 def insertImagePathIntoDb(image_path, screen_area):

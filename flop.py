@@ -236,13 +236,13 @@ def checkPair(hand, screen_area):
     if len(doubles) == 1:
         double_element = list(doubles.keys())[0]
         index_double_element = ranks.index(double_element)
-        if double_element in [hand[0], hand[1]] and index_double_element >= max(ts):
+        if list(doubles.values())[0] > 2 and double_element in [hand[0], hand[1]]:
+            hand_value = 'set'
+        elif double_element in [hand[0], hand[1]] and index_double_element >= max(ts):
             if index_double_element <= 8:
                 hand_value = 'weak_top_pair'
             else:
                 hand_value = 'top_pair'
-        elif list(doubles.values())[0] > 2 and double_element in [hand[0], hand[1]]:
-            hand_value = 'set'
         elif double_element in [hand[0], hand[1]] and ranks.index(double_element) == min(ts):
             hand_value = 'bottom_pair'
         elif double_element in [hand[0], hand[1]]:
@@ -263,7 +263,7 @@ def checkPair(hand, screen_area):
             hand_value = 'two_pairs'
         else:
             hand_value = 'low_two_pairs'
-    if hand_value in ['top_pair', 'set', 'two_pairs']:
+    if hand_value in ['top_pair', 'set', 'two_pairs', 'weak_top_pair']:
         session_log.updateHandValue(screen_area, hand_value)
         return True
     return hand_value
