@@ -140,13 +140,13 @@ def getLastOpponentAction(position, last_opponent_action):
         last_opponent_action = 'push'
     elif position == 'big_blind' and last_opponent_action['alias'] == '1':
         last_opponent_action = 'min_raise'
-    elif position == 'big_blind' and last_opponent_action['alias'] in ['2', '3']:
+    elif position == 'big_blind' and last_opponent_action['alias'] in ('2', '3'):
         last_opponent_action = 'open'
     elif position == 'small_blind' and last_opponent_action['alias'] == '2':
         last_opponent_action = 'min_raise'
     elif position == 'small_blind' and last_opponent_action['alias'] == '3':
         last_opponent_action = 'open'
-    elif last_opponent_action['alias'] in ['check', '0.5']:
+    elif last_opponent_action['alias'] in ('check', '0.5'):
         last_opponent_action = 'limp'
     else:
         last_opponent_action = 'push'

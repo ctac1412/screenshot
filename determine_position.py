@@ -7,7 +7,7 @@ import error_log
 import os
 
 def seacrhBlindChips(screen_area):
-    blinds = ['big_blind','small_blind']
+    blinds = ('big_blind', 'small_blind')
     path = image_processing.getLastScreen(getBlindArea(str(screen_area)))
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)

@@ -25,7 +25,7 @@ def start():
             image_name = str(math.floor(time.time())) + ".png"
             image_path = os.path.join(images_folder, str(datetime.datetime.now().date()), str(item['screen_area']), image_name)
             last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))
-            if last_row_action in ['push', 'fold', 'end']:
+            if last_row_action in ('push', 'fold', 'end'):
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'])
                 hand = image_processing.searchCards((item['screen_area']), deck, 4)
@@ -33,13 +33,13 @@ def start():
                 current_stack.saveStackImage(str(item['screen_area']), image_name, folder_name)
                 session_log.checkConditionsBeforeInsert(hand, item['screen_area'], stack_collection)
                 logic.getDecision(item['screen_area'])
-            elif last_row_action in ['open', 'call', 'check']:
+            elif last_row_action in ('open', 'call', 'check'):
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, str(item['screen_area']), last_row_action, image_name, folder_name, deck)
             elif last_row_action == 'cbet':
                 postflop.actionAfterCbet(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, str(item['screen_area']), deck)
-            elif last_row_action in ['turn_cbet', 'river_cbet']:
+            elif last_row_action in ('turn_cbet', 'river_cbet'):
                 postflop.actionAfterTurnCbet(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, str(item['screen_area']), deck)
             elif last_row_action == 'cc_postflop':

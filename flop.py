@@ -22,13 +22,14 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         if hand_value != True:
             checkStraightDraw(hand, screen_area, hand_value)
         hand_value = session_log.getHandValue(screen_area)
+        # if top_pair <= T
         if hand_value == 'weak_top_pair':
             keyboard.press('q')
             session_log.updateActionLogSession('push', str(screen_area))
             return
         elif action == 'open' and int(stack) > 12:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
-                if hand_value in ['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'] or hand_value.find('.') != -1:
+                if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1:
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
@@ -41,57 +42,63 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
             else:
-                if hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'] or hand_value.find('.') != -1:
+                if hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1:
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif int(stack) <= 10 and hand_value in['middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs']:
+                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs') or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif hand_value in['trash']:
+                elif hand_value != 'trash':
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
-                elif opponent_reaction in ['1', '2']:
+                elif opponent_reaction in ('1', '2'):
                     keyboard.press('c')
                     session_log.updateActionLogSession('cc_postflop', str(screen_area))
                 else:
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
+        # if action <> open
         else:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
-                if is_headsup == 0 and (hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'] or hand_value.find('.') != -1):
+                if is_headsup == 0 and (hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1):
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
                 elif is_headsup == 1 and (hand_value.find('.') != -1 or
-                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'full_house']):
+                        hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'low_two_pairs', 'full_house')):
                     keyboard.press('v')
+                    session_log.updateActionLogSession('cbet', str(screen_area))
+                    return
+                elif is_headsup == 1 and hand_value in('middle_pair', 'straight_draw', 'flush_draw'):
+                    keyboard.press('b')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
                 else:
                     keyboard.press('h')
                     session_log.updateActionLogSession('cc_postflop', str(screen_area))
                     return True
+            # if action <> open and cbet unavailable
             else:
-                if hand_value in['trash']:
+                if hand_value == 'trash':
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
-                elif is_headsup == 0 and (hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'] or hand_value.find('.') != -1):
+                elif is_headsup == 0 and (hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif is_headsup == 1 and  (hand_value.find('.') != -1 or
-                        hand_value in['top_pair', 'two_pairs', 'set', 'flush', 'straight', 'straight_draw', 'flush_draw', 'full_house']):
+                elif is_headsup == 1 and (hand_value.find('.') != -1 or
+                        hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house')):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
-                elif int(stack) <= 10 and hand_value in['middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs']:
+                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs') or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif opponent_reaction in ['1', '2']:
+                elif opponent_reaction in ('1', '2') and hand_value != 'gutshot':
                     keyboard.press('c')
                     session_log.updateActionLogSession('cc_postflop', str(screen_area))
                 else:
@@ -168,7 +175,7 @@ def checkStraightDraw(hand, screen_area, hand_value):
         if first == list(range(min(first), max(first) + 1)) or second == list(range(min(second), max(second) + 1)) or \
                 third == list(range(min(third), max(third) + 1)) or set(low_straight).issubset(arr):
             hand_value = 'straight'
-    if hand_value not in ['straight', 'straight_draw'] and hand_value.find('.') == -1:
+    if hand_value not in ('straight', 'straight_draw') and hand_value.find('.') == -1:
         hand_value = checkGutShot(hand, hand_value)
     session_log.updateHandValue(screen_area, hand_value)
 
@@ -236,34 +243,34 @@ def checkPair(hand, screen_area):
     if len(doubles) == 1:
         double_element = list(doubles.keys())[0]
         index_double_element = ranks.index(double_element)
-        if list(doubles.values())[0] > 2 and double_element in [hand[0], hand[1]]:
+        if list(doubles.values())[0] > 2 and double_element in (hand[0], hand[1]):
             hand_value = 'set'
-        elif double_element in [hand[0], hand[1]] and index_double_element >= max(ts):
+        elif double_element in (hand[0], hand[1]) and index_double_element >= max(ts):
             if index_double_element <= 8:
                 hand_value = 'weak_top_pair'
             else:
                 hand_value = 'top_pair'
-        elif double_element in [hand[0], hand[1]] and ranks.index(double_element) == min(ts):
+        elif double_element in (hand[0], hand[1]) and ranks.index(double_element) == min(ts):
             hand_value = 'bottom_pair'
-        elif double_element in [hand[0], hand[1]]:
+        elif double_element in (hand[0], hand[1]):
             hand_value = 'middle_pair'
     elif len(doubles) == 2:
         maximum = max(doubles, key=doubles.get)
         double_element = list(doubles.keys())[0]
-        if double_element in [hand[0], hand[1]] and ranks.index(double_element) >= max(ts):
+        if double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(ts):
             hand_value = 'two_pairs'
         elif sorted(list(doubles.keys())) == sorted([hand[0], hand[1]]):
             hand_value = 'two_pairs'
-        elif maximum in [hand[0], hand[1]] and doubles[maximum] >= 3:
+        elif maximum in (hand[0], hand[1]) and doubles[maximum] >= 3:
             hand_value = 'full_house'
-        elif double_element in [hand[0], hand[1]]:
+        elif double_element in (hand[0], hand[1]):
             hand_value = 'low_two_pairs'
     elif len(doubles) == 3:
         if hand[0] in list(doubles.keys()) and hand[1] in list(doubles.keys()):
             hand_value = 'two_pairs'
         else:
             hand_value = 'low_two_pairs'
-    if hand_value in ['top_pair', 'set', 'two_pairs', 'weak_top_pair']:
+    if hand_value in ('top_pair', 'set', 'two_pairs', 'weak_top_pair'):
         session_log.updateHandValue(screen_area, hand_value)
         return True
     return hand_value

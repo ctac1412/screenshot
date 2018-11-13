@@ -15,23 +15,27 @@ import postflop
 import flop
 import timeit
 import headsup
+import cv2
+import numpy as np
+import error_log
 
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
 # hand = 'TcQcJcJsThTs9h'
-hand = '8s9h8c4d8d'
-screen_area = '1'
-hand_value = flop.checkPair(hand, screen_area)
-if hand_value != True:
-    hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
-if hand_value != True:
-    flop.checkStraightDraw(hand, screen_area, hand_value)
-hand_value = session_log.getHandValue(screen_area)
-print(hand_value)
+# hand = '8s9h8c4d8d'
+# screen_area = '1'
+# hand_value = flop.checkPair(hand, screen_area)
+# if hand_value != True:
+#     hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
+# if hand_value != True:
+#     flop.checkStraightDraw(hand, screen_area, hand_value)
+# hand_value = session_log.getHandValue(screen_area)
+# print(hand_value)
 # if hand.find('.') == -1:
 #     print(1)
 # print(postflop.riverAction('1', '8c7d2s7cQd2cAh', 13))
-
+hand_value = 'set'
+print(hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'))
 
 # start_time = timeit.default_timer()
 # session_log.checkConditionsBeforeInsert(hand, screen_area, image_processing.getStackImages())
