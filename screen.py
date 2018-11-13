@@ -21,7 +21,7 @@ stack_collection = image_processing.getStackImages()
 def start():
     for item in screen_data:
         mouse.moveMouse(item['x_mouse'],item['y_mouse'])
-        if metka.seacrhBar(str(item['screen_area'])):
+        if metka.searchBar(str(item['screen_area'])):
             image_name = str(math.floor(time.time())) + ".png"
             image_path = os.path.join(images_folder, str(datetime.datetime.now().date()), str(item['screen_area']), image_name)
             last_row_action = session_log.getLastRowActionFromLogSession(str(item['screen_area']))

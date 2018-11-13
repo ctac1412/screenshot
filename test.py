@@ -41,3 +41,9 @@ print(hand_value)
 # logic.getDecision(screen_area)
 # print(timeit.default_timer() - start_time)
 
+def test(image_path, img_rgb):
+    template = cv2.imread(str(image_path), 0)
+    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.98
+    loc = np.where(res >= threshold)
+    return loc

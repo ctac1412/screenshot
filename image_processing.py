@@ -16,12 +16,8 @@ def searchCards(screen_area, deck, list_length):
         for item in getLastScreen(str(screen_area)):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
-            threshold = 0.98
             for value in deck:
-                template = cv2.imread(str(value['image_path']), 0)
-                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-                loc = np.where(res >= threshold)
-                if len(loc[0]) != 0:
+                if cvDataTemplate(value['image_path'], img_rgb) > 0:
                     hand += value['alias']
                 if len(hand) == list_length:
                     return hand
@@ -123,6 +119,8 @@ def searchElement(screen_area, elements, folder):
         path = getLastScreen(screen_area)
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
+        if cvDataTemplate(path, img_rgb) > 0:
+            return True
         template = cv2.imread(folder + item + '.png', 0)
         res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
         threshold = 0.98
@@ -134,30 +132,21 @@ def searchElement(screen_area, elements, folder):
 
 def searchLastOpponentAction(screen_area):
     element_area = introduction.saveElement(screen_area, 'limp_area')
-    threshold = 0.98
     path = getLastScreen(element_area)
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
     for item in getActionsButtons():
-        template = cv2.imread(str(item['image_path']), 0)
-        res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-        loc = np.where(res >= threshold)
-        if len(loc[0]) != 0:
+        if cvDataTemplate(path, img_rgb) > 0:
             return item
     return 'push'
 
 def checkIsCbetAvailable(screen_area):
     element_area = introduction.saveElement(screen_area, 'limp_area')
-    threshold = 0.98
     path = getLastScreen(element_area)
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
-    template = cv2.imread('action_buttons/check.png', 0)
-    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-    loc = np.where(res >= threshold)
-    if len(loc[0]) > 0:
+    if cvDataTemplate(path, img_rgb) > 0:
         return True
-
 
 def getCurrentCards(condition):
     db = postgresql.open(db_conf.connectionString())
@@ -175,3 +164,9 @@ def checkCurrentHand(screen_area, hand):
         return True
     else:
         return False
+
+def cvDataTemplate(image_path, img_rgb):
+    template = cv2.imread(str(image_path), 0)
+    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+    loc = np.where(res >= 0.98)
+    return len(loc[0])
