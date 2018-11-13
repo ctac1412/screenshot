@@ -49,6 +49,10 @@ def turnAction(screen_area, hand, stack):
         keyboard.press('h')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
+    elif opponent_reaction in ('1', '2', '3') and hand_value in('straight_draw', 'flush_draw'):
+        keyboard.press('c')
+        session_log.updateActionLogSession('cc_postflop', str(screen_area))
+        return True
     elif opponent_reaction in ('1', '2') and hand_value not in('trash', 'gutshot'):
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
