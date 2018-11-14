@@ -119,14 +119,8 @@ def searchElement(screen_area, elements, folder):
         path = getLastScreen(screen_area)
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
-        if cvDataTemplate(path, img_rgb) > 0:
-            return True
-        template = cv2.imread(folder + item + '.png', 0)
-        res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-        threshold = 0.98
-        loc = np.where(res >= threshold)
-
-        if len(loc[0]) != 0:
+        template_path = folder + item + '.png'
+        if cvDataTemplate(template_path, img_rgb):
             return True
         return False
 

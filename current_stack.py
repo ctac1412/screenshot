@@ -2,28 +2,24 @@ import db_conf
 import postgresql
 import image_processing
 import cv2
-import numpy as np
 import error_log
 import math
 import time
 import datetime
 import os
 
+default_stack = 22
+
 def searchCurrentStack(screen_area, stack_collection):
     try:
-        current_stack = 22
         for item in image_processing.getLastScreen(getStackArea(screen_area)):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in stack_collection:
-                template = cv2.imread(str(value['image_path']), 0)
-                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-                threshold = 0.98
-                loc = np.where(res >= threshold)
-                if len(loc[0]) != 0:
+                if image_processing.cvDataTemplate(value['image_path'], img_rgb) > 0:
                     current_stack = int(value['stack_value'])
                     return current_stack
-        return current_stack
+        return default_stack
     except Exception as e:
         error_log.errorLog('searchCurrentStack', str(e))
         print(e)
@@ -31,45 +27,18 @@ def searchOpponentStack(screen_area, opponent_area, stack_collection):
     try:
         folder_name = 'images/' + str(datetime.datetime.now().date())
         saveOpponentStackImage(str(screen_area), folder_name, opponent_area)
-        opponent_stack = 22
         screen_area = getOpponentStackArea(str(screen_area))
         for item in image_processing.getLastScreen(str(screen_area)):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in stack_collection:
-                template = cv2.imread(str(value['image_path']), 0)
-                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-                threshold = 0.98
-                loc = np.where(res >= threshold)
-                if len(loc[0]) != 0:
+                if image_processing.cvDataTemplate(value['image_path'], img_rgb) > 0:
                     opponent_stack = int(value['stack_value'])
                     return opponent_stack
-        return opponent_stack
+        return default_stack
     except Exception as e:
         error_log.errorLog('searchOpponentStack', str(e))
         print(e)
-
-
-#Поиск конкретного стека
-def searchConctreteStack(screen_area, last_stack):
-    path = image_processing.getLastScreen(str(getStackArea(str(screen_area))))
-    path = path[0]['image_path']
-    img_rgb = cv2.imread(path, 0)
-    template = getStackImage(last_stack)
-    if template == 0:
-        return False
-    template = cv2.imread(template, 0)
-    if len(template) == 0:
-        return False
-
-    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-    threshold = 0.98
-    loc = np.where(res >= threshold)
-
-    if len(loc[0]) > 0:
-        return True
-    else:
-        return False
 
 def getStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
@@ -147,20 +116,15 @@ def saveAllinStackImage(screen_area):
 def searchAllinStack(screen_area):
     try:
         saveAllinStackImage(screen_area)
-        all_in_stack = 22
         screen_area = getAllinStackArea(str(screen_area))
         for item in image_processing.getLastScreen(str(screen_area)):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in image_processing.getAllinStackImages():
-                template = cv2.imread(str(value['image_path']), 0)
-                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-                threshold = 0.98
-                loc = np.where(res >= threshold)
-                if len(loc[0]) != 0:
+                if image_processing.cvDataTemplate(value['image_path'], img_rgb) > 0:
                     all_in_stack = int(value['stack_value'])
                     return all_in_stack
-        return all_in_stack
+        return default_stack
     except Exception as e:
         error_log.errorLog('searchAllinStack', str(e))
         print(e)
@@ -185,20 +149,15 @@ def saveBankStackImage(screen_area):
 def searchBankStack(screen_area):
     try:
         saveBankStackImage(screen_area)
-        bank_stack = 22
         screen_area = getBankStackArea(str(screen_area))
         for item in image_processing.getLastScreen(str(screen_area)):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in image_processing.getBankStackImages():
-                template = cv2.imread(str(value['image_path']), 0)
-                res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-                threshold = 0.98
-                loc = np.where(res >= threshold)
-                if len(loc[0]) != 0:
+                if image_processing.cvDataTemplate(value['image_path'], img_rgb) > 0:
                     bank_stack = int(value['stack_value'])
                     return bank_stack
-        return bank_stack
+        return default_stack
     except Exception as e:
         error_log.errorLog('searchBankStack', str(e))
         print(e)

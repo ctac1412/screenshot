@@ -20,11 +20,8 @@ def searchOpponentCard(screen_area, stack_collection=0, is_postflop=False):
         for item in last_screen:
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
-            template = cv2.imread('is_headsup/is_headsup.png', 0)
-            res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-            threshold = 0.98
-            loc = np.where(res >= threshold)
-            if len(loc[0]) != 0:
+            template_path = 'is_headsup/is_headsup.png'
+            if image_processing.cvDataTemplate(template_path, img_rgb) > 0:
                 check_is_headsup += 1
                 if is_postflop is False:
                     opponent_data.append(current_stack.searchOpponentStack(screen_area, opponent_area, stack_collection))
