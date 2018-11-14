@@ -12,7 +12,7 @@ def seacrhBlindChips(screen_area):
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
     for blind in blinds:
-        template_path = 'blinds/' + blind + '.png',
+        template_path = 'blinds/' + blind + '.png'
         if image_processing.cvDataTemplate(template_path, img_rgb) > 0:
             return blind
     return 'button'
