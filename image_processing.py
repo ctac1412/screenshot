@@ -24,7 +24,7 @@ def searchCards(screen_area, deck, list_length):
     except Exception as e:
         error_log.errorLog('searchCards', str(e))
         print(e)
-    if len(hand) < 4:
+    if len(hand) < 4 and list_length > 2:
         print(hand)
         hand = '7h2d'
     return hand
@@ -139,7 +139,8 @@ def checkIsCbetAvailable(screen_area):
     path = getLastScreen(element_area)
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
-    if cvDataTemplate(path, img_rgb) > 0:
+    template_path = 'action_buttons/check.png'
+    if cvDataTemplate(template_path, img_rgb) > 0:
         return True
 
 def getCurrentCards(condition):
