@@ -42,7 +42,7 @@ def turnAction(screen_area, hand, stack):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif int(stack) <= 10 and hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs') or hand_value.find('.') != -1:
+    elif int(stack) <= 10 and hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs' or hand_value.find('.')) != -1:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
     elif image_processing.checkIsCbetAvailable(str(screen_area)):
@@ -121,8 +121,8 @@ def riverAction(screen_area, hand, stack, action):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
     elif (hand_value in('middle_pair', 'low_two_pairs') or hand_value.find('middle_pair.') != -1) and image_processing.checkIsCbetAvailable(str(screen_area)):
-        keyboard.press('h')
-        session_log.updateActionLogSession('cc_postflop', str(screen_area))
+        keyboard.press('b')
+        session_log.updateActionLogSession('value_bet', str(screen_area))
         return True
     else:
         keyboard.press('f')
@@ -173,3 +173,18 @@ def getOpponentFlopReaction(screen_area):
         keyboard.press('f')
         session_log.updateActionLogSession('fold', str(screen_area))
         return True
+
+def checkIsRaiseRiverValueBet(screen_area):
+    opponent_reaction = image_processing.searchLastOpponentAction(screen_area)
+    if opponent_reaction in ('1', '2'):
+        keyboard.press('c')
+        session_log.updateActionLogSession('end', str(screen_area))
+        return True
+    else:
+        keyboard.press('f')
+        session_log.updateActionLogSession('fold', str(screen_area))
+        return True
+
+def actionAfterValueBet(screen_area, x_coordinate, y_coordinate, width, height, image_path):
+    if introduction.checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
+    if checkIsRaiseRiverValueBet(screen_area): return

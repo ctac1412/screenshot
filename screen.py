@@ -45,6 +45,9 @@ def start():
             elif last_row_action == 'cc_postflop':
                 postflop.actionAfterCCPostflop(str(item['screen_area']), deck, item['x_coordinate'], item['y_coordinate'],
                                                item['width'], item['height'], image_path)
+            elif last_row_action == 'value_bet':
+                postflop.actionAfterValueBet(str(item['screen_area']), item['x_coordinate'], item['y_coordinate'],
+                                               item['width'], item['height'], image_path)
             else:
                 hand = session_log.getLastRowFromLogSession(str(item['screen_area']))
                 if image_processing.checkCurrentHand(str(item['screen_area']), hand[0]['hand']):
