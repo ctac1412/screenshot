@@ -1,6 +1,5 @@
 import image_processing
 import cv2
-import numpy as np
 import postgresql
 import db_conf
 import error_log

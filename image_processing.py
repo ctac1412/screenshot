@@ -130,7 +130,7 @@ def searchLastOpponentAction(screen_area):
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
     for item in getActionsButtons():
-        if cvDataTemplate(path, img_rgb) > 0:
+        if cvDataTemplate(item['image_path'], img_rgb) > 0:
             return item
     return 'push'
 
