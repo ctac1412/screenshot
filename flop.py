@@ -33,7 +33,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
-                elif hand_value == 'trash' and is_headsup == 0:
+                elif hand_value in ('trash', 'bottom_pair', 'gutshot') and is_headsup == 0:
                     keyboard.press('h')
                     session_log.updateActionLogSession('cc_postflop', str(screen_area))
                     return
@@ -200,8 +200,6 @@ def checkFlushDraw(hand, screen_area, hand_value):
         for item in hand:
             counter[item] = counter.get(item, 0) + 1
         doubles = {element: count for element, count in counter.items() if count > 3}
-        print(doubles)
-        print(counter)
         if doubles and list(doubles.values())[0] >= 5:
             hand_value = 'flush'
             session_log.updateHandValue(screen_area, hand_value)

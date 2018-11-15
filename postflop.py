@@ -28,7 +28,8 @@ def turnAction(screen_area, hand, stack):
     if hand_value != True:
         flop.checkStraightDraw(hand, screen_area, hand_value)
     hand_value = session_log.getHandValue(screen_area)
-    if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') and image_processing.checkIsCbetAvailable(str(screen_area)):
+    if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') \
+            and image_processing.checkIsCbetAvailable(str(screen_area)):
         action = current_stack.compareBankAndAvailableStack(screen_area, image_processing.getStackImages())
         if action == 'turn_cbet':
             keyboard.press('v')
@@ -102,7 +103,8 @@ def riverAction(screen_area, hand, stack, action):
         keyboard.press('f')
         session_log.updateActionLogSession('fold', str(screen_area))
         return True
-    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair', 'full_house') and image_processing.checkIsCbetAvailable(str(screen_area)):
+    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair', 'full_house') \
+            and image_processing.checkIsCbetAvailable(str(screen_area)):
         keyboard.press('v')
         session_log.updateActionLogSession('river_cbet', str(screen_area))
         return True
@@ -110,14 +112,15 @@ def riverAction(screen_area, hand, stack, action):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif opponent_reaction in ('1', '2', '3') and (hand_value in('middle_pair', 'low_two_pairs') or hand_value.find('middle_pair.') != -1):
+    elif opponent_reaction in ('1', '2', '3') and (hand_value in('middle_pair', 'low_two_pairs') or hand_value.find('middle_pair') != -1):
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
     elif int(stack) <= 10 and hand_value in('middle_pair', 'low_two_pairs'):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
-    elif (hand_value in('middle_pair', 'low_two_pairs') or hand_value.find('middle_pair.') != -1) and image_processing.checkIsCbetAvailable(str(screen_area)):
+    elif (hand_value in('middle_pair', 'low_two_pairs') or hand_value.find('middle_pair') != -1 or
+          hand_value.find('low_two_pairs') != -1) and image_processing.checkIsCbetAvailable(str(screen_area)):
         keyboard.press('j')
         session_log.updateActionLogSession('value_bet', str(screen_area))
         return True
