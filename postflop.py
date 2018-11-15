@@ -80,11 +80,12 @@ def checkIsRiver(screen_area, deck):
         hand = last_row[0][0]
         stack = last_row[0][1]
         action = last_row[0][3]
-        if riverAction(screen_area, hand, stack, action):
+        position = last_row[0][2]
+        if riverAction(screen_area, hand, stack, action, position):
             return True
     return False
 
-def riverAction(screen_area, hand, stack, action):
+def riverAction(screen_area, hand, stack, action, position):
     if action in ('turn_cbet', 'river_cbet'):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
@@ -118,9 +119,14 @@ def riverAction(screen_area, hand, stack, action):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
     elif (hand_value in('middle_pair', 'low_two_pairs') or hand_value.find('middle_pair.') != -1) and image_processing.checkIsCbetAvailable(str(screen_area)):
-        keyboard.press('j')
-        session_log.updateActionLogSession('value_bet', str(screen_area))
-        return True
+        if position != 'big_blind':
+            keyboard.press('j')
+            session_log.updateActionLogSession('value_bet', str(screen_area))
+            return True
+        else:
+            keyboard.press('h')
+            session_log.updateActionLogSession('cc_postflop', str(screen_area))
+            return True
     else:
         keyboard.press('f')
         session_log.updateActionLogSession('fold', str(screen_area))
