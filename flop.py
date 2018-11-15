@@ -200,6 +200,8 @@ def checkFlushDraw(hand, screen_area, hand_value):
         for item in hand:
             counter[item] = counter.get(item, 0) + 1
         doubles = {element: count for element, count in counter.items() if count > 3}
+        print(doubles)
+        print(counter)
         if doubles and list(doubles.values())[0] >= 5:
             hand_value = 'flush'
             session_log.updateHandValue(screen_area, hand_value)

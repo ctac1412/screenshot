@@ -22,15 +22,16 @@ import error_log
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
 # hand = 'TcQcJcJsThTs9h'
-hand = 'Td9hAcAsAdJc'
-screen_area = '1'
-hand_value = flop.checkPair(hand, screen_area)
-if hand_value != True:
-    hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
-if hand_value != True:
-    flop.checkStraightDraw(hand, screen_area, hand_value)
-hand_value = session_log.getHandValue(screen_area)
-print(hand_value)
+hand = 'Td9hAcAcAdJc2d'
+print(postflop.checkIsBoardDanger(hand))
+# screen_area = '1'
+# hand_value = flop.checkPair(hand, screen_area)
+# if hand_value != True:
+#     hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
+# if hand_value != True:
+#     flop.checkStraightDraw(hand, screen_area, hand_value)
+# hand_value = session_log.getHandValue(screen_area)
+# print(hand_value)
 # if hand.find('.') == -1:
 #     print(1)
 # print(postflop.riverAction('1', '8c7d2s7cQd2cAh', 13))
@@ -39,11 +40,3 @@ print(hand_value)
 # session_log.checkConditionsBeforeInsert(hand, screen_area, image_processing.getStackImages())
 # (session_log.checkConditionsBeforeInsert(hand, 1, image_processing.getStackImages()))
 # logic.getDecision(screen_area)
-# print(timeit.default_timer() - start_time)
-
-def test(image_path, img_rgb):
-    template = cv2.imread(str(image_path), 0)
-    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-    threshold = 0.98
-    loc = np.where(res >= threshold)
-    return loc
