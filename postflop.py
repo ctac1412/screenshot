@@ -58,8 +58,6 @@ def turnAction(screen_area, hand, stack):
         keyboard.press('f')
         session_log.updateActionLogSession('fold', str(screen_area))
         return True
-    print(1)
-
 
 def actionAfterCbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck):
     if introduction.checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
@@ -125,7 +123,7 @@ def riverAction(screen_area, hand, stack, action, position):
         keyboard.press('j')
         session_log.updateActionLogSession('value_bet', str(screen_area))
         return True
-    elif (hand_value in('middle_pair', 'low_two_pairs') or hand_value.find('middle_pair.') != -1) and image_processing.checkIsCbetAvailable(str(screen_area)):
+    elif hand_value == 'middle_pair' and image_processing.checkIsCbetAvailable(str(screen_area)):
         if position != 'big_blind':
             keyboard.press('j')
             session_log.updateActionLogSession('value_bet', str(screen_area))

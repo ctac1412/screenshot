@@ -46,7 +46,8 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs') or hand_value.find('.') != -1):
+                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs')
+                                           or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
@@ -63,7 +64,8 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
         # if action <> open
         else:
             if image_processing.checkIsCbetAvailable(str(screen_area)):
-                if is_headsup == 0 and (hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1):
+                if is_headsup == 0 and (hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house')
+                                        or hand_value.find('.') != -1):
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
@@ -86,7 +88,8 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
-                elif is_headsup == 0 and (hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1):
+                elif is_headsup == 0 and (hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house')
+                                          or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
@@ -94,7 +97,8 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                         hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house')):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
-                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs') or hand_value.find('.') != -1):
+                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs')
+                                           or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
