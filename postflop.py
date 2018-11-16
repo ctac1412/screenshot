@@ -211,3 +211,6 @@ def checkIsBoardDanger(hand):
         if len(doubles) > 0:
             return True
     return False
+
+def checkIsSecondPair(hand):
+    pass
