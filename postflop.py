@@ -123,7 +123,7 @@ def riverAction(screen_area, hand, stack, action, position):
         keyboard.press('j')
         session_log.updateActionLogSession('value_bet', str(screen_area))
         return True
-    elif hand_value == 'middle_pair' and image_processing.checkIsCbetAvailable(str(screen_area)):
+    elif hand_value == 'low_two_pairs' and image_processing.checkIsCbetAvailable(str(screen_area)):
         if position != 'big_blind':
             keyboard.press('j')
             session_log.updateActionLogSession('value_bet', str(screen_area))
