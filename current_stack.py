@@ -191,5 +191,5 @@ def getActualStack(screen_area, stack_collection, folder_name):
     saveStackImage(str(screen_area), image_name, folder_name)
     stack = searchCurrentStack(screen_area, stack_collection)
     stack = convertStack(stack)
-    session_log.updateCurrentStackLogSession(screen_area, stack)
+    session_log.updateCurrentStackLogSession(str(screen_area), str(stack))
     return stack

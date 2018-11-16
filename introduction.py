@@ -49,6 +49,7 @@ def checkIsFlop(screen_area, image_name, folder_name, flop_deck, stack_collectio
         if len(hand) == 4:
             if action == 'open':
                 stack = current_stack.getActualStack(screen_area, stack_collection, folder_name)
+                print(stack)
             flop.makeFlopDecision(str(screen_area), hand, image_name, folder_name, stack, action, is_headsup, flop_deck)
         else:
             session_log.updateActionLogSession('end', str(screen_area))

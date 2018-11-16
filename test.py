@@ -22,15 +22,15 @@ import error_log
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
 # hand = 'TcQcJcJsThTs9h'
-hand = 'Ts5hKhKdKs5s4c'
-screen_area = '1'
-hand_value = flop.checkPair(hand, screen_area)
-if hand_value != True:
-    hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
-if hand_value != True:
-    flop.checkStraightDraw(hand, screen_area, hand_value)
-hand_value = session_log.getHandValue(screen_area)
-print(hand_value)
+# hand = 'Ts5hKhKdKs5s4c'
+# screen_area = '1'
+# hand_value = flop.checkPair(hand, screen_area)
+# if hand_value != True:
+#     hand_value = flop.checkFlushDraw(hand, screen_area, hand_value)
+# if hand_value != True:
+#     flop.checkStraightDraw(hand, screen_area, hand_value)
+# hand_value = session_log.getHandValue(screen_area)
+# print(hand_value)
 # if hand.find('.') == -1:
 #     print(1)
 # print(postflop.riverAction('1', '8c7d2s7cQd2cAh', 13))
@@ -39,3 +39,6 @@ print(hand_value)
 # session_log.checkConditionsBeforeInsert(hand, screen_area, image_processing.getStackImages())
 # (session_log.checkConditionsBeforeInsert(hand, 1, image_processing.getStackImages()))
 # logic.getDecision(screen_area)
+
+stack = current_stack.convertStack(13)
+print(type(stack))

@@ -55,7 +55,7 @@ def updateCurrentStackLogSession(screen_area, actual_stack):
     try:
         db = postgresql.open(db_conf.connectionString())
         db.query("UPDATE session_log SET current_stack=yourvalue FROM "
-                 "(SELECT id, actual_stack AS yourvalue FROM session_log where screen_area = " +
+                 "(SELECT id, " + actual_stack + "AS yourvalue FROM session_log where screen_area = " +
                  screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id ")
     except Exception as e:
         error_log.errorLog('updateCurrentStackLogSession', str(e))
