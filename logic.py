@@ -55,18 +55,3 @@ def getActionFromPreflopChart(screen_area):
     if len(data) == 0:
         return sklansky_chubukov.getAction(hand, stack, last_opponent_action, position)
     return data[0]['action']
-
-def convertStack(stack):
-    if stack >= 22:
-        stack = 22
-    elif stack in range(17, 22):
-        stack = 21
-    elif stack in range(13, 17):
-        stack = 17
-    elif stack in range(10, 13):
-        stack = 13
-    elif stack in range(7, 10):
-        stack = 10
-    elif stack == 0:
-        stack = 0
-    return stack

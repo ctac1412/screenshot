@@ -6,6 +6,8 @@ import determine_position
 import headsup
 import image_processing
 import logic
+import math
+import time
 
 def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0', action='', is_headsup=0, last_opponent_action=None):
     try:
@@ -49,11 +51,11 @@ def updateIsFlopLogSession(screen_area):
              "(SELECT id FROM session_log where screen_area = " + screen_area + "ORDER BY id desc limit 1) "
                                                                                 "AS t1 WHERE session_log.id=t1.id")
 
-def updateCurrentStackLogSession(screen_area):
+def updateCurrentStackLogSession(screen_area, actual_stack):
     try:
         db = postgresql.open(db_conf.connectionString())
         db.query("UPDATE session_log SET current_stack=yourvalue FROM "
-                 "(SELECT id, int2(current_stack) - 2 AS yourvalue FROM session_log where screen_area = " +
+                 "(SELECT id, actual_stack AS yourvalue FROM session_log where screen_area = " +
                  screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id ")
     except Exception as e:
         error_log.errorLog('updateCurrentStackLogSession', str(e))
@@ -88,7 +90,7 @@ def checkConditionsBeforeInsert(hand, screen_area, stack_collection):
                 opponent_actual_stack = max(opponent_actual_stack)
                 if int(opponent_actual_stack) < int(stack):
                     stack = opponent_actual_stack
-        stack = logic.convertStack(stack)
+        stack = current_stack.convertStack(stack)
         if position == 'big_blind' or (position == 'small_blind' and is_headsup == 0):
             last_opponent_action = image_processing.searchLastOpponentAction(screen_area)
             last_opponent_action = getLastOpponentAction(position, last_opponent_action)

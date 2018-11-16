@@ -35,7 +35,7 @@ def start():
                 logic.getDecision(item['screen_area'])
             elif last_row_action in ('open', 'call', 'check'):
                 introduction.actionAfterOpen(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
-                                         image_path, str(item['screen_area']), last_row_action, image_name, folder_name, deck)
+                                         image_path, str(item['screen_area']), last_row_action, image_name, folder_name, deck, stack_collection)
             elif last_row_action == 'cbet':
                 postflop.actionAfterCbet(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, str(item['screen_area']), deck)

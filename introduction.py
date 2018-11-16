@@ -15,8 +15,8 @@ import current_stack
 
 images_folder = "images"
 
-def actionAfterOpen(x_coordinate, y_coordinate, width, height, image_path, screen_area, action, image_name, folder_name, flop_deck):
-    if checkIsFlop(screen_area, image_name, folder_name, flop_deck): return
+def actionAfterOpen(x_coordinate, y_coordinate, width, height, image_path, screen_area, action, image_name, folder_name, flop_deck, stack_collection):
+    if checkIsFlop(screen_area, image_name, folder_name, flop_deck, stack_collection): return
     if action == 'open':
         if checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_path): return
     if checkIsActionButtons(screen_area): return
@@ -36,7 +36,7 @@ def checkIsLimpAvailable(screen_area, element):
         return True
     return False
 
-def checkIsFlop(screen_area, image_name, folder_name, flop_deck):
+def checkIsFlop(screen_area, image_name, folder_name, flop_deck, stack_collection):
     element_area = saveElement(screen_area, 'green_board_area')
     if image_processing.searchElement(element_area, ['green_board'], 'green_board/') is False:
         last_row = session_log.getLastRowFromLogSession(str(screen_area))
@@ -47,6 +47,8 @@ def checkIsFlop(screen_area, image_name, folder_name, flop_deck):
         if is_headsup == 0 and headsup.searchOpponentCard(screen_area, is_postflop=True)[0] == 1:
             is_headsup = 1
         if len(hand) == 4:
+            if action == 'open':
+                stack = current_stack.getActualStack(screen_area, stack_collection, folder_name)
             flop.makeFlopDecision(str(screen_area), hand, image_name, folder_name, stack, action, is_headsup, flop_deck)
         else:
             session_log.updateActionLogSession('end', str(screen_area))
@@ -101,7 +103,7 @@ def getElementData(screen_area):
 
 def getReactionToOpponent(row):
     hand = logic.handConverting(row[0]['hand'])
-    stack = logic.convertStack(int(row[0]['current_stack']))
+    stack = current_stack.convertStack(int(row[0]['current_stack']))
     last_opponent_action = row[0]['last_opponent_action']
     if last_opponent_action is None:
         last_opponent_action = ' is null'

@@ -7,6 +7,7 @@ import math
 import time
 import datetime
 import os
+import session_log
 
 default_stack = 22
 
@@ -169,3 +170,26 @@ def compareBankAndAvailableStack(screen_area, stack_collection):
         return 'turn_cbet'
     elif stack < bank:
         return 'push'
+
+def convertStack(stack):
+    if stack >= 22:
+        stack = 22
+    elif stack in range(17, 22):
+        stack = 21
+    elif stack in range(13, 17):
+        stack = 17
+    elif stack in range(10, 13):
+        stack = 13
+    elif stack in range(7, 10):
+        stack = 10
+    elif stack == 0:
+        stack = 0
+    return stack
+
+def getActualStack(screen_area, stack_collection, folder_name):
+    image_name = str(math.floor(time.time())) + ".png"
+    saveStackImage(str(screen_area), image_name, folder_name)
+    stack = searchCurrentStack(screen_area, stack_collection)
+    stack = convertStack(stack)
+    session_log.updateCurrentStackLogSession(screen_area, stack)
+    return stack
