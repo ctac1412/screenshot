@@ -22,7 +22,7 @@ import error_log
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
 # hand = 'TcQcJcJsThTs9h'
-hand = '2c8cKc5d9dTc6h'
+hand = '2c8cKc8d3dTc6h'
 screen_area = '1'
 hand_value = flop.checkPair(hand, screen_area)
 if hand_value != True:

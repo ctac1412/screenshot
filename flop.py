@@ -257,6 +257,7 @@ def checkPair(hand, screen_area):
         elif double_element in (hand[0], hand[1]) and ranks.index(double_element) == min(ts):
             hand_value = 'bottom_pair'
         elif double_element in (hand[0], hand[1]):
+            print(ts)
             hand_value = 'middle_pair'
     elif len(doubles) == 2:
         maximum = max(doubles, key=doubles.get)
