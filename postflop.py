@@ -43,14 +43,15 @@ def turnAction(screen_area, hand, stack):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif int(stack) <= 10 and hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs' or hand_value.find('.')) != -1:
+    elif int(stack) <= 10 and (hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
+                               or hand_value.find('.')) != -1:
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
     elif image_processing.checkIsCbetAvailable(str(screen_area)):
         keyboard.press('h')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
-    elif opponent_reaction in ('1', '2', '3') and hand_value not in('trash', 'gutshot'):
+    elif opponent_reaction in ('1', '2', '3') and hand_value not in('trash', 'gutshot', 'bottom_pair'):
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
@@ -111,21 +112,21 @@ def riverAction(screen_area, hand, stack, action, position):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif opponent_reaction in ('1', '2', '3') and (hand_value in('middle_pair', 'low_two_pairs') or hand_value.find('middle_pair') != -1):
+    elif opponent_reaction in ('1', '2', '3') and (hand_value in('middle_pair', 'low_two_pairs', 'second_pair')
+                                                   or hand_value.find('middle_pair') != -1):
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
-    elif int(stack) <= 10 and hand_value in('middle_pair', 'low_two_pairs'):
+    elif int(stack) <= 10 and hand_value in('middle_pair', 'low_two_pairs', 'second_pair'):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
-    elif (hand_value in('middle_pair', 'low_two_pairs') or hand_value.find('middle_pair') != -1 or
-          hand_value.find('low_two_pairs') != -1) and image_processing.checkIsCbetAvailable(str(screen_area)):
-        keyboard.press('j')
-        session_log.updateActionLogSession('value_bet', str(screen_area))
-        return True
-    elif hand_value == 'low_two_pairs' and image_processing.checkIsCbetAvailable(str(screen_area)):
+    elif (hand_value in ('second_pair', 'low_two_pairs') or hand_value.find('second_pair') != -1 or
+              hand_value.find('low_two_pairs') != -1) and image_processing.checkIsCbetAvailable(str(screen_area)):
         if position != 'big_blind':
-            keyboard.press('j')
+            if current_stack.searchBankStack(screen_area) <= 3:
+                keyboard.press('j')
+            else:
+                keyboard.press('k')
             session_log.updateActionLogSession('value_bet', str(screen_area))
             return True
         else:
@@ -147,11 +148,11 @@ def checkIsRaiseCbet(screen_area):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif int(stack) <= 10 and hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs'):
+    elif int(stack) <= 10 and hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair'):
         keyboard.press('q')
         session_log.updateActionLogSession('push', str(screen_area))
         return True
-    elif opponent_reaction in ('1', '2') and hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs'):
+    elif opponent_reaction in ('1', '2') and hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair'):
         keyboard.press('c')
         session_log.updateActionLogSession('cc_postflop', str(screen_area))
         return True
@@ -211,6 +212,3 @@ def checkIsBoardDanger(hand):
         if len(doubles) > 0:
             return True
     return False
-
-def checkIsSecondPair(hand):
-    pass

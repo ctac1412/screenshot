@@ -46,7 +46,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs')
+                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
                                            or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
@@ -74,7 +74,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
-                elif is_headsup == 1 and hand_value in('middle_pair', 'straight_draw', 'flush_draw'):
+                elif is_headsup == 1 and hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'second_pair'):
                     keyboard.press('b')
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
@@ -97,7 +97,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                         hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house')):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
-                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs')
+                elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
                                            or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
@@ -257,8 +257,12 @@ def checkPair(hand, screen_area):
         elif double_element in (hand[0], hand[1]) and ranks.index(double_element) == min(ts):
             hand_value = 'bottom_pair'
         elif double_element in (hand[0], hand[1]):
-            print(ts)
-            hand_value = 'middle_pair'
+            set(ts)
+            ts.remove(max(ts))
+            if index_double_element >= max(ts):
+                hand_value = 'second_pair'
+            else:
+                hand_value = 'middle_pair'
     elif len(doubles) == 2:
         maximum = max(doubles, key=doubles.get)
         double_element = list(doubles.keys())[0]
@@ -266,7 +270,7 @@ def checkPair(hand, screen_area):
             hand_value = 'two_pairs'
         elif sorted(list(doubles.keys())) == sorted([hand[0], hand[1]]):
             hand_value = 'two_pairs'
-        elif maximum in (hand[0], hand[1]) and doubles[maximum] >= 3:
+        elif doubles[maximum] >= 3:
             hand_value = 'full_house'
         elif double_element in (hand[0], hand[1]):
             hand_value = 'low_two_pairs'
