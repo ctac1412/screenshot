@@ -122,17 +122,12 @@ def riverAction(screen_area, hand, stack, action, position):
         session_log.updateActionLogSession('push', str(screen_area))
     elif (hand_value in ('second_pair', 'low_two_pairs') or hand_value.find('second_pair') != -1 or
               hand_value.find('low_two_pairs') != -1) and image_processing.checkIsCbetAvailable(str(screen_area)):
-        if position != 'big_blind':
-            if current_stack.searchBankStack(screen_area) <= 3:
-                keyboard.press('j')
-            else:
-                keyboard.press('k')
-            session_log.updateActionLogSession('value_bet', str(screen_area))
-            return True
+        if current_stack.searchBankStack(screen_area) <= 3:
+            keyboard.press('j')
         else:
-            keyboard.press('h')
-            session_log.updateActionLogSession('cc_postflop', str(screen_area))
-            return True
+            keyboard.press('k')
+        session_log.updateActionLogSession('value_bet', str(screen_area))
+        return True
     else:
         keyboard.press('f')
         session_log.updateActionLogSession('fold', str(screen_area))

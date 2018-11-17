@@ -51,7 +51,7 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('q')
                     session_log.updateActionLogSession('push', str(screen_area))
                     return
-                elif hand_value != 'trash':
+                elif hand_value == 'trash':
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
