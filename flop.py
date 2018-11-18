@@ -42,9 +42,10 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     session_log.updateActionLogSession('cbet', str(screen_area))
                     return
             else:
-                if hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1:
-                    keyboard.press('q')
-                    session_log.updateActionLogSession('push', str(screen_area))
+                if (hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1)\
+                        and opponent_reaction in ('1', '2'):
+                    keyboard.press('v')
+                    session_log.updateActionLogSession('cbet', str(screen_area))
                     return
                 elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
                                            or hand_value.find('.') != -1):
@@ -88,15 +89,10 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                     keyboard.press('f')
                     session_log.updateActionLogSession('fold', str(screen_area))
                     return
-                elif is_headsup == 0 and (hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house')
-                                          or hand_value.find('.') != -1):
-                    keyboard.press('q')
-                    session_log.updateActionLogSession('push', str(screen_area))
-                    return
-                elif is_headsup == 1 and (hand_value.find('.') != -1 or
+                elif opponent_reaction in ('1', '2') and (hand_value.find('.') != -1 or
                         hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house')):
-                    keyboard.press('q')
-                    session_log.updateActionLogSession('push', str(screen_area))
+                    keyboard.press('v')
+                    session_log.updateActionLogSession('cbet', str(screen_area))
                 elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
                                            or hand_value.find('.') != -1):
                     keyboard.press('q')
