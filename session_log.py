@@ -5,9 +5,6 @@ import current_stack
 import determine_position
 import headsup
 import image_processing
-import logic
-import math
-import time
 
 def insertIntoLogSession(screen_area, hand, current_position='0', current_stack='0', action='', is_headsup=0, last_opponent_action=None):
     try:
@@ -22,8 +19,8 @@ def insertIntoLogSession(screen_area, hand, current_position='0', current_stack=
 def getLastRowActionFromLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
-        data = db.query("select trim(action) as action from session_log where screen_area = " + screen_area +
-                        " order by id desc limit 1")
+        sql = "select trim(action) as action from session_log where screen_area = ? order by id desc limit 1"
+        data = db.query.first(sql, (screen_area))
         return data[0]['action']
     except Exception as e:
         error_log.errorLog('getLastRowActionFromLogSession', str(e))
