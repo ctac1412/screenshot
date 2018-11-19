@@ -132,9 +132,9 @@ def getActualHand(screen_area):
         "select trim(hand) as hand from session_log where screen_area = " + screen_area + " order by id desc limit 1")
     return data[0]['hand']
 
-def updateIsHeadsupPostflop(screen_area):
+def updateIsHeadsupPostflop(screen_area, is_headsup):
     db = postgresql.open(db_conf.connectionString())
-    db.query("UPDATE session_log SET is_headsup = 1 from(SELECT id FROM session_log where screen_area = " +
+    db.query("UPDATE session_log SET is_headsup = " + str(is_headsup) + " from(SELECT id FROM session_log where screen_area = " +
              screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")
 
 def getLastOpponentAction(position, last_opponent_action):

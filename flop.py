@@ -271,7 +271,10 @@ def checkPair(hand, screen_area):
         elif double_element in (hand[0], hand[1]):
             hand_value = 'low_two_pairs'
     elif len(doubles) == 3:
+        double_element = list(doubles.keys())[0]
         if hand[0] in list(doubles.keys()) and hand[1] in list(doubles.keys()):
+            hand_value = 'two_pairs'
+        elif double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(ts):
             hand_value = 'two_pairs'
         else:
             hand_value = 'low_two_pairs'

@@ -46,6 +46,7 @@ def checkIsFlop(screen_area, image_name, folder_name, flop_deck, stack_collectio
         is_headsup = last_row[0][4]
         if is_headsup == 0 and headsup.searchOpponentCard(screen_area, is_postflop=True)[0] == 1:
             is_headsup = 1
+            session_log.updateIsHeadsupPostflop(str(screen_area), is_headsup)
         if len(hand) == 4:
             if action == 'open':
                 stack = current_stack.getActualStack(screen_area, stack_collection, folder_name)
