@@ -119,13 +119,8 @@ def checkStraightDraw(hand, screen_area, hand_value):
         hand = hand[0] + hand[2] + hand[4] + hand[6] + hand[8] + hand[10] + hand[12]
     else:
         return hand_value
-    collection = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
     low_straight = [0, 1, 2, 3, 12]
-    arr = []
-    for val in hand:
-        arr.append(collection.index(val))
-    arr = list(set(arr))
-    arr = sorted(arr)
+    arr = straightCollection(hand)
     arr_length = len(arr)
     if arr_length == 5:
         first = arr[:-1]
@@ -332,3 +327,12 @@ def checkGutShot(hand, hand_value):
         else:
             hand_value = 'gutshot'
     return hand_value
+
+def straightCollection(hand):
+    collection = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+    arr = []
+    for val in hand:
+        arr.append(collection.index(val))
+    arr = list(set(arr))
+    arr = sorted(arr)
+    return arr

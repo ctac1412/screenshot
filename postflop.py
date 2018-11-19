@@ -195,15 +195,27 @@ def actionAfterValueBet(screen_area, x_coordinate, y_coordinate, width, height, 
 
 def checkIsBoardDanger(hand):
     if len(hand) == 12:
-        hand = hand[5] + hand[7] + hand[9] + hand[11]
-        if len(set(hand)) == 1:
+        flush_hand = hand[5] + hand[7] + hand[9] + hand[11]
+        straight_hand = hand[4] + hand[6] + hand[8] + hand[10]
+        straight_hand = flop.straightCollection(straight_hand)
+        if len(set(flush_hand)) == 1:
+            return True
+        elif list(map(int, straight_hand)) == list(range(min(straight_hand), max(straight_hand) + 1)):
             return True
     elif len(hand) == 14:
-        hand = hand[5] + hand[7] + hand[9] + hand[11] +hand[13]
+        flush_hand = hand[5] + hand[7] + hand[9] + hand[11] +hand[13]
+        straight_hand = hand[4] + hand[6] + hand[8] + hand[10] + hand[12]
+        straight_hand = flop.straightCollection(straight_hand)
+        first_straight_hand = straight_hand[-1:]
+        second_straight_hand = straight_hand[:1]
         counter = {}
-        for item in hand:
+        for item in flush_hand:
             counter[item] = counter.get(item, 0) + 1
         doubles = {element: count for element, count in counter.items() if count > 3}
         if len(doubles) > 0:
+            return True
+        elif first_straight_hand == list(range(min(first_straight_hand), max(first_straight_hand) + 1)):
+            return True
+        elif second_straight_hand == list(range(min(second_straight_hand), max(second_straight_hand) + 1)):
             return True
     return False
