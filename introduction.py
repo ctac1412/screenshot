@@ -93,13 +93,14 @@ def checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_pa
 
 def getElementArea(screen_area, element):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select " + element + " from screen_coordinates where screen_area = " + str(screen_area) + " and active = 1")
-    return data[0]
+    sql = "select $1 from screen_coordinates where screen_area = $2 and active = 1"
+    data = db.query.first(sql, element, int(screen_area))
+    return data
 
 def getElementData(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
-                    "where active = 1 and screen_area = " + str(screen_area))
+    sql = "select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates where active = 1 and screen_area = $1"
+    data = db.query(sql, int(screen_area))
     return data
 
 def getReactionToOpponent(row):

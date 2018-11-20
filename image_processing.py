@@ -91,15 +91,16 @@ def getActionsButtons():
 
 def getLastScreen(screen_area, limit='1'):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path)as image_path from screenshots where screen_area = " +
-                    str(screen_area) + " order by id desc limit " + limit)
+    sql = "select trim(image_path)as image_path from screenshots where screen_area = $1 order by id desc limit $2"
+    data = db.query.first(sql, int(screen_area), limit)
     return data
 
 def getUIButtonData(alias):
     try:
         db = postgresql.open(db_conf.connectionString())
-        data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse "
-                        "from screen_coordinates where active = 1 and alias = '" + alias + "'")
+        sql = "select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse " \
+              "from screen_coordinates where active = 1 and alias = $1"
+        data = db.query(sql, alias)
         return data
     except Exception as e:
         error_log.errorLog('getUIButtonData',str(e))
@@ -145,7 +146,8 @@ def checkIsCbetAvailable(screen_area):
 
 def getCurrentCards(condition):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards where alias in(" + condition + ")")
+    sql = "select trim(image_path) as image_path, trim(alias) as alias from cards where alias in ($1)"
+    data = db.query.first(sql, condition)
     return data
 
 def convertHand(hand):

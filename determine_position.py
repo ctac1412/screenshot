@@ -18,13 +18,14 @@ def seacrhBlindChips(screen_area):
 
 def getBlindArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select blind_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
-    return data[0]['blind_area']
+    sql = "select blind_area from screen_coordinates where screen_area = $1 and active = 1"
+    data = db.query.first(sql, int(screen_area))
+    return data
 
 def getBlindData(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
-                    "where screen_area = "  + screen_area)
+    sql = "select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates where screen_area = $1"
+    data = db.query(sql, int(screen_area))
     return data
 
 def saveBlindImage(screen_area,image_name,folder_name):
