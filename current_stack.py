@@ -43,8 +43,9 @@ def searchOpponentStack(screen_area, opponent_area, stack_collection):
 
 def getStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select stack_area from screen_coordinates where screen_area = " + screen_area + " and active = 1")
-    return data[0]['stack_area']
+    sql = "select stack_area from screen_coordinates where screen_area = $1"
+    data = db.query.first(sql, screen_area)
+    return data
 
 def getOpponentStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())

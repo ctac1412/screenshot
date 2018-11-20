@@ -31,7 +31,7 @@ hand = 'AhKd8d7d5s6cQc'
 #     flop.checkStraightDraw(hand, screen_area, hand_value)
 # hand_value = session_log.getHandValue(screen_area)
 # print(hand_value)
-print(postflop.checkIsBoardDanger(hand))
+print(current_stack.getStackArea(1))
 # if hand.find('.') == -1:
 #     print(1)
 # print(postflop.riverAction('1', '8c7d2s7cQd2cAh', 13))

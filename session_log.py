@@ -19,8 +19,8 @@ def insertIntoLogSession(screen_area, hand, current_position='0', current_stack=
 def getLastRowActionFromLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
-        sql = "select trim(action) as action from session_log where screen_area = ? order by id desc limit 1"
-        data = db.query.first(sql, (screen_area))
+        data = db.query("select trim(action) as action from session_log where screen_area = " + screen_area +
+                        " order by id desc limit 1")
         return data[0]['action']
     except Exception as e:
         error_log.errorLog('getLastRowActionFromLogSession', str(e))
