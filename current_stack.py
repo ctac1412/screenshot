@@ -24,11 +24,12 @@ def searchCurrentStack(screen_area, stack_collection):
     except Exception as e:
         error_log.errorLog('searchCurrentStack', str(e))
         print(e)
+
 def searchOpponentStack(screen_area, opponent_area, stack_collection):
     try:
         folder_name = 'images/' + str(datetime.datetime.now().date())
         saveOpponentStackImage(str(screen_area), folder_name, opponent_area)
-        screen_area = getOpponentStackArea(str(screen_area))
+        screen_area = getOpponentStackArea(screen_area)
         for item in image_processing.getLastScreen(str(screen_area)):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
@@ -44,13 +45,13 @@ def searchOpponentStack(screen_area, opponent_area, stack_collection):
 def getStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     sql = "select stack_area from screen_coordinates where screen_area = $1"
-    data = db.query.first(sql, screen_area)
+    data = db.query.first(sql, int(screen_area))
     return data
 
 def getOpponentStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     sql = "select opponent_stack_area from screen_coordinates where screen_area = $1"
-    data = db.query.first(sql, screen_area)
+    data = db.query.first(sql, int(screen_area))
     return data
 
 #Получение путей к изображениям шаблонов стеков
@@ -72,24 +73,24 @@ def getStackImage(stack_value):
 def getStackData(screen_area):
     db = postgresql.open(db_conf.connectionString())
     sql = "select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates where screen_area = $1"
-    data = db.query.first(sql, screen_area)
+    data = db.query(sql, screen_area)
     return data
 
 def getOpponentStackData(screen_area, opponent_area):
     db = postgresql.open(db_conf.connectionString())
-    sql = "select opp.x_coordinate,opp.y_coordinate,opp.width,opp.height,opp.screen_area" \
+    sql = "select opp.x_coordinate,opp.y_coordinate,opp.width,opp.height,opp.screen_area " \
           "from screen_coordinates as sc inner join opponent_screen_coordinates as opp " \
           "on sc.opponent_stack_area = opp.screen_area " \
           "where sc.screen_area = $1 and opp.opponent_area = $2"
-    data = db.query.first(sql, screen_area, opponent_area)
+    data = db.query(sql, int(screen_area), int(opponent_area))
     return data
 
 def saveStackImage(screen_area, image_name, folder_name):
     try:
-        for val in getStackData(str(getStackArea(str(screen_area)))):
-            image_path = os.path.join(folder_name, str(getStackArea(str(screen_area))), image_name)
+        for val in getStackData(getStackArea(screen_area)):
+            image_path = os.path.join(folder_name, str(getStackArea(screen_area)), image_name)
             image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
-                                     val['screen_area'])
+                                     str(val['screen_area']))
     except Exception as e:
         error_log.errorLog('saveStackImage', str(e))
         print(e)
@@ -104,7 +105,7 @@ def saveOpponentStackImage(screen_area, folder_name, opponent_area):
 def getAllinStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     sql = "select all_in_stack_area from screen_coordinates where screen_area = $1"
-    data = db.query.first(sql, screen_area)
+    data = db.query.first(sql, int(screen_area))
     return data
 
 def saveAllinStackImage(screen_area):
@@ -138,14 +139,14 @@ def searchAllinStack(screen_area):
 def getBankStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     sql = "select bank_stack_area from screen_coordinates where screen_area = $1"
-    data = db.query.first(sql, screen_area)
+    data = db.query(sql, int(screen_area))
     return data
 
 def saveBankStackImage(screen_area):
     try:
         image_name = str(math.floor(time.time())) + ".png"
         folder_name = 'images/' + str(datetime.datetime.now().date())
-        for val in getStackData(str(getBankStackArea(str(screen_area)))):
+        for val in getStackData(getBankStackArea(screen_area)):
             image_path = os.path.join(folder_name, str(getBankStackArea(str(screen_area))), image_name)
             image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
                                      val['screen_area'])
