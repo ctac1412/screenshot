@@ -13,7 +13,7 @@ images_folder = "images"
 def searchCards(screen_area, deck, list_length):
     hand = ''
     try:
-        for item in getLastScreen(str(screen_area)):
+        for item in getLastScreen(screen_area):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in deck:
@@ -89,10 +89,10 @@ def getActionsButtons():
                     "trim(alias) as alias from opponent_last_action")
     return data
 
-def getLastScreen(screen_area, limit='1'):
+def getLastScreen(screen_area, limit=1):
     db = postgresql.open(db_conf.connectionString())
     sql = "select trim(image_path)as image_path from screenshots where screen_area = $1 order by id desc limit $2"
-    data = db.query.first(sql, int(screen_area), limit)
+    data = db.query(sql, int(screen_area), limit)
     return data
 
 def getUIButtonData(alias):

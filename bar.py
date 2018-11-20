@@ -1,6 +1,5 @@
 import image_processing
 import cv2
-import numpy as np
 import postgresql
 import db_conf
 import math
@@ -10,7 +9,7 @@ import datetime
 
 def searchBar(screen_area):
     saveBarImage(screen_area, str(math.floor(time.time())), 'images/')
-    path = image_processing.getLastScreen(getBarArea(str(screen_area)))
+    path = image_processing.getLastScreen(getBarArea(screen_area))
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
     template_path = 'bar/red_mark.png'

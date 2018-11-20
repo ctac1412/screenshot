@@ -30,7 +30,7 @@ def searchOpponentStack(screen_area, opponent_area, stack_collection):
         folder_name = 'images/' + str(datetime.datetime.now().date())
         saveOpponentStackImage(str(screen_area), folder_name, opponent_area)
         screen_area = getOpponentStackArea(screen_area)
-        for item in image_processing.getLastScreen(str(screen_area)):
+        for item in image_processing.getLastScreen(screen_area):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in stack_collection:
@@ -112,8 +112,9 @@ def saveAllinStackImage(screen_area):
     try:
         image_name = str(math.floor(time.time())) + ".png"
         folder_name = 'images/' + str(datetime.datetime.now().date())
-        for val in getStackData(str(getAllinStackArea(str(screen_area)))):
-            image_path = os.path.join(folder_name, str(getAllinStackArea(str(screen_area))), image_name)
+        print(type(str(getAllinStackArea(screen_area))))
+        for val in getStackData(getAllinStackArea(screen_area)):
+            image_path = os.path.join(folder_name, str(getAllinStackArea(screen_area)), image_name)
             image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
                                      val['screen_area'])
     except Exception as e:
@@ -123,8 +124,8 @@ def saveAllinStackImage(screen_area):
 def searchAllinStack(screen_area):
     try:
         saveAllinStackImage(screen_area)
-        screen_area = getAllinStackArea(str(screen_area))
-        for item in image_processing.getLastScreen(str(screen_area)):
+        screen_area = getAllinStackArea(screen_area)
+        for item in image_processing.getLastScreen(screen_area):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in image_processing.getAllinStackImages():
@@ -158,7 +159,7 @@ def searchBankStack(screen_area):
     try:
         saveBankStackImage(screen_area)
         screen_area = getBankStackArea(str(screen_area))
-        for item in image_processing.getLastScreen(str(screen_area)):
+        for item in image_processing.getLastScreen(screen_area):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in image_processing.getBankStackImages():

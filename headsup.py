@@ -14,7 +14,7 @@ def searchOpponentCard(screen_area, stack_collection=0, is_postflop=False):
         check_is_headsup = 0
         card_area = getOpponentCardArea(str(screen_area))
         opponent_data = []
-        last_screen = image_processing.getLastScreen(card_area, '2')
+        last_screen = image_processing.getLastScreen(card_area, 2)
         last_screen = last_screen[::-1]
         for item in last_screen:
             path = item['image_path']
