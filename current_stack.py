@@ -112,7 +112,6 @@ def saveAllinStackImage(screen_area):
     try:
         image_name = str(math.floor(time.time())) + ".png"
         folder_name = 'images/' + str(datetime.datetime.now().date())
-        print(type(str(getAllinStackArea(screen_area))))
         for val in getStackData(getAllinStackArea(screen_area)):
             image_path = os.path.join(folder_name, str(getAllinStackArea(screen_area)), image_name)
             image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
