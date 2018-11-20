@@ -19,9 +19,9 @@ def insertIntoLogSession(screen_area, hand, current_position='0', current_stack=
 def getLastRowActionFromLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
-        data = db.query("select trim(action) as action from session_log where screen_area = " + screen_area +
-                        " order by id desc limit 1")
-        return data[0]['action']
+        sql = "select trim(action) as action from session_log where screen_area = $1 order by id desc limit 1"
+        data = db.query.first(sql, int(screen_area))
+        return data
     except Exception as e:
         error_log.errorLog('getLastRowActionFromLogSession', str(e))
         print(e)
@@ -38,9 +38,9 @@ def updateActionLogSession(action, screen_area):
 
 def getLastIsFlopLogSession(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query(
-        "select is_flop from session_log where screen_area = " + screen_area + " order by id desc limit 1")
-    return data[0]['is_flop']
+    sql = "select is_flop from session_log where screen_area = $1 order by id desc limit 1"
+    data = db.query.first(sql, int(screen_area))
+    return data
 
 def updateIsFlopLogSession(screen_area):
     db = postgresql.open(db_conf.connectionString())
@@ -61,10 +61,10 @@ def updateCurrentStackLogSession(screen_area, actual_stack):
 def getLastRowFromLogSession(screen_area):
     try:
         db = postgresql.open(db_conf.connectionString())
-        data = db.query(
-            "select trim(hand) as hand,trim(current_stack) as current_stack,trim(current_position) as current_position,"
-            "trim(action) as action, is_headsup, trim(last_opponent_action) as last_opponent_action"
-            " from session_log where screen_area = " + str(screen_area) + " order by id desc limit 1")
+        sql = "select trim(hand) as hand,trim(current_stack) as current_stack,trim(current_position) as current_position, " \
+              "trim(action) as action, is_headsup, trim(last_opponent_action) as last_opponent_action " \
+              "from session_log where screen_area = $1 order by id desc limit 1"
+        data = db.query(sql, int(screen_area))
         return data
     except Exception as e:
         error_log.errorLog('getLastHandFromLogSession', str(e))
@@ -119,15 +119,15 @@ def updateHandValue(screen_area, hand_value):
 
 def getHandValue(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query(
-        "select trim(hand_value) as hand_value from session_log where screen_area = " + screen_area + " order by id desc limit 1")
-    return data[0]['hand_value']
+    sql = "select trim(hand_value) as hand_value from session_log where screen_area = $1 order by id desc limit 1"
+    data = db.query.first(sql, int(screen_area))
+    return data
 
 def getActualHand(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query(
-        "select trim(hand) as hand from session_log where screen_area = " + screen_area + " order by id desc limit 1")
-    return data[0]['hand']
+    sql = "select trim(hand) as hand from session_log where screen_area = $1 order by id desc limit 1"
+    data = db.query.first(sql, int(screen_area))
+    return data
 
 def updateIsHeadsupPostflop(screen_area, is_headsup):
     db = postgresql.open(db_conf.connectionString())
