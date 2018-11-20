@@ -49,8 +49,9 @@ def getStackArea(screen_area):
 
 def getOpponentStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select opponent_stack_area from screen_coordinates where screen_area = " + screen_area)
-    return data[0]['opponent_stack_area']
+    sql = "select opponent_stack_area from screen_coordinates where screen_area = $1"
+    data = db.query.first(sql, screen_area)
+    return data
 
 #Получение путей к изображениям шаблонов стеков
 def getStackImages():
@@ -61,24 +62,26 @@ def getStackImages():
 #Получение путей к конкретному изображению
 def getStackImage(stack_value):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select trim(image_path) as image_path from stack where stack_value = " + stack_value)
+    sql = "select trim(image_path) as image_path from stack where stack_value = $1"
+    data = db.query.first(sql, stack_value)
     if len(data) == 0:
         return False
-    return data[0]['image_path']
+    return data
 
 
 def getStackData(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates "
-                    "where screen_area = " + screen_area)
+    sql = "select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates where screen_area = $1"
+    data = db.query.first(sql, screen_area)
     return data
 
 def getOpponentStackData(screen_area, opponent_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select opp.x_coordinate,opp.y_coordinate,opp.width,opp.height,opp.screen_area "
-                    "from screen_coordinates as sc "
-                    "inner join opponent_screen_coordinates as opp on sc.opponent_stack_area = opp.screen_area "
-                    "where sc.screen_area = " + str(screen_area) + " and opp.opponent_area = " + opponent_area)
+    sql = "select opp.x_coordinate,opp.y_coordinate,opp.width,opp.height,opp.screen_area" \
+          "from screen_coordinates as sc inner join opponent_screen_coordinates as opp " \
+          "on sc.opponent_stack_area = opp.screen_area " \
+          "where sc.screen_area = $1 and opp.opponent_area = $2"
+    data = db.query.first(sql, screen_area, opponent_area)
     return data
 
 def saveStackImage(screen_area, image_name, folder_name):
@@ -100,8 +103,9 @@ def saveOpponentStackImage(screen_area, folder_name, opponent_area):
 
 def getAllinStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select all_in_stack_area from screen_coordinates where screen_area = " + screen_area)
-    return data[0]['all_in_stack_area']
+    sql = "select all_in_stack_area from screen_coordinates where screen_area = $1"
+    data = db.query.first(sql, screen_area)
+    return data
 
 def saveAllinStackImage(screen_area):
     try:
@@ -133,8 +137,9 @@ def searchAllinStack(screen_area):
 
 def getBankStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
-    data = db.query("select bank_stack_area from screen_coordinates where screen_area = " + screen_area)
-    return data[0]['bank_stack_area']
+    sql = "select bank_stack_area from screen_coordinates where screen_area = $1"
+    data = db.query.first(sql, screen_area)
+    return data
 
 def saveBankStackImage(screen_area):
     try:
