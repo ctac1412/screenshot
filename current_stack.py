@@ -1,15 +1,15 @@
-import db_conf
-import postgresql
-import image_processing
-import cv2
-import error_log
+import os
 import math
 import time
 import datetime
-import os
+import postgresql
+import cv2
+import db_conf
+import image_processing
+import error_log
 import session_log
 
-default_stack = 22
+DEFAULT_STACK = 22
 
 def searchCurrentStack(screen_area, stack_collection):
     try:
@@ -20,7 +20,7 @@ def searchCurrentStack(screen_area, stack_collection):
                 if image_processing.cvDataTemplate(value['image_path'], img_rgb) > 0:
                     current_stack = int(value['stack_value'])
                     return current_stack
-        return default_stack
+        return DEFAULT_STACK
     except Exception as e:
         error_log.errorLog('searchCurrentStack', str(e))
         print(e)
@@ -37,7 +37,7 @@ def searchOpponentStack(screen_area, opponent_area, stack_collection):
                 if image_processing.cvDataTemplate(value['image_path'], img_rgb) > 0:
                     opponent_stack = int(value['stack_value'])
                     return opponent_stack
-        return default_stack
+        return DEFAULT_STACK
     except Exception as e:
         error_log.errorLog('searchOpponentStack', str(e))
         print(e)
@@ -131,7 +131,7 @@ def searchAllinStack(screen_area):
                 if image_processing.cvDataTemplate(value['image_path'], img_rgb) > 0:
                     all_in_stack = int(value['stack_value'])
                     return all_in_stack
-        return default_stack
+        return DEFAULT_STACK
     except Exception as e:
         error_log.errorLog('searchAllinStack', str(e))
         print(e)
@@ -139,7 +139,7 @@ def searchAllinStack(screen_area):
 def getBankStackArea(screen_area):
     db = postgresql.open(db_conf.connectionString())
     sql = "select bank_stack_area from screen_coordinates where screen_area = $1"
-    data = db.query(sql, int(screen_area))
+    data = db.query.first(sql, int(screen_area))
     return data
 
 def saveBankStackImage(screen_area):
@@ -157,7 +157,7 @@ def saveBankStackImage(screen_area):
 def searchBankStack(screen_area):
     try:
         saveBankStackImage(screen_area)
-        screen_area = getBankStackArea(str(screen_area))
+        screen_area = getBankStackArea(screen_area)
         for item in image_processing.getLastScreen(screen_area):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
@@ -165,7 +165,7 @@ def searchBankStack(screen_area):
                 if image_processing.cvDataTemplate(value['image_path'], img_rgb) > 0:
                     bank_stack = int(value['stack_value'])
                     return bank_stack
-        return default_stack
+        return DEFAULT_STACK
     except Exception as e:
         error_log.errorLog('searchBankStack', str(e))
         print(e)

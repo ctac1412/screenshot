@@ -1,7 +1,7 @@
 import postgresql
-import db_conf
 import pyaudio
 import wave
+import db_conf
 
 def errorLog(module_name, error_message):
     error_message = (error_message[:250] + '..') if len(error_message) > 250 else error_message

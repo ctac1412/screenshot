@@ -1,12 +1,12 @@
-import threading, tkinter, time
+import threading
+import tkinter
+import time
+import postgresql
 import screen
 import image_processing
-import postgresql
 import db_conf
 
 class Window(tkinter.Tk, threading.Thread):
-    images_folder = "images/"
-
     def __init__(self):
         # Инициализируем графический интерфейс
         tkinter.Tk.__init__(self)

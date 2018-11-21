@@ -1,14 +1,14 @@
+import os
+import datetime
 import cv2
 import numpy as np
 import postgresql
-import os
-import datetime
+from PIL import ImageGrab
 import error_log
 import db_conf
-from PIL import ImageGrab
 import introduction
 
-images_folder = "images"
+IMAGES_FOLDER = "images"
 
 def searchCards(screen_area, deck, list_length):
     hand = ''
@@ -48,7 +48,7 @@ def getScreenData():
         error_log.errorLog('getScreenData',str(e))
 
 def checkIsFolderExist():
-    folder_name = os.path.join(images_folder, str(datetime.datetime.now().date()))
+    folder_name = os.path.join(IMAGES_FOLDER, str(datetime.datetime.now().date()))
     if not os.path.exists(str(folder_name)):
         os.makedirs(str(folder_name))
     db = postgresql.open(db_conf.connectionString())

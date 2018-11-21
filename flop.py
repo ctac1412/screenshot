@@ -1,10 +1,10 @@
-import image_processing
+import os
 import postgresql
-import db_conf
 import keyboard
+import image_processing
+import db_conf
 import session_log
 import error_log
-import os
 
 def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, is_headsup, flop_deck):
     try:
@@ -46,6 +46,11 @@ def makeFlopDecision(screen_area, hand, image_name, folder_name, stack, action, 
                         and opponent_reaction in ('1', '2'):
                     keyboard.press('v')
                     session_log.updateActionLogSession('cbet', str(screen_area))
+                    return
+                elif (hand_value in('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1)\
+                        and opponent_reaction not in ('1', '2'):
+                    keyboard.press('q')
+                    session_log.updateActionLogSession('push', str(screen_area))
                     return
                 elif int(stack) <= 10 and (hand_value in('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
                                            or hand_value.find('.') != -1):
@@ -202,8 +207,7 @@ def checkFlushDraw(hand, screen_area, hand_value):
         elif len(doubles) > 0 and list(doubles)[0] in (hand[0], hand[1]):
             if hand_value != 'trash':
                 hand_value = hand_value + '.flush_draw'
-                session_log.updateHandValue(screen_area, hand_value)
-                return True
+                return hand_value
             else:
                 hand_value = 'flush_draw'
             return hand_value
@@ -336,3 +340,12 @@ def straightCollection(hand):
     arr = list(set(arr))
     arr = sorted(arr)
     return arr
+
+def searchHandValue(hand, screen_area):
+    hand_value = checkPair(hand, screen_area)
+    print(hand_value)
+    hand_value = checkFlushDraw(hand, screen_area, hand_value)
+    print(hand_value)
+    checkStraightDraw(hand, screen_area, hand_value)
+    hand_value = session_log.getHandValue(screen_area)
+    return hand_value

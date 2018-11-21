@@ -1,9 +1,9 @@
-import image_processing
+import os
 import cv2
 import postgresql
+import image_processing
 import db_conf
 import error_log
-import os
 
 def seacrhBlindChips(screen_area):
     blinds = ('big_blind', 'small_blind')

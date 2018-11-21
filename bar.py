@@ -4,8 +4,8 @@ import postgresql
 import db_conf
 import math
 import time
-import error_log
 import datetime
+import error_log
 
 def searchBar(screen_area):
     saveBarImage(screen_area, str(math.floor(time.time())), 'images/')

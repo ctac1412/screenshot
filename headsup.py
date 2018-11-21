@@ -1,10 +1,10 @@
-import db_conf
-import postgresql
-import image_processing
 import cv2
 import math
 import time
 import datetime
+import postgresql
+import db_conf
+import image_processing
 import current_stack
 
 def searchOpponentCard(screen_area, stack_collection=0, is_postflop=False):

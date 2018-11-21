@@ -43,6 +43,9 @@ def turnAction(screen_area, hand, stack):
         keyboard.press('v')
         session_log.updateActionLogSession('turn_cbet', str(screen_area))
         return True
+    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
+        keyboard.press('q')
+        session_log.updateActionLogSession('push', str(screen_area))
     elif int(stack) <= 10 and (hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
                                or hand_value.find('.')) != -1:
         keyboard.press('q')

@@ -1,19 +1,20 @@
-import image_processing
+import os
 import datetime
 import math
 import time
+import postgresql
+import image_processing
 import session_log
 import logic
-import postgresql
 import db_conf
 import keyboard
 import flop
-import os
+
 import headsup
 import determine_position
 import current_stack
 
-images_folder = "images"
+IMAGES_FOLDER = "images"
 
 def actionAfterOpen(x_coordinate, y_coordinate, width, height, image_path, screen_area, action, image_name, folder_name, flop_deck, stack_collection):
     if checkIsFlop(screen_area, image_name, folder_name, flop_deck, stack_collection): return
@@ -25,7 +26,7 @@ def saveElement(screen_area, element_name):
     element_area = getElementArea(screen_area, element_name)
     for item in getElementData(element_area):
         image_name = str(math.floor(time.time())) + ".png"
-        image_path = os.path.join(images_folder, str(datetime.datetime.now().date()), str(item['screen_area']), image_name)
+        image_path = os.path.join(IMAGES_FOLDER, str(datetime.datetime.now().date()), str(item['screen_area']), image_name)
         image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'], image_path,
                                  item['screen_area'])
     return element_area
@@ -82,7 +83,7 @@ def checkIsFold(screen_area, x_coordinate, y_coordinate, width, height, image_pa
     image_processing.imaging(x_coordinate, y_coordinate, width, height, image_path, str(screen_area))
     cur_hand = image_processing.searchCards(str(screen_area), image_processing.getCards(), 4)
     if last_hand != cur_hand:
-        folder_name = images_folder + '/' + str(datetime.datetime.now().date())
+        folder_name = IMAGES_FOLDER + '/' + str(datetime.datetime.now().date())
         image_name = str(math.floor(time.time())) + ".png"
         session_log.updateActionLogSession('end', str(screen_area))
         determine_position.saveBlindImage(screen_area, image_name, folder_name)

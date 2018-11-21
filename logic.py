@@ -1,11 +1,11 @@
-import error_log
 import postgresql
+import error_log
 import db_conf
 import keyboard
 import session_log
 import sklansky_chubukov
 
-images_folder = "images/"
+IMAGES_FOLDER = "images/"
 
 
 def getDecision(screen_area):
