@@ -3,14 +3,16 @@ import pyaudio
 import wave
 import db_conf
 
-def errorLog(module_name, error_message):
+
+def error_log(module_name, error_message):
     error_message = (error_message[:250] + '..') if len(error_message) > 250 else error_message
-    db = postgresql.open(db_conf.connectionString())
+    db = postgresql.open(db_conf.connection_string())
     insert = db.prepare("insert into error_log (module_name,error_message) values($1,$2)")
     insert(module_name, str(error_message))
-    playAlarmSound()
+    play_alarm_sound()
 
-def playAlarmSound():
+
+def play_alarm_sound():
     chunk = 1024
     f = wave.open("C:/OSPanel/domains/screenshot/ALERT.wav", "rb")
     p = pyaudio.PyAudio()
