@@ -43,6 +43,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('b')
                     session_log.update_action_log_session('cbet', str(screen_area))
                     return
+            # if cbet unavailable
             else:
                 if (hand_value in (
                 'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1) \
@@ -51,8 +52,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     session_log.update_action_log_session('cbet', str(screen_area))
                     return
                 elif (hand_value in (
-                'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1) \
-                        and opponent_reaction not in ('1', '2'):
+                'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area))
                     return

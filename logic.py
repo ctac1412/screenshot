@@ -51,9 +51,10 @@ def get_action_from_preflop_chart(screen_area):
     else:
         last_opponent_action = " = '" + last_opponent_action + '\''
     db = postgresql.open(db_conf.connection_string())
-    sql = "select trim(action) as action from preflop_chart where hand = $1 " \
-          "and position = $2 and is_headsup = $3 and opponent_last_action = $4 and stack = $5"
-    data = db.query(sql, hand, position, is_headsup, last_opponent_action, stack)
+    data = db.query("select trim(action) as action from preflop_chart "
+                    "where hand = '" + hand + '\'' + " and position = '" + position + '\'' +
+                    " and is_headsup = '" + str(is_headsup) + '\'' + " and opponent_last_action" +
+                    last_opponent_action + " and stack = " + str(stack))
     if len(data) == 0:
         return sklansky_chubukov.get_action(hand, stack, last_opponent_action, position)
-    return data
+    return data[0]['action']
