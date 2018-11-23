@@ -246,9 +246,12 @@ def check_pair(hand, screen_area):
     else:
         return hand_value
     ranks = [str(n) for n in range(2, 10)] + list('TJQKA')
-    ts = []
+    board_card = []
+    poket_card = []
     for item in flop:
-        ts.append(ranks.index(item))
+        board_card.append(ranks.index(item))
+    for item in hand[:2]:
+        poket_card.append(ranks.index(item))
     counter = {}
     for item in hand:
         counter[item] = counter.get(item, 0) + 1
@@ -258,24 +261,24 @@ def check_pair(hand, screen_area):
         index_double_element = ranks.index(double_element)
         if list(doubles.values())[0] > 2 and double_element in (hand[0], hand[1]):
             hand_value = 'set'
-        elif double_element in (hand[0], hand[1]) and index_double_element >= max(ts):
+        elif double_element in (hand[0], hand[1]) and index_double_element >= max(board_card):
             if index_double_element <= 8:
                 hand_value = 'weak_top_pair'
             else:
                 hand_value = 'top_pair'
-        elif double_element in (hand[0], hand[1]) and ranks.index(double_element) == min(ts):
+        elif double_element in (hand[0], hand[1]) and ranks.index(double_element) == min(board_card):
             hand_value = 'bottom_pair'
         elif double_element in (hand[0], hand[1]):
-            set(ts)
-            ts.remove(max(ts))
-            if index_double_element >= max(ts):
+            set(board_card)
+            board_card.remove(max(board_card))
+            if index_double_element >= max(board_card):
                 hand_value = 'second_pair'
             else:
                 hand_value = 'middle_pair'
     elif len(doubles) == 2:
         maximum = max(doubles, key=doubles.get)
         double_element = list(doubles.keys())[0]
-        if double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(ts):
+        if double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(board_card):
             hand_value = 'two_pairs'
         elif sorted(list(doubles.keys())) == sorted([hand[0], hand[1]]):
             hand_value = 'two_pairs'
@@ -287,10 +290,12 @@ def check_pair(hand, screen_area):
         double_element = list(doubles.keys())[0]
         if hand[0] in list(doubles.keys()) and hand[1] in list(doubles.keys()):
             hand_value = 'two_pairs'
-        elif double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(ts):
+        elif double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(board_card):
             hand_value = 'two_pairs'
         else:
             hand_value = 'low_two_pairs'
+    elif poket_card[0] > max(board_card) and poket_card[1] > max(board_card):
+        hand_value = 'over_cards'
     if hand_value in ('top_pair', 'set', 'two_pairs', 'weak_top_pair'):
         session_log.update_hand_value(screen_area, hand_value)
         return True

@@ -123,8 +123,9 @@ def river_action(screen_area, hand, stack, action, position):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area))
         return True
-    elif opponent_reaction in ('1', '2', '3') and (hand_value in ('middle_pair', 'low_two_pairs', 'second_pair')
-                                                   or hand_value.find('middle_pair') != -1):
+    elif opponent_reaction in ('1', '2', '3') and (
+            hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') or hand_value.find(
+            'middle_pair') != -1 or hand_value.find('low_two_pairs') or hand_value.find('second_pair')):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area))
         return True
@@ -156,7 +157,7 @@ def check_is_raise_cbet(screen_area):
         session_log.update_action_log_session('push', str(screen_area))
         return True
     elif int(stack) <= 10 and hand_value in (
-    'middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair'):
+    'middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair', 'over_cards'):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area))
         return True
@@ -185,7 +186,7 @@ def get_opponent_flop_reaction(screen_area):
     opponent_reaction = image_processing.search_last_opponent_action(screen_area)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    if opponent_reaction in ('1', '2') and hand_value != 'trash':
+    if opponent_reaction in ('1', '2') and hand_value not in('trash', 'gutshot', 'bottom_pair'):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area))
         return True
