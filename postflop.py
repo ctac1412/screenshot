@@ -30,7 +30,20 @@ def turn_action(screen_area, hand, stack):
     if hand_value != True:
         flop.check_straight_draw(hand, screen_area, hand_value)
     hand_value = session_log.get_hand_value(screen_area)
-    if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') \
+    if check_is_board_danger(hand) and hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair'):
+        if image_processing.check_is_cbet_available(str(screen_area)):
+            keyboard.press('h')
+            session_log.update_action_log_session('cc_postflop', str(screen_area))
+            return True
+        elif opponent_reaction in ('1', '2', '3'):
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area))
+            return True
+        else:
+            keyboard.press('f')
+            session_log.update_action_log_session('fold', str(screen_area))
+            return True
+    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') \
             and image_processing.check_is_cbet_available(str(screen_area)):
         action = current_stack.compare_bank_with_available_stack(screen_area, image_processing.get_stack_images())
         if action == 'turn_cbet':
@@ -90,13 +103,12 @@ def check_is_river(screen_area, deck):
         hand = last_row[0][0]
         stack = last_row[0][1]
         action = last_row[0][3]
-        position = last_row[0][2]
-        if river_action(screen_area, hand, stack, action, position):
+        if river_action(screen_area, hand, stack, action):
             return True
     return False
 
 
-def river_action(screen_area, hand, stack, action, position):
+def river_action(screen_area, hand, stack, action):
     if action in ('turn_cbet', 'river_cbet'):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area))
@@ -110,7 +122,20 @@ def river_action(screen_area, hand, stack, action, position):
     if hand_value != True:
         flop.check_straight_draw(hand, screen_area, hand_value)
     hand_value = session_log.get_hand_value(screen_area)
-    if hand_value == 'trash':
+    if check_is_board_danger(hand) and hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair'):
+        if image_processing.check_is_cbet_available(str(screen_area)):
+            keyboard.press('h')
+            session_log.update_action_log_session('cc_postflop', str(screen_area))
+            return True
+        elif opponent_reaction in ('1', '2', '3'):
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area))
+            return True
+        else:
+            keyboard.press('f')
+            session_log.update_action_log_session('fold', str(screen_area))
+            return True
+    elif hand_value == 'trash':
         keyboard.press('f')
         session_log.update_action_log_session('fold', str(screen_area))
         return True
@@ -226,8 +251,8 @@ def check_is_board_danger(hand):
         flush_hand = hand[5] + hand[7] + hand[9] + hand[11] + hand[13]
         straight_hand = hand[4] + hand[6] + hand[8] + hand[10] + hand[12]
         straight_hand = flop.straight_collection(straight_hand)
-        first_straight_hand = straight_hand[-1:]
-        second_straight_hand = straight_hand[:1]
+        first_straight_hand = straight_hand[:-1]
+        second_straight_hand = straight_hand[1:]
         counter = {}
         for item in flush_hand:
             counter[item] = counter.get(item, 0) + 1
