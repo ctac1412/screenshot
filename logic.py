@@ -10,13 +10,17 @@ IMAGES_FOLDER = "images/"
 
 def get_decision(screen_area):
     try:
-        action = get_action_from_preflop_chart(str(screen_area))
+        action = get_action_from_preflop_chart(str(screen_area))[0]
+        stack = get_action_from_preflop_chart(str(screen_area))[1]
         if action == 'push':
             keyboard.press('q')
         elif action == 'fold':
             keyboard.press('f')
         elif action == 'open':
-            keyboard.press('r')
+            if stack > 13:
+                keyboard.press('r')
+            else:
+                keyboard.press('o')
         elif action == 'call':
             keyboard.press('c')
         elif action == 'check':
@@ -57,4 +61,6 @@ def get_action_from_preflop_chart(screen_area):
                     last_opponent_action + " and stack = " + str(stack))
     if len(data) == 0:
         return sklansky_chubukov.get_action(hand, stack, last_opponent_action, position)
-    return data[0]['action']
+    data = [data[0]['action']]
+    data.append(stack)
+    return data

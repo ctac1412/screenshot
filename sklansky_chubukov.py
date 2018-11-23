@@ -11,9 +11,13 @@ def get_valid_stack_value_to_push(hand):
 
 def get_action(hand, stack, last_opponent_action, position):
     push_stack_value = get_valid_stack_value_to_push(hand)
+    data = [stack]
     if int(stack) <= push_stack_value:
-        return 'push'
+        data.insert(0, 'push')
+        return data
     elif last_opponent_action == 'limp' and position == 'big_blind':
-        return 'check'
+        data.insert(0, 'check')
+        return data
     else:
-        return 'fold'
+        data.insert(0, 'fold')
+        return data
