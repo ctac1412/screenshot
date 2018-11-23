@@ -39,6 +39,10 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('h')
                     session_log.update_action_log_session('cc_postflop', str(screen_area))
                     return
+                elif hand_value == 'trash':
+                    keyboard.press('k')
+                    session_log.update_action_log_session('cbet', str(screen_area))
+                    return
                 else:
                     keyboard.press('b')
                     session_log.update_action_log_session('cbet', str(screen_area))
