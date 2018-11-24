@@ -112,6 +112,10 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                                                           'full_house')):
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area))
+                elif hand_value.find('.') != -1 or hand_value in (
+                'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
+                    keyboard.press('q')
+                    session_log.update_action_log_session('push', str(screen_area))
                 elif int(stack) <= 10 and (
                         hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
                         or hand_value.find('.') != -1):
