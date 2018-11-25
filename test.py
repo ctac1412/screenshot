@@ -13,6 +13,8 @@ import os
 import postflop
 import flop
 import current_stack
+import postgresql
+import db_conf
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 
 # hand = 'TcQcJcJsThTs9h'
@@ -31,4 +33,7 @@ import current_stack
 # print(hand_value)
 # row = session_log.get_last_row_from_log_session(3)
 # print(row)
-print(logic.get_action_from_preflop_chart(1))
+DB = postgresql.open(db_conf.connection_string())
+IMAGES_FOLDER = "images/"
+FOLDER_NAME = IMAGES_FOLDER + str(datetime.datetime.now().date())
+print(flop.save_flop_image(3, 'asdasd.png', FOLDER_NAME, DB))
