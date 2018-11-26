@@ -70,6 +70,10 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)
                     return
+                elif opponent_reaction in ('1', '2', '3') and hand_value in ('middle_pair', 'straight_draw', 'flush_draw') \
+                        and int(stack) <= 13:
+                    keyboard.press('q')
+                    session_log.update_action_log_session('push', str(screen_area), db)
                 elif opponent_reaction in ('1', '2'):
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
@@ -93,8 +97,8 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     session_log.update_action_log_session('cbet', str(screen_area), db)
                     return
                 elif is_headsup == 1 and hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'second_pair'):
-                    keyboard.press('b')
-                    session_log.update_action_log_session('cbet', str(screen_area), db)
+                    keyboard.press('h')
+                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                     return
                 else:
                     keyboard.press('h')

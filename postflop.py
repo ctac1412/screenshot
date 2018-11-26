@@ -81,9 +81,10 @@ def turn_action(screen_area, hand, stack, db):
         return True
 
 
-def action_after_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, db):
+def action_after_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, stack_collection, folder_name, db):
     if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
     if check_is_turn(screen_area, deck, db): return
+    current_stack.get_actual_stack(screen_area, stack_collection, folder_name, db)
     if check_is_raise_cbet(screen_area, db): return
 
 
@@ -181,6 +182,10 @@ def check_is_raise_cbet(screen_area, db):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
+    if hand_value in ('straight_draw', 'flush_draw') and stack <= 13:
+        keyboard.press('q')
+        session_log.update_action_log_session('push', str(screen_area), db)
+        return True
     elif int(stack) <= 10 and hand_value in (
             'middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair', 'over_cards'):
         keyboard.press('q')
@@ -206,6 +211,7 @@ def action_after_cc_postflop(screen_area, deck, x_coordinate, y_coordinate, widt
 
 def get_opponent_flop_reaction(screen_area, db):
     hand_value = session_log.get_hand_value(screen_area, db)
+    stack = session_log.get_last_row_from_log_session(screen_area, db)[0][1]
     if hand_value is None:
         return False
     opponent_reaction = image_processing.search_last_opponent_action(screen_area, db)
@@ -214,6 +220,11 @@ def get_opponent_flop_reaction(screen_area, db):
     if opponent_reaction in ('1', '2') and hand_value not in ('trash', 'gutshot', 'bottom_pair'):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        return True
+    elif opponent_reaction in ('1', '2', '3') and hand_value in \
+            ('middle_pair', 'straight_draw', 'flush_draw', 'second_pair') and int(stack) <= 13:
+        keyboard.press('q')
+        session_log.update_action_log_session('push', str(screen_area), db)
         return True
     else:
         keyboard.press('f')

@@ -45,7 +45,7 @@ def start():
                                                FOLDER_NAME, DECK, STACK_COLLECTION, DB)
             elif last_row_action == 'cbet':
                 postflop.action_after_cbet(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
-                                           image_path, item['screen_area'], DECK, DB)
+                                           image_path, item['screen_area'], DECK, STACK_COLLECTION, FOLDER_NAME, DB)
             elif last_row_action in ('turn_cbet', 'river_cbet'):
                 postflop.action_after_turn_cbet(item['x_coordinate'], item['y_coordinate'], item['width'],
                                                 item['height'],
