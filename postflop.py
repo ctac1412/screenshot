@@ -4,6 +4,7 @@ import image_processing
 import keyboard
 import flop
 import current_stack
+import error_log
 
 
 def check_is_turn(screen_area, deck, db):
@@ -82,10 +83,14 @@ def turn_action(screen_area, hand, stack, db):
 
 
 def action_after_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, stack_collection, folder_name, db):
-    if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
-    if check_is_turn(screen_area, deck, db): return
-    current_stack.get_actual_stack(screen_area, stack_collection, folder_name, db)
-    if check_is_raise_cbet(screen_area, db): return
+    try:
+        if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
+        if check_is_turn(screen_area, deck, db): return
+        current_stack.get_actual_stack(screen_area, stack_collection, folder_name, db)
+        if check_is_raise_cbet(screen_area, db): return
+    except Exception as e:
+        error_log.error_log('action_after_cbet', str(e))
+        print(e)
 
 
 def action_after_turn_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, db):
@@ -182,7 +187,7 @@ def check_is_raise_cbet(screen_area, db):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
-    if hand_value in ('straight_draw', 'flush_draw') and stack <= 13:
+    if hand_value in ('straight_draw', 'flush_draw') and int(stack) <= 13:
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
@@ -203,10 +208,14 @@ def check_is_raise_cbet(screen_area, db):
 
 
 def action_after_cc_postflop(screen_area, deck, x_coordinate, y_coordinate, width, height, image_path, db):
-    if check_is_river(screen_area, deck, db): return
-    if check_is_turn(screen_area, deck, db): return
-    if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
-    if get_opponent_flop_reaction(screen_area, db): return
+    try:
+        if check_is_river(screen_area, deck, db): return
+        if check_is_turn(screen_area, deck, db): return
+        if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
+        if get_opponent_flop_reaction(screen_area, db): return
+    except Exception as e:
+        error_log.error_log('action_after_cc_postflop', str(e))
+        print(e)
 
 
 def get_opponent_flop_reaction(screen_area, db):
