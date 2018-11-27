@@ -3,6 +3,7 @@ import keyboard
 import image_processing
 import session_log
 import error_log
+import postflop
 
 
 def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup, flop_deck, db):
@@ -61,7 +62,8 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     session_log.update_action_log_session('push', str(screen_area), db)
                     return
                 elif int(stack) <= 10 and (
-                        hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
+                        hand_value in (
+                'middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair', 'gutshot')
                         or hand_value.find('.') != -1):
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area), db)
@@ -70,7 +72,8 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)
                     return
-                elif opponent_reaction in ('1', '2', '3') and hand_value in ('middle_pair', 'straight_draw', 'flush_draw') \
+                elif opponent_reaction in ('1', '2', '3') and hand_value in (
+                'middle_pair', 'straight_draw', 'flush_draw', 'gutshot') \
                         and int(stack) <= 13:
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area), db)
@@ -126,6 +129,11 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area), db)
                     return
+                elif opponent_reaction in ('1', '2', '3') and hand_value in (
+                'middle_pair', 'straight_draw', 'flush_draw', 'gutshot') \
+                        and int(stack) <= 13:
+                    keyboard.press('q')
+                    session_log.update_action_log_session('push', str(screen_area), db)
                 elif opponent_reaction in ('1', '2') and hand_value != 'gutshot':
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
@@ -205,6 +213,7 @@ def check_straight_draw(hand, screen_area, hand_value, db):
 
 
 def check_flush_draw(hand, screen_area, hand_value, db):
+    cur_hand = hand
     if len(hand) == 10:
         hand = hand[1] + hand[3] + hand[5] + hand[7] + hand[9]
     elif len(hand) == 8:
@@ -227,6 +236,8 @@ def check_flush_draw(hand, screen_area, hand_value, db):
         doubles = {element: count for element, count in counter.items() if count > 3}
         if doubles and list(doubles.values())[0] >= 5:
             hand_value = 'flush'
+            if check_is_flush_weak(cur_hand, hand, list(doubles)[0]):
+                hand_value = 'weak_flush'
             session_log.update_hand_value(str(screen_area), hand_value, db)
             return True
         elif len(doubles) > 0 and list(doubles)[0] in (hand[0], hand[1]):
@@ -376,3 +387,17 @@ def straight_collection(hand):
     arr = list(set(arr))
     arr = sorted(arr)
     return arr
+
+
+def check_is_flush_weak(hand, suit, doubles):
+    weak_flush = 1
+    if suit[0] == doubles:
+        first_card = hand[0]
+        if first_card and first_card in ('A', 'K', 'Q', 'J'):
+            weak_flush = 0
+    if weak_flush != 0 and suit[1] == doubles:
+        second_card = hand[2]
+        if second_card and second_card in ('A', 'K', 'Q', 'J'):
+            weak_flush = 0
+    if postflop.check_is_board_danger(hand) and weak_flush == 1:
+        return True

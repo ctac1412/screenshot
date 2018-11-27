@@ -16,16 +16,17 @@ import current_stack
 import postgresql
 import db_conf
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
-
+DB = postgresql.open(db_conf.connection_string())
 # hand = 'TcQcJcJsThTs9h'
-# hand = 'Js8d4h2d3dQd6s'
-# screen_area = '2'
-# hand_value = flop.check_pair(hand, screen_area)
-# if hand_value != True:
-#     hand_value = flop.check_flush_draw(hand, screen_area, hand_value)
-# if hand_value != True:
-#     flop.check_straight_draw(hand, screen_area, hand_value)
-# hand_value = session_log.get_hand_value(screen_area)
+hand = '8s9s4s2d3sQh6s'
+screen_area = '2'
+hand_value = flop.check_pair(hand, screen_area, DB)
+if hand_value != True:
+    hand_value = flop.check_flush_draw(hand, screen_area, hand_value, DB)
+if hand_value != True:
+    flop.check_straight_draw(hand, screen_area, hand_value, DB)
+hand_value = session_log.get_hand_value(screen_area, DB)
+print(hand_value)
 # if postflop.check_is_board_danger(hand) and hand_value not in ('straight', 'flush'):
 #     print(1)
 # else:
@@ -33,4 +34,3 @@ import db_conf
 # print(hand_value)
 # row = session_log.get_last_row_from_log_session(3)
 # print(row)
-print(postflop.check_is_board_danger('JcKhAcJs4hQcKc'))

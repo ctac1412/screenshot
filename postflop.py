@@ -171,6 +171,17 @@ def river_action(screen_area, hand, stack, action, db):
             keyboard.press('k')
         session_log.update_action_log_session('value_bet', str(screen_area), db)
         return True
+    elif hand_value == 'weak_flush':
+        if image_processing.check_is_cbet_available(screen_area, db):
+            keyboard.press('h')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+            return True
+        elif opponent_reaction in ('1', '2', '3'):
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        else:
+            keyboard.press('f')
+            session_log.update_action_log_session('fold', str(screen_area), db)
     else:
         keyboard.press('f')
         session_log.update_action_log_session('fold', str(screen_area), db)
@@ -226,11 +237,11 @@ def get_opponent_flop_reaction(screen_area, db):
     opponent_reaction = image_processing.search_last_opponent_action(screen_area, db)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    if opponent_reaction in ('1', '2', '3') and hand_value in \
-            ('middle_pair', 'straight_draw', 'flush_draw', 'second_pair') and int(stack) <= 13:
+    if opponent_reaction in ('1', '2', '3') and hand_value in (
+            'middle_pair', 'straight_draw', 'flush_draw', 'gutshot') \
+            and int(stack) <= 13:
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
-        return True
     elif opponent_reaction in ('1', '2') and hand_value not in ('trash', 'gutshot', 'bottom_pair'):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
