@@ -33,6 +33,4 @@ import db_conf
 # print(hand_value)
 # row = session_log.get_last_row_from_log_session(3)
 # print(row)
-import random
-for item in range(20):
-    print(round(random.uniform(0.2, 0.5), 2))
+print(postflop.check_is_board_danger('JcKhAcJs4hQcKc'))
