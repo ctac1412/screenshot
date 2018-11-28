@@ -156,14 +156,9 @@ def river_action(screen_area, hand, stack, action, db):
         keyboard.press('f')
         session_log.update_action_log_session('fold', str(screen_area), db)
         return True
-    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair', 'full_house') \
-            and image_processing.check_is_cbet_available(screen_area, db):
+    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair', 'full_house'):
         keyboard.press('v')
         session_log.update_action_log_session('river_cbet', str(screen_area), db)
-        return True
-    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
-        keyboard.press('q')
-        session_log.update_action_log_session('push', str(screen_area), db)
         return True
     elif opponent_reaction in ('1', '2', '3') and (
             hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') or hand_value.find(
