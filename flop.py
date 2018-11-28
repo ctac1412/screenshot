@@ -51,7 +51,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                 if (hand_value in (
                         'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find(
                     '.') != -1) \
-                        and opponent_reaction in ('1', '2'):
+                        and opponent_reaction in ('1', '2', '3'):
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
                     return

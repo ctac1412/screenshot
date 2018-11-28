@@ -170,7 +170,8 @@ def river_action(screen_area, hand, stack, action, db):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
     elif (hand_value in ('second_pair', 'low_two_pairs') or hand_value.find('second_pair') != -1 or
-          hand_value.find('low_two_pairs') != -1) and image_processing.check_is_cbet_available(screen_area, db):
+          hand_value.find('low_two_pairs') != -1) and image_processing.check_is_cbet_available(screen_area, db)\
+            and check_is_board_danger(hand) is False:
         if current_stack.search_bank_stack(screen_area, db) <= 3:
             keyboard.press('j')
         else:
