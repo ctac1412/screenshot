@@ -72,6 +72,17 @@ def turn_action(screen_area, hand, stack, db):
         keyboard.press('h')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         return True
+    elif hand_value == 'weak_flush':
+        if image_processing.check_is_cbet_available(screen_area, db):
+            keyboard.press('h')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+            return True
+        elif opponent_reaction in ('1', '2', '3'):
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        else:
+            keyboard.press('f')
+            session_log.update_action_log_session('fold', str(screen_area), db)
     elif opponent_reaction in ('1', '2', '3') and hand_value not in ('trash', 'gutshot', 'bottom_pair'):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
