@@ -15,6 +15,7 @@ import flop
 import current_stack
 import postgresql
 import db_conf
+import pot_odds
 import error_log
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 DB = postgresql.open(db_conf.connection_string())
@@ -28,7 +29,7 @@ hand = '7dQdAh5hQh4h8c'
 #     flop.check_straight_draw(hand, screen_area, hand_value, DB)
 # hand_value = session_log.get_hand_value(screen_area, DB)
 # print(hand_value)
-print(postflop.check_is_board_danger(hand))
+print(pot_odds.check_is_call_valid(1, 'straight_draw', 'turn', DB))
 # if postflop.check_is_board_danger(hand) and hand_value not in ('straight', 'flush'):
 #     print(1)
 # else:

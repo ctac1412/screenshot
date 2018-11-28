@@ -5,6 +5,7 @@ import keyboard
 import flop
 import current_stack
 import error_log
+import pot_odds
 
 
 def check_is_turn(screen_area, deck, db):
@@ -214,8 +215,12 @@ def check_is_raise_cbet(screen_area, db):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
-    elif opponent_reaction in ('1', '2') and hand_value in (
-            'middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair'):
+    elif hand_value in ('straight_draw', 'flush_draw', 'over_cards', 'gutshot') and pot_odds.check_is_call_valid(
+            screen_area, hand_value, 'turn', db):
+        keyboard.press('c')
+        session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        return True
+    if opponent_reaction in ('1', '2') and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         return True
