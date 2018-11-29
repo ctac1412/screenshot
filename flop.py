@@ -74,7 +74,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     session_log.update_action_log_session('fold', str(screen_area), db)
                     return
                 elif opponent_reaction in ('1', '2', '3') and hand_value in (
-                'middle_pair', 'straight_draw', 'flush_draw', 'gutshot') \
+                'middle_pair', 'straight_draw', 'flush_draw') \
                         and int(stack) <= 13:
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area), db)

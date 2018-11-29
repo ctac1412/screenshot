@@ -293,7 +293,8 @@ def check_is_board_danger(hand):
         straight_hand = flop.straight_collection(straight_hand)
         if len(set(flush_hand)) == 1:
             return True
-        elif list(map(int, straight_hand)) == list(range(min(straight_hand), max(straight_hand) + 1)):
+        elif list(map(int, straight_hand)) == list(range(min(straight_hand), max(straight_hand) + 1)) \
+                and len(straight_hand) == 4:
             return True
     elif len(hand) == 14:
         flush_hand = hand[5] + hand[7] + hand[9] + hand[11] + hand[13]
@@ -307,8 +308,10 @@ def check_is_board_danger(hand):
         doubles = {element: count for element, count in counter.items() if count > 3}
         if len(doubles) > 0:
             return True
-        elif first_straight_hand == list(range(min(first_straight_hand), max(first_straight_hand) + 1)):
+        elif first_straight_hand == list(range(min(first_straight_hand), max(first_straight_hand) + 1)) \
+                and len(first_straight_hand) == 4:
             return True
-        elif second_straight_hand == list(range(min(second_straight_hand), max(second_straight_hand) + 1)):
+        elif second_straight_hand == list(range(min(second_straight_hand), max(second_straight_hand) + 1)) \
+                and len(second_straight_hand) == 4:
             return True
     return False
