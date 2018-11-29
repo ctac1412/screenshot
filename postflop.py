@@ -8,7 +8,7 @@ import error_log
 import pot_odds
 
 
-def check_is_turn(screen_area, deck, db):
+def check_is_turn(screen_area, deck, stack_collection, db):
     element_area = introduction.save_element(screen_area, 'turn_area', db)
     if image_processing.search_element(element_area, ['turn'], 'green_board/', db) is False:
         if len(session_log.get_actual_hand(screen_area, db)) == 10:
@@ -17,12 +17,12 @@ def check_is_turn(screen_area, deck, db):
         last_row = session_log.get_last_row_from_log_session(screen_area, db)
         hand = last_row[0][0]
         stack = last_row[0][1]
-        if turn_action(screen_area, hand, stack, db):
+        if turn_action(screen_area, hand, stack, stack_collection ,db):
             return True
     return False
 
 
-def turn_action(screen_area, hand, stack, db):
+def turn_action(screen_area, hand, stack, stack_collection, db):
     opponent_reaction = image_processing.search_last_opponent_action(screen_area, db)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
@@ -84,7 +84,12 @@ def turn_action(screen_area, hand, stack, db):
         else:
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
-    elif opponent_reaction in ('1', '2', '3') and hand_value not in ('trash', 'gutshot', 'bottom_pair'):
+    elif hand_value in ('straight_draw', 'flush_draw', 'over_cards', 'gutshot') \
+            and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn', stack_collection, db):
+        keyboard.press('c')
+        session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        return True
+    elif opponent_reaction in ('1', '2', '3') and (hand_value in ('low_two_pairs', 'second_pair', 'middle_pair') or hand_value.find('.') != -1):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         return True
@@ -97,18 +102,18 @@ def turn_action(screen_area, hand, stack, db):
 def action_after_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, stack_collection, folder_name, db):
     try:
         if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
-        if check_is_turn(screen_area, deck, db): return
+        if check_is_turn(screen_area, deck, stack_collection, db): return
         current_stack.get_actual_stack(screen_area, stack_collection, folder_name, db)
-        if check_is_raise_cbet(screen_area, db): return
+        if check_is_raise_cbet(screen_area, stack_collection, db): return
     except Exception as e:
         error_log.error_log('action_after_cbet', str(e))
         print(e)
 
 
-def action_after_turn_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, db):
+def action_after_turn_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, stack_collection, db):
     if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
     if check_is_river(screen_area, deck, db): return
-    if check_is_raise_cbet(screen_area, db): return
+    if check_is_raise_cbet(screen_area, stack_collection, db): return
 
 
 def check_is_river(screen_area, deck, db):
@@ -196,7 +201,7 @@ def river_action(screen_area, hand, stack, action, db):
         return True
 
 
-def check_is_raise_cbet(screen_area, db):
+def check_is_raise_cbet(screen_area, stack_collection, db):
     hand_value = session_log.get_hand_value(screen_area, db)
     opponent_reaction = image_processing.search_last_opponent_action(screen_area, db)
     stack = session_log.get_last_row_from_log_session(screen_area, db)[0]['current_stack']
@@ -206,7 +211,7 @@ def check_is_raise_cbet(screen_area, db):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
-    if hand_value in ('straight_draw', 'flush_draw') and int(stack) <= 13:
+    if hand_value in ('straight_draw', 'flush_draw', 'middle_pair', 'second_pair') and int(stack) <= 13:
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
@@ -216,7 +221,7 @@ def check_is_raise_cbet(screen_area, db):
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
     elif hand_value in ('straight_draw', 'flush_draw', 'over_cards', 'gutshot') and pot_odds.check_is_call_valid(
-            screen_area, hand_value, 'turn', db):
+            screen_area, hand_value, 'turn', stack_collection, db):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         return True
@@ -230,10 +235,10 @@ def check_is_raise_cbet(screen_area, db):
         return True
 
 
-def action_after_cc_postflop(screen_area, deck, x_coordinate, y_coordinate, width, height, image_path, db):
+def action_after_cc_postflop(screen_area, deck, x_coordinate, y_coordinate, width, height, image_path, stack_collection ,db):
     try:
         if check_is_river(screen_area, deck, db): return
-        if check_is_turn(screen_area, deck, db): return
+        if check_is_turn(screen_area, deck, stack_collection ,db): return
         if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
         if get_opponent_flop_reaction(screen_area, db): return
     except Exception as e:

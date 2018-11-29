@@ -49,11 +49,11 @@ def start():
             elif last_row_action in ('turn_cbet', 'river_cbet'):
                 postflop.action_after_turn_cbet(item['x_coordinate'], item['y_coordinate'], item['width'],
                                                 item['height'],
-                                                image_path, item['screen_area'], DECK, DB)
+                                                image_path, item['screen_area'], DECK, STACK_COLLECTION, DB)
             elif last_row_action == 'cc_postflop':
                 postflop.action_after_cc_postflop(item['screen_area'], DECK, item['x_coordinate'],
                                                   item['y_coordinate'],
-                                                  item['width'], item['height'], image_path, DB)
+                                                  item['width'], item['height'], image_path, STACK_COLLECTION, DB)
             elif last_row_action == 'value_bet':
                 postflop.action_after_value_bet(item['screen_area'], item['x_coordinate'], item['y_coordinate'],
                                                 item['width'], item['height'], image_path, DB)

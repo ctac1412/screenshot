@@ -16,7 +16,7 @@ def get_decision(screen_area, db):
         elif action == 'fold':
             keyboard.press('f')
         elif action == 'open':
-            if stack > 13:
+            if int(stack) > 17:
                 keyboard.press('r')
             else:
                 keyboard.press('o')

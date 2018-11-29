@@ -4,9 +4,10 @@ import image_processing
 import session_log
 import error_log
 import postflop
+import pot_odds
 
 
-def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup, flop_deck, db):
+def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup, flop_deck, stack_collection, db):
     try:
         save_flop_image(screen_area, image_name, folder_name, db)
         flop_area = get_flop_area(screen_area, db)
@@ -77,7 +78,13 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                         and int(stack) <= 13:
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area), db)
-                elif opponent_reaction in ('1', '2'):
+                elif hand_value in ('straight_draw', 'flush_draw', 'over_cards', 'gutshot') \
+                        and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn', stack_collection, db):
+                    keyboard.press('c')
+                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+                    return True
+                elif opponent_reaction in ('1', '2') and hand_value not in (
+                'straight_draw', 'flush_draw', 'over_cards', 'gutshot'):
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                 else:
@@ -98,10 +105,6 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                                                   'full_house')):
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
-                    return
-                elif is_headsup == 1 and hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'second_pair'):
-                    keyboard.press('h')
-                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                     return
                 else:
                     keyboard.press('h')
@@ -130,13 +133,15 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     session_log.update_action_log_session('push', str(screen_area), db)
                     return
                 elif opponent_reaction in ('1', '2', '3') and hand_value in (
-                'middle_pair', 'straight_draw', 'flush_draw', 'gutshot') \
+                'middle_pair', 'straight_draw', 'flush_draw', 'gutshot', 'second_pair') \
                         and int(stack) <= 13:
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area), db)
-                elif opponent_reaction in ('1', '2') and hand_value != 'gutshot':
+                elif hand_value in ('straight_draw', 'flush_draw', 'over_cards', 'gutshot') \
+                        and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn', stack_collection, db):
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+                    return True
                 else:
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)
@@ -298,6 +303,8 @@ def check_pair(hand, screen_area, db):
                 hand_value = 'second_pair'
             else:
                 hand_value = 'middle_pair'
+        elif poket_card[0] > max(board_card) and poket_card[1] > max(board_card):
+            hand_value = 'over_cards'
     elif len(doubles) == 2:
         maximum = max(doubles, key=doubles.get)
         double_element = list(doubles.keys())[0]

@@ -48,7 +48,7 @@ def check_is_flop(screen_area, image_name, folder_name, flop_deck, stack_collect
             if action == 'open':
                 stack = current_stack.get_actual_stack(screen_area, stack_collection, folder_name, db)
             flop.make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup,
-                                    flop_deck, db)
+                                    flop_deck, stack_collection, db)
         else:
             session_log.update_action_log_session('end', str(screen_area), db)
         return True
@@ -65,7 +65,9 @@ def check_is_action_buttons(screen_area, db):
     last_opponnet_action = image_processing.search_last_opponent_action(screen_area, db)
     if not isinstance(last_opponnet_action, str):
         bb_count = last_opponnet_action['alias']
-        if reaction_to_opponent == 'fold' and bb_count == '1' and int(row[0]['current_stack']) > 9:
+        if reaction_to_opponent == 'fold' and bb_count == '1' and int(row[0]['current_stack']) > 10:
+            reaction_to_opponent = 'call'
+        elif reaction_to_opponent == 'fold' and bb_count == '2' and int(row[0]['current_stack']) > 17:
             reaction_to_opponent = 'call'
     if reaction_to_opponent == 'push':
         keyboard.press('q')
