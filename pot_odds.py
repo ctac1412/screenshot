@@ -24,7 +24,6 @@ def check_is_call_valid(screen_area, hand_value, element, stack_collection, db):
     else:
         return False
     current_pot_odds = round(bank_size / int(call_size))
-    print(current_pot_odds)
     if cur_stack <= int(call_size):
         element = 'river'
     necessary_pot_odds = get_pot_odds(hand_value, element, db)
