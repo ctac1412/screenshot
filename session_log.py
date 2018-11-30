@@ -59,9 +59,9 @@ def get_last_row_from_log_session(screen_area, db):
         print(e)
 
 
-def check_conditions_before_insert(hand, screen_area, stack_collection, db):
+def check_conditions_before_insert(hand, screen_area, stack_collection, image_name, folder_name, db):
     try:
-        position = str(determine_position.seacrh_blind_chips(screen_area, db))
+        position = str(determine_position.seacrh_blind_chips(screen_area, image_name, folder_name, db))
         stack = current_stack.search_current_stack(screen_area, stack_collection, db)
         is_headsup = 1
         if int(stack) > 6:

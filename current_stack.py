@@ -12,6 +12,9 @@ DEFAULT_STACK = 22
 
 def search_current_stack(screen_area, stack_collection, db):
     try:
+        image_name = str(math.floor(time.time())) + ".png"
+        folder_name = "images/" + str(datetime.datetime.now().date())
+        save_stack_image(screen_area, image_name, folder_name, db)
         for item in image_processing.get_last_screen(get_stack_area(screen_area, db), db):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
@@ -192,9 +195,7 @@ def convert_stack(stack):
     return stack
 
 
-def get_actual_stack(screen_area, stack_collection, folder_name, db):
-    image_name = str(math.floor(time.time())) + ".png"
-    save_stack_image(screen_area, image_name, folder_name, db)
+def get_actual_stack(screen_area, stack_collection, db):
     stack = search_current_stack(screen_area, stack_collection, db)
     stack = convert_stack(stack)
     session_log.update_current_stack_log_session(str(screen_area), str(stack), db)

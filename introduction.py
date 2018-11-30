@@ -46,7 +46,7 @@ def check_is_flop(screen_area, image_name, folder_name, flop_deck, stack_collect
             session_log.update_is_headsup_postflop(str(screen_area), is_headsup, db)
         if len(hand) == 4:
             if action == 'open':
-                stack = current_stack.get_actual_stack(screen_area, stack_collection, folder_name, db)
+                stack = current_stack.get_actual_stack(screen_area, stack_collection, db)
             flop.make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup,
                                     flop_deck, stack_collection, db)
         else:
@@ -87,9 +87,8 @@ def check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_
         folder_name = IMAGES_FOLDER + '/' + str(datetime.datetime.now().date())
         image_name = str(math.floor(time.time())) + ".png"
         session_log.update_action_log_session('end', str(screen_area), db)
-        determine_position.save_blind_image(screen_area, image_name, folder_name, db)
         current_stack.save_stack_image(screen_area, image_name, folder_name, db)
-        session_log.check_conditions_before_insert(cur_hand, int(screen_area), current_stack.get_stack_images(db), db)
+        session_log.check_conditions_before_insert(cur_hand, int(screen_area), current_stack.get_stack_images(db), image_name, folder_name, db)
         logic.get_decision(screen_area, db)
         return True
 

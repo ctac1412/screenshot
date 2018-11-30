@@ -34,9 +34,7 @@ def start():
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'], DB)
                 hand = image_processing.search_cards(item['screen_area'], DECK, 4, DB)
-                determine_position.save_blind_image(item['screen_area'], image_name, FOLDER_NAME, DB)
-                current_stack.save_stack_image(item['screen_area'], image_name, FOLDER_NAME, DB)
-                session_log.check_conditions_before_insert(hand, item['screen_area'], STACK_COLLECTION, DB)
+                session_log.check_conditions_before_insert(hand, item['screen_area'], STACK_COLLECTION, image_name, FOLDER_NAME, DB)
                 logic.get_decision(item['screen_area'], DB)
             elif last_row_action in ('open', 'call', 'check'):
                 introduction.action_after_open(item['x_coordinate'], item['y_coordinate'], item['width'],

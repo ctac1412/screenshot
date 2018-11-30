@@ -103,7 +103,7 @@ def action_after_cbet(x_coordinate, y_coordinate, width, height, image_path, scr
     try:
         if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
         if check_is_turn(screen_area, deck, stack_collection, db): return
-        current_stack.get_actual_stack(screen_area, stack_collection, folder_name, db)
+        current_stack.get_actual_stack(screen_area, stack_collection, db)
         if check_is_raise_cbet(screen_area, stack_collection, db): return
     except Exception as e:
         error_log.error_log('action_after_cbet', str(e))

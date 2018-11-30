@@ -6,7 +6,8 @@ import db_conf
 import error_log
 
 
-def seacrh_blind_chips(screen_area, db):
+def seacrh_blind_chips(screen_area, image_name, folder_name, db):
+    save_blind_image(screen_area, image_name, folder_name, db)
     blinds = ('big_blind', 'small_blind')
     path = image_processing.get_last_screen(get_blind_area(screen_area), db)
     path = path[0]['image_path']
