@@ -8,7 +8,6 @@ import logic
 import keyboard
 import flop
 import headsup
-import determine_position
 import current_stack
 
 IMAGES_FOLDER = "images"

@@ -7,8 +7,6 @@ import image_processing
 import session_log
 import logic
 import mouse
-import determine_position
-import current_stack
 import introduction
 import bar as metka
 import postflop
