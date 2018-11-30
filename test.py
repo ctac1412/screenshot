@@ -35,4 +35,4 @@ hand = 'JsJh5h6h4d4h2d'
 #     print(0)
 # print(hand_value)
 # row = session_log.get_last_row_from_log_session(3)
-print(postflop.check_is_board_danger(hand))
+print(pot_odds.check_is_call_valid(2,'straight_draw','turn',current_stack.get_stack_images(DB),DB))

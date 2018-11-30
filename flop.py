@@ -30,8 +30,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
             return
         elif action == 'open' and int(stack) > 12:
             if image_processing.check_is_cbet_available(screen_area, db):
-                if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find(
-                        '.') != -1:
+                if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
                     return
@@ -49,9 +48,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     return
             # if cbet unavailable
             else:
-                if (hand_value in (
-                        'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find(
-                    '.') != -1) \
+                if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') \
                         and opponent_reaction in ('1', '2', '3'):
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
@@ -93,9 +90,8 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
         # if action <> open
         else:
             if image_processing.check_is_cbet_available(screen_area, db):
-                if is_headsup == 0 and (
-                        hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house')
-                        or hand_value.find('.') != -1):
+                if is_headsup == 0 and \
+                        hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
                     return
@@ -116,14 +112,11 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)
                     return
-                elif opponent_reaction in ('1', '2') and (hand_value.find('.') != -1 or
-                                                          hand_value in (
-                                                                  'top_pair', 'two_pairs', 'set', 'flush', 'straight',
-                                                                  'full_house')):
+                elif opponent_reaction in ('1', '2') and hand_value in \
+                        ('top_pair', 'two_pairs', 'set', 'flush', 'straight','full_house'):
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
-                elif hand_value.find('.') != -1 or hand_value in (
-                        'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
+                elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area), db)
                 elif int(stack) <= 10 and (
@@ -142,6 +135,9 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                     return True
+                elif opponent_reaction in ('1', '2') and hand_value.find('.') != -1:
+                    keyboard.press('c')
+                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                 else:
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)

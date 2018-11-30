@@ -207,11 +207,12 @@ def check_is_raise_cbet(screen_area, stack_collection, db):
     stack = session_log.get_last_row_from_log_session(screen_area, db)[0]['current_stack']
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    if hand_value.find('.') != -1 or hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
+    if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
-    if hand_value in ('straight_draw', 'flush_draw', 'middle_pair', 'second_pair') and int(stack) <= 13:
+    if (hand_value.find('.') != -1 or hand_value in ('straight_draw', 'flush_draw', 'middle_pair', 'second_pair'))\
+            and int(stack) <= 13:
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
@@ -225,7 +226,8 @@ def check_is_raise_cbet(screen_area, stack_collection, db):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         return True
-    if opponent_reaction in ('1', '2') and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
+    if opponent_reaction in ('1', '2') and \
+            (hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') or hand_value.find('.') != -1):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         return True
@@ -240,13 +242,13 @@ def action_after_cc_postflop(screen_area, deck, x_coordinate, y_coordinate, widt
         if check_is_river(screen_area, deck, db): return
         if check_is_turn(screen_area, deck, stack_collection ,db): return
         if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
-        if get_opponent_flop_reaction(screen_area, db): return
+        if get_opponent_flop_reaction(screen_area, stack_collection, db): return
     except Exception as e:
         error_log.error_log('action_after_cc_postflop', str(e))
         print(e)
 
 
-def get_opponent_flop_reaction(screen_area, db):
+def get_opponent_flop_reaction(screen_area, stack_collection, db):
     hand_value = session_log.get_hand_value(screen_area, db)
     stack = session_log.get_last_row_from_log_session(screen_area, db)[0][1]
     if hand_value is None:
@@ -259,7 +261,12 @@ def get_opponent_flop_reaction(screen_area, db):
             and int(stack) <= 13:
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
-    elif opponent_reaction in ('1', '2') and hand_value not in ('trash', 'gutshot', 'bottom_pair'):
+    elif hand_value in ('straight_draw', 'flush_draw', 'over_cards', 'gutshot') \
+            and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn', stack_collection, db):
+        keyboard.press('c')
+        session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        return True
+    elif opponent_reaction in ('1', '2') and hand_value not in ('trash', 'gutshot', 'bottom_pair', 'over_cards'):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         return True
