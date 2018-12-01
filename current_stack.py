@@ -6,6 +6,7 @@ import cv2
 import image_processing
 import error_log
 import session_log
+import headsup
 
 DEFAULT_STACK = 22
 
@@ -195,8 +196,34 @@ def convert_stack(stack):
     return stack
 
 
-def get_actual_stack(screen_area, stack_collection, db):
-    stack = search_current_stack(screen_area, stack_collection, db)
+def get_actual_game_data(screen_area, stack_collection, db):
+    row = session_log.get_last_row_from_log_session(screen_area, db)
+    position = row[0]['current_position']
+    opponent_data = processing_opponent_data(screen_area, stack_collection, db)
+    is_headsup = opponent_data[0]
+    if position == 'button':
+        is_headsup = 0
+    stack = opponent_data[1]
     stack = convert_stack(stack)
+    session_log.update_is_headsup_postflop(str(screen_area), is_headsup, db)
     session_log.update_current_stack_log_session(str(screen_area), str(stack), db)
     return stack
+
+
+def processing_opponent_data(screen_area, stack_collection, db):
+    data = []
+    stack = search_current_stack(screen_area, stack_collection, db)
+    opponent_data = headsup.search_opponent_card(screen_area, db, stack_collection)
+    is_headsup = opponent_data[0]
+    data.append(is_headsup)
+    opponent_data.pop(0)
+    if len(opponent_data) > 0:
+        opponent_actual_stack = sorted(opponent_data, reverse=True)
+        if int(opponent_actual_stack[0]) == 666:
+            all_in_stack = search_allin_stack(screen_area, db)
+            opponent_actual_stack[0] = all_in_stack
+        opponent_actual_stack = max(opponent_actual_stack)
+        if int(opponent_actual_stack) < int(stack):
+            stack = opponent_actual_stack
+    data.append(stack)
+    return data

@@ -1,7 +1,6 @@
 import error_log
 import current_stack
 import determine_position
-import headsup
 import image_processing
 
 
@@ -62,20 +61,11 @@ def get_last_row_from_log_session(screen_area, db):
 def check_conditions_before_insert(hand, screen_area, stack_collection, image_name, folder_name, db):
     try:
         position = str(determine_position.seacrh_blind_chips(screen_area, image_name, folder_name, db))
-        stack = current_stack.search_current_stack(screen_area, stack_collection, db)
-        is_headsup = 1
-        if int(stack) > 6:
-            opponent_data = headsup.search_opponent_card(screen_area, db, stack_collection)
-            is_headsup = opponent_data[0]
-            opponent_data.pop(0)
-            if len(opponent_data) > 0:
-                opponent_actual_stack = sorted(opponent_data, reverse=True)
-                if int(opponent_actual_stack[0]) == 666:
-                    all_in_stack = current_stack.search_allin_stack(screen_area, db)
-                    opponent_actual_stack[0] = all_in_stack
-                opponent_actual_stack = max(opponent_actual_stack)
-                if int(opponent_actual_stack) < int(stack):
-                    stack = opponent_actual_stack
+        opponent_data = current_stack.processing_opponent_data(screen_area, stack_collection, db)
+        is_headsup = opponent_data[0]
+        stack = opponent_data[1]
+        if position == 'button':
+            is_headsup = 0
         stack = current_stack.convert_stack(stack)
         if position == 'big_blind' or (position == 'small_blind' and is_headsup == 0):
             last_opponent_action = image_processing.search_last_opponent_action(screen_area, db)

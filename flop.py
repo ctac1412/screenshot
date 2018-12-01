@@ -95,10 +95,8 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
                     return
-                elif is_headsup == 1 and (hand_value.find('.') != -1 or
-                                          hand_value in (
-                                                  'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'low_two_pairs',
-                                                  'full_house')):
+                elif is_headsup == 1 and hand_value in (
+                'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'low_two_pairs', 'full_house'):
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
                     return
@@ -322,7 +320,7 @@ def check_pair(hand, screen_area, db):
             hand_value = 'low_two_pairs'
     elif poket_card[0] > max(board_card) and poket_card[1] > max(board_card):
         hand_value = 'over_cards'
-    if hand_value in ('top_pair', 'set', 'two_pairs', 'weak_top_pair'):
+    if hand_value in ('top_pair', 'set', 'two_pairs', 'weak_top_pair', 'full_house'):
         session_log.update_hand_value(str(screen_area), hand_value, db)
         return True
     return hand_value

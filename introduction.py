@@ -18,6 +18,7 @@ def action_after_open(x_coordinate, y_coordinate, width, height, image_path, scr
     if check_is_flop(screen_area, image_name, folder_name, flop_deck, stack_collection, db): return
     if action == 'open':
         if check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
+        current_stack.get_actual_game_data(screen_area, stack_collection, db)
     if check_is_action_buttons(screen_area, db): return
 
 
@@ -45,7 +46,7 @@ def check_is_flop(screen_area, image_name, folder_name, flop_deck, stack_collect
             session_log.update_is_headsup_postflop(str(screen_area), is_headsup, db)
         if len(hand) == 4:
             if action == 'open':
-                stack = current_stack.get_actual_stack(screen_area, stack_collection, db)
+                stack = current_stack.get_actual_game_data(screen_area, stack_collection, db)
             flop.make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup,
                                     flop_deck, stack_collection, db)
         else:

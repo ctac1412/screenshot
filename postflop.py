@@ -99,11 +99,11 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
         return True
 
 
-def action_after_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, stack_collection, folder_name, db):
+def action_after_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, stack_collection, db):
     try:
         if introduction.check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
         if check_is_turn(screen_area, deck, stack_collection, db): return
-        current_stack.get_actual_stack(screen_area, stack_collection, db)
+        current_stack.get_actual_game_data(screen_area, stack_collection, db)
         if check_is_raise_cbet(screen_area, stack_collection, db): return
     except Exception as e:
         error_log.error_log('action_after_cbet', str(e))
@@ -168,7 +168,8 @@ def river_action(screen_area, hand, stack, action, db):
         return True
     elif opponent_reaction in ('1', '2', '3') and (
             hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') or hand_value.find(
-        'middle_pair') != -1 or hand_value.find('low_two_pairs') or hand_value.find('second_pair')):
+        'middle_pair') != -1 or hand_value.find('low_two_pairs') or hand_value.find('second_pair')) \
+            and check_is_board_danger(hand) is False:
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         return True
@@ -207,7 +208,7 @@ def check_is_raise_cbet(screen_area, stack_collection, db):
     stack = session_log.get_last_row_from_log_session(screen_area, db)[0]['current_stack']
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
+    if hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') or hand_value.find('.') != -1:
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
         return True
@@ -226,7 +227,7 @@ def check_is_raise_cbet(screen_area, stack_collection, db):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         return True
-    if opponent_reaction in ('1', '2') and \
+    if opponent_reaction in ('1', '2', '3') and \
             (hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') or hand_value.find('.') != -1):
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
