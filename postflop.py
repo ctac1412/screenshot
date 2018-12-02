@@ -57,15 +57,15 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
             session_log.update_action_log_session('push', str(screen_area), db)
             return True
     elif opponent_reaction in ('1', '2') and hand_value in (
-            'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair', 'full_house'):
+            'top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
         keyboard.press('v')
         session_log.update_action_log_session('turn_cbet', str(screen_area), db)
         return True
-    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house'):
+    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair','full_house'):
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
     elif int(stack) <= 10 and (
-            hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair')
+            hand_value in ('middle_pair', 'straight_draw', 'flush_draw', 'low_two_pairs', 'second_pair', 'weak_top_pair')
             or hand_value.find('.')) != -1:
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)

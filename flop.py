@@ -80,10 +80,6 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                     return True
-                elif opponent_reaction in ('1', '2') and hand_value not in (
-                'straight_draw', 'flush_draw', 'over_cards', 'gutshot'):
-                    keyboard.press('c')
-                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                 else:
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)

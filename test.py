@@ -19,20 +19,20 @@ import pot_odds
 import error_log
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 DB = postgresql.open(db_conf.connection_string())
-hand = 'JsJh5h6h4d4h2d'
-# hand = 'QhKh9c6h9h'
-# screen_area = '2'
-# hand_value = flop.check_pair(hand, screen_area, DB)
-# if hand_value != True:
-#     hand_value = flop.check_flush_draw(hand, screen_area, hand_value, DB)
-# if hand_value != True:
-#     flop.check_straight_draw(hand, screen_area, hand_value, DB)
-# hand_value = session_log.get_hand_value(screen_area, DB)
-# print(hand_value)
+hand = '2h4h3h4s5h'
+screen_area = '3'
+hand_value = flop.check_pair(hand, screen_area, DB)
+if hand_value != True:
+    hand_value = flop.check_flush_draw(hand, screen_area, hand_value, DB)
+if hand_value != True:
+    flop.check_straight_draw(hand, screen_area, hand_value, DB)
+hand_value = session_log.get_hand_value(screen_area, DB)
+print(hand_value)
+print(round(13/3,1))
 # if postflop.check_is_board_danger(hand) and hand_value not in ('straight', 'flush'):
 #     print(1)
 # else:
 #     print(0)
 # print(hand_value)
 # row = session_log.get_last_row_from_log_session(3)
-print(pot_odds.check_is_call_valid(2,'straight_draw','turn',current_stack.get_stack_images(DB),DB))
+# print(pot_odds.check_is_call_valid(2,'straight_draw','turn',current_stack.get_stack_images(DB),DB))
