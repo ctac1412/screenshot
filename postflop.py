@@ -6,6 +6,7 @@ import flop
 import current_stack
 import error_log
 import pot_odds
+import db_query
 
 
 def check_is_turn(screen_area, deck, stack_collection, db):
@@ -47,7 +48,7 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
             return True
     elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'full_house') \
             and image_processing.check_is_cbet_available(screen_area, db):
-        action = current_stack.compare_bank_with_available_stack(screen_area, image_processing.get_stack_images(db), db)
+        action = current_stack.compare_bank_with_available_stack(screen_area, db_query.get_stack_images(db), db)
         if action == 'turn_cbet':
             keyboard.press('v')
             session_log.update_action_log_session('turn_cbet', str(screen_area), db)

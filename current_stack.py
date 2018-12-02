@@ -7,6 +7,7 @@ import image_processing
 import error_log
 import session_log
 import headsup
+import db_query
 
 DEFAULT_STACK = 22
 
@@ -16,7 +17,7 @@ def search_current_stack(screen_area, stack_collection, db):
         image_name = str(math.floor(time.time())) + ".png"
         folder_name = "images/" + str(datetime.datetime.now().date())
         save_stack_image(screen_area, image_name, folder_name, db)
-        for item in image_processing.get_last_screen(get_stack_area(screen_area, db), db):
+        for item in db_query.get_last_screen(db_query.get_stack_area(screen_area, db), db):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in stack_collection:
@@ -33,8 +34,8 @@ def search_opponent_stack(screen_area, opponent_area, stack_collection, db):
     try:
         folder_name = 'images/' + str(datetime.datetime.now().date())
         save_opponent_stack_image(screen_area, folder_name, opponent_area, db)
-        screen_area = get_opponent_stack_area(screen_area, db)
-        for item in image_processing.get_last_screen(screen_area, db):
+        screen_area = db_query.get_opponent_stack_area(screen_area, db)
+        for item in db_query.get_last_screen(screen_area, db):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in stack_collection:
@@ -47,42 +48,10 @@ def search_opponent_stack(screen_area, opponent_area, stack_collection, db):
         print(e)
 
 
-def get_stack_area(screen_area, db):
-    sql = "select stack_area from screen_coordinates where screen_area = $1"
-    data = db.query.first(sql, int(screen_area))
-    return data
-
-
-def get_opponent_stack_area(screen_area, db):
-    sql = "select opponent_stack_area from screen_coordinates where screen_area = $1"
-    data = db.query.first(sql, int(screen_area))
-    return data
-
-
-def get_stack_images(db):
-    data = db.query("select trim(image_path) as image_path, stack_value from stack where active = 1 order by id desc")
-    return data
-
-
-def get_stack_data(screen_area, db):
-    sql = "select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates where screen_area = $1"
-    data = db.query(sql, screen_area)
-    return data
-
-
-def get_opponent_stack_data(screen_area, opponent_area, db):
-    sql = "select opp.x_coordinate,opp.y_coordinate,opp.width,opp.height,opp.screen_area " \
-          "from screen_coordinates as sc inner join opponent_screen_coordinates as opp " \
-          "on sc.opponent_stack_area = opp.screen_area " \
-          "where sc.screen_area = $1 and opp.opponent_area = $2"
-    data = db.query(sql, int(screen_area), int(opponent_area))
-    return data
-
-
 def save_stack_image(screen_area, image_name, folder_name, db):
     try:
-        for val in get_stack_data(get_stack_area(screen_area, db), db):
-            image_path = os.path.join(folder_name, str(get_stack_area(screen_area, db)), image_name)
+        for val in db_query.get_stack_data(db_query.get_stack_area(screen_area, db), db):
+            image_path = os.path.join(folder_name, str(db_query.get_stack_area(screen_area, db)), image_name)
             image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
                                      str(val['screen_area']), db)
     except Exception as e:
@@ -92,25 +61,19 @@ def save_stack_image(screen_area, image_name, folder_name, db):
 
 def save_opponent_stack_image(screen_area, folder_name, opponent_area, db):
     image_name = int(math.floor(time.time()))
-    for val in get_opponent_stack_data(screen_area, opponent_area, db):
+    for val in db_query.get_opponent_stack_data(screen_area, opponent_area, db):
         image_path = folder_name + "/" + str(val['screen_area']) + "/" + str(image_name) + ".png"
         image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
                                  str(val['screen_area']), db)
         image_name += 1
 
 
-def get_allin_stack_area(screen_area, db):
-    sql = "select all_in_stack_area from screen_coordinates where screen_area = $1"
-    data = db.query.first(sql, int(screen_area))
-    return data
-
-
 def save_allin_stack_image(screen_area, db):
     try:
         image_name = str(math.floor(time.time())) + ".png"
         folder_name = 'images/' + str(datetime.datetime.now().date())
-        for val in get_stack_data(get_allin_stack_area(screen_area, db), db):
-            image_path = os.path.join(folder_name, str(get_allin_stack_area(screen_area, db)), image_name)
+        for val in db_query.get_stack_data(db_query.get_allin_stack_area(screen_area, db), db):
+            image_path = os.path.join(folder_name, str(db_query.get_allin_stack_area(screen_area, db)), image_name)
             image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
                                      val['screen_area'], db)
     except Exception as e:
@@ -121,11 +84,11 @@ def save_allin_stack_image(screen_area, db):
 def search_allin_stack(screen_area, db):
     try:
         save_allin_stack_image(screen_area, db)
-        screen_area = get_allin_stack_area(screen_area, db)
-        for item in image_processing.get_last_screen(screen_area, db):
+        screen_area = db_query.get_allin_stack_area(screen_area, db)
+        for item in db_query.get_last_screen(screen_area, db):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
-            for value in image_processing.get_allin_stack_images(db):
+            for value in db_query.get_allin_stack_images(db):
                 if image_processing.cv_data_template(value['image_path'], img_rgb) > 0:
                     all_in_stack = int(value['stack_value'])
                     return all_in_stack
@@ -135,18 +98,12 @@ def search_allin_stack(screen_area, db):
         print(e)
 
 
-def get_bank_stack_area(screen_area, db):
-    sql = "select bank_stack_area from screen_coordinates where screen_area = $1"
-    data = db.query.first(sql, int(screen_area))
-    return data
-
-
 def save_bank_stack_image(screen_area, db):
     try:
         image_name = str(math.floor(time.time())) + ".png"
         folder_name = 'images/' + str(datetime.datetime.now().date())
-        for val in get_stack_data(get_bank_stack_area(screen_area, db), db):
-            image_path = os.path.join(folder_name, str(get_bank_stack_area(screen_area, db)), image_name)
+        for val in db_query.get_stack_data(db_query.get_bank_stack_area(screen_area, db), db):
+            image_path = os.path.join(folder_name, str(db_query.get_bank_stack_area(screen_area, db)), image_name)
             image_processing.imaging(val['x_coordinate'], val['y_coordinate'], val['width'], val['height'], image_path,
                                      val['screen_area'], db)
     except Exception as e:
@@ -157,11 +114,11 @@ def save_bank_stack_image(screen_area, db):
 def search_bank_stack(screen_area, db):
     try:
         save_bank_stack_image(screen_area, db)
-        screen_area = get_bank_stack_area(screen_area, db)
-        for item in image_processing.get_last_screen(screen_area, db):
+        screen_area = db_query.get_bank_stack_area(screen_area, db)
+        for item in db_query.get_last_screen(screen_area, db):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
-            for value in image_processing.get_bank_stack_images(db):
+            for value in db_query.get_bank_stack_images(db):
                 if image_processing.cv_data_template(value['image_path'], img_rgb) > 0:
                     bank_stack = int(value['stack_value'])
                     return bank_stack

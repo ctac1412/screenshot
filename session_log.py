@@ -1,7 +1,4 @@
 import error_log
-import current_stack
-import determine_position
-import image_processing
 
 
 def insert_into_log_session(screen_area, hand, db, current_position='0', current_stack='0', action='', is_headsup=0,
@@ -58,27 +55,6 @@ def get_last_row_from_log_session(screen_area, db):
         print(e)
 
 
-def check_conditions_before_insert(hand, screen_area, stack_collection, image_name, folder_name, db):
-    try:
-        position = str(determine_position.seacrh_blind_chips(screen_area, image_name, folder_name, db))
-        opponent_data = current_stack.processing_opponent_data(screen_area, stack_collection, db)
-        is_headsup = opponent_data[0]
-        stack = opponent_data[1]
-        if position == 'button':
-            is_headsup = 0
-        stack = current_stack.convert_stack(stack)
-        if position == 'big_blind' or (position == 'small_blind' and is_headsup == 0):
-            last_opponent_action = image_processing.search_last_opponent_action(screen_area, db)
-            last_opponent_action = get_last_opponent_action(position, last_opponent_action)
-        else:
-            last_opponent_action = None
-        insert_into_log_session(screen_area, hand, db, position, str(stack), is_headsup=is_headsup,
-                                last_opponent_action=last_opponent_action)
-    except Exception as e:
-        error_log.error_log('checkConditionsBeforeInsert', str(e))
-        print(e)
-
-
 def update_hand_after_flop(screen_area, hand, db):
     db.query("UPDATE session_log SET hand= '" + hand +
              "' from(SELECT id FROM session_log where screen_area = " +
@@ -113,21 +89,3 @@ def update_is_headsup_postflop(screen_area, is_headsup, db):
     db.query("UPDATE session_log SET is_headsup = " + str(
         is_headsup) + " from(SELECT id FROM session_log where screen_area = " +
              screen_area + " ORDER BY id desc limit 1) AS t1 WHERE session_log.id=t1.id")
-
-
-def get_last_opponent_action(position, last_opponent_action):
-    if isinstance(last_opponent_action, str):
-        last_opponent_action = 'push'
-    elif position == 'big_blind' and last_opponent_action['alias'] == '1':
-        last_opponent_action = 'min_raise'
-    elif position == 'big_blind' and last_opponent_action['alias'] in ('2', '3'):
-        last_opponent_action = 'open'
-    elif position == 'small_blind' and last_opponent_action['alias'] == '2':
-        last_opponent_action = 'min_raise'
-    elif position == 'small_blind' and last_opponent_action['alias'] == '3':
-        last_opponent_action = 'open'
-    elif last_opponent_action['alias'] in ('check', '0.5'):
-        last_opponent_action = 'limp'
-    else:
-        last_opponent_action = 'push'
-    return last_opponent_action

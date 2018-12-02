@@ -1,11 +1,11 @@
 import postgresql
 import pyaudio
 import wave
-import db_conf
+import db_query
 
 
 def error_log(module_name, error_message):
-    db = postgresql.open(db_conf.connection_string())
+    db = postgresql.open(db_query.connection_string())
     insert = db.prepare("insert into error_log (module_name, error_message) values($1,$2)")
     insert(module_name, str(error_message))
     play_alarm_sound()

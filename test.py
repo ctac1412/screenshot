@@ -14,11 +14,11 @@ import postflop
 import flop
 import current_stack
 import postgresql
-import db_conf
+import db_query
 import pot_odds
 import error_log
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
-DB = postgresql.open(db_conf.connection_string())
+DB = postgresql.open(db_query.connection_string())
 hand = '2h4h3h4s5h'
 screen_area = '3'
 hand_value = flop.check_pair(hand, screen_area, DB)

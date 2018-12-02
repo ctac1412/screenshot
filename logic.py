@@ -2,6 +2,7 @@ import error_log
 import keyboard
 import session_log
 import sklansky_chubukov
+import db_query
 
 IMAGES_FOLDER = "images/"
 
@@ -55,10 +56,7 @@ def get_action_from_preflop_chart(screen_area, db):
         last_opponent_action = ' is null'
     else:
         last_opponent_action = " = '" + last_opponent_action + '\''
-    data = db.query("select trim(action) as action from preflop_chart "
-                    "where hand = '" + hand + '\'' + " and position = '" + position + '\'' +
-                    " and is_headsup = '" + str(is_headsup) + '\'' + " and opponent_last_action" +
-                    last_opponent_action + " and stack = " + str(stack))
+    data = db_query.get_action_from_preflop_chart(hand, position, is_headsup, last_opponent_action, stack, db)
     if len(data) == 0:
         return sklansky_chubukov.get_action(hand, stack, last_opponent_action, position, db)
     data = [data[0]['action']]

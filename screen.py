@@ -10,14 +10,14 @@ import mouse
 import introduction
 import bar as metka
 import postflop
-import db_conf
+import db_query
 
 IMAGES_FOLDER = "images/"
 FOLDER_NAME = IMAGES_FOLDER + str(datetime.datetime.now().date())
-DB = postgresql.open(db_conf.connection_string())
-SCREEN_DATA = image_processing.get_screen_data(DB)
-DECK = image_processing.get_cards(DB)
-STACK_COLLECTION = image_processing.get_stack_images(DB)
+DB = postgresql.open(db_query.connection_string())
+SCREEN_DATA = db_query.get_screen_data(DB)
+DECK = db_query.get_cards(DB)
+STACK_COLLECTION = db_query.get_stack_images(DB)
 
 
 def start():
@@ -32,7 +32,7 @@ def start():
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'], DB)
                 hand = image_processing.search_cards(item['screen_area'], DECK, 4, DB)
-                session_log.check_conditions_before_insert(hand, item['screen_area'], STACK_COLLECTION, image_name, FOLDER_NAME, DB)
+                introduction.check_conditions_before_insert(hand, item['screen_area'], STACK_COLLECTION, image_name, FOLDER_NAME, DB)
                 logic.get_decision(item['screen_area'], DB)
             elif last_row_action in ('open', 'call', 'check'):
                 introduction.action_after_open(item['x_coordinate'], item['y_coordinate'], item['width'],

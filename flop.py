@@ -5,12 +5,13 @@ import session_log
 import error_log
 import postflop
 import pot_odds
+import db_query
 
 
 def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup, flop_deck, stack_collection, db):
     try:
         save_flop_image(screen_area, image_name, folder_name, db)
-        flop_area = get_flop_area(screen_area, db)
+        flop_area = db_query.get_flop_area(screen_area, db)
         flop_card = image_processing.search_cards(str(flop_area), flop_deck, 6, db)
         hand = hand + flop_card
         opponent_reaction = image_processing.search_last_opponent_action(screen_area, db)
@@ -322,23 +323,11 @@ def check_pair(hand, screen_area, db):
     return hand_value
 
 
-def get_flop_area(screen_area, db):
-    sql = "select flop_area from screen_coordinates where screen_area = $1 and active = 1"
-    data = db.query.first(sql, int(screen_area))
-    return data
-
-
 def save_flop_image(screen_area, image_name, folder_name, db):
-    for value in get_flop_data(get_flop_area(screen_area, db), db):
-        image_path = os.path.join(folder_name, str(get_flop_area(screen_area, db)), image_name)
+    for value in db_query.get_flop_data(db_query.get_flop_area(screen_area, db), db):
+        image_path = os.path.join(folder_name, str(db_query.get_flop_area(screen_area, db)), image_name)
         image_processing.imaging(value['x_coordinate'], value['y_coordinate'], value['width'], value['height'],
                                  image_path, value['screen_area'], db)
-
-
-def get_flop_data(screen_area, db):
-    sql = "select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates where screen_area = $1"
-    data = db.query(sql, int(screen_area))
-    return data
 
 
 def check_gutshot(hand, hand_value):

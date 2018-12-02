@@ -4,7 +4,7 @@ import time
 import postgresql
 import screen
 import image_processing
-import db_conf
+import db_query
 
 
 class Window(tkinter.Tk, threading.Thread):
@@ -41,20 +41,20 @@ class Window(tkinter.Tk, threading.Thread):
         # Потом бизнес-логика
 
         def get_curren_value(screen_area):
-            db = postgresql.open(db_conf.connection_string())
+            db = postgresql.open(db_query.connection_string())
             data = db.query("select active from screen_coordinates where screen_area = " + str(screen_area))
             return data[0]['active']
 
         def update_current_stack_log_session(screen_area):
             if len(screen_area) > 0:
                 for item in screen_area:
-                    db = postgresql.open(db_conf.connection_string())
+                    db = postgresql.open(db_query.connection_string())
                     db.query(
                         "UPDATE screen_coordinates SET active = CASE active WHEN 0 THEN 1 WHEN 1 THEN 0 ELSE active END "
                         "where screen_area = " + str(item))
 
         def truncate_screenshot_table():
-            db = postgresql.open(db_conf.connection_string())
+            db = postgresql.open(db_query.connection_string())
             db.query("truncate screenshots restart identity")
 
         self.first.set(get_curren_value(1))  # Устанавливаем значение переменной

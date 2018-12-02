@@ -9,8 +9,32 @@ import keyboard
 import flop
 import headsup
 import current_stack
+import determine_position
+import error_log
+import db_query
 
 IMAGES_FOLDER = "images"
+
+
+def check_conditions_before_insert(hand, screen_area, stack_collection, image_name, folder_name, db):
+    try:
+        position = str(determine_position.seacrh_blind_chips(screen_area, image_name, folder_name, db))
+        opponent_data = current_stack.processing_opponent_data(screen_area, stack_collection, db)
+        is_headsup = opponent_data[0]
+        stack = opponent_data[1]
+        if position == 'button':
+            is_headsup = 0
+        stack = current_stack.convert_stack(stack)
+        if position == 'big_blind' or (position == 'small_blind' and is_headsup == 0):
+            last_opponent_action = image_processing.search_last_opponent_action(screen_area, db)
+            last_opponent_action = get_last_opponent_action(position, last_opponent_action)
+        else:
+            last_opponent_action = None
+            session_log.insert_into_log_session(screen_area, hand, db, position, str(stack), is_headsup=is_headsup,
+                                last_opponent_action=last_opponent_action)
+    except Exception as e:
+        error_log.error_log('checkConditionsBeforeInsert', str(e))
+        print(e)
 
 
 def action_after_open(x_coordinate, y_coordinate, width, height, image_path, screen_area, action, image_name,
@@ -23,8 +47,8 @@ def action_after_open(x_coordinate, y_coordinate, width, height, image_path, scr
 
 
 def save_element(screen_area, element_name, db):
-    element_area = get_element_area(screen_area, element_name, db)
-    for item in get_element_data(element_area, db):
+    element_area = db_query.get_element_area(screen_area, element_name, db)
+    for item in db_query.get_element_data(element_area, db):
         image_name = str(math.floor(time.time())) + ".png"
         image_path = os.path.join(IMAGES_FOLDER, str(datetime.datetime.now().date()), str(item['screen_area']),
                                   image_name)
@@ -82,28 +106,15 @@ def check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_
     last_hand = session_log.get_last_row_from_log_session(screen_area, db)[0]['hand']
     last_hand = last_hand[:4]
     image_processing.imaging(x_coordinate, y_coordinate, width, height, image_path, screen_area, db)
-    cur_hand = image_processing.search_cards(screen_area, image_processing.get_cards(db), 4, db)
+    cur_hand = image_processing.search_cards(screen_area, db_query.get_cards(db), 4, db)
     if last_hand != cur_hand:
         folder_name = IMAGES_FOLDER + '/' + str(datetime.datetime.now().date())
         image_name = str(math.floor(time.time())) + ".png"
         session_log.update_action_log_session('end', str(screen_area), db)
         current_stack.save_stack_image(screen_area, image_name, folder_name, db)
-        session_log.check_conditions_before_insert(cur_hand, int(screen_area), current_stack.get_stack_images(db), image_name, folder_name, db)
+        check_conditions_before_insert(cur_hand, int(screen_area), db_query.get_stack_images(db), image_name, folder_name, db)
         logic.get_decision(screen_area, db)
         return True
-
-
-def get_element_area(screen_area, element, db):
-    sql = "select " + element + " from screen_coordinates where screen_area = $1 and active = 1"
-    data = db.query.first(sql, int(screen_area))
-    return data
-
-
-def get_element_data(screen_area, db):
-    sql = "select x_coordinate,y_coordinate,width,height,screen_area from screen_coordinates " \
-          "where active = 1 and screen_area = $1"
-    data = db.query(sql, int(screen_area))
-    return data
 
 
 def get_reaction_to_opponent(row, db):
@@ -117,8 +128,22 @@ def get_reaction_to_opponent(row, db):
         last_opponent_action = ' is null'
     else:
         last_opponent_action = " = '" + last_opponent_action + '\''
-    data = db.query("select trim(reaction_to_opponent) as reaction_to_opponent from preflop_chart "
-                    "where hand = '" + hand + '\'' + " and position = '" + position + '\'' +
-                    " and is_headsup = '" + str(is_headsup) + '\'' + " and opponent_last_action" +
-                    last_opponent_action + ' and stack = ' + str(stack) + " and action = '" + action + '\'')
-    return data
+    return db_query.get_reaction_to_opponent(hand, position, is_headsup, last_opponent_action, stack, action, db)
+
+
+def get_last_opponent_action(position, last_opponent_action):
+    if isinstance(last_opponent_action, str):
+        last_opponent_action = 'push'
+    elif position == 'big_blind' and last_opponent_action['alias'] == '1':
+        last_opponent_action = 'min_raise'
+    elif position == 'big_blind' and last_opponent_action['alias'] in ('2', '3'):
+        last_opponent_action = 'open'
+    elif position == 'small_blind' and last_opponent_action['alias'] == '2':
+        last_opponent_action = 'min_raise'
+    elif position == 'small_blind' and last_opponent_action['alias'] == '3':
+        last_opponent_action = 'open'
+    elif last_opponent_action['alias'] in ('check', '0.5'):
+        last_opponent_action = 'limp'
+    else:
+        last_opponent_action = 'push'
+    return last_opponent_action

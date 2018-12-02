@@ -5,7 +5,7 @@ import numpy as np
 import postgresql
 from PIL import ImageGrab
 import error_log
-import db_conf
+import db_query
 import introduction
 
 IMAGES_FOLDER = "images"
@@ -14,7 +14,7 @@ IMAGES_FOLDER = "images"
 def search_cards(screen_area, deck, list_length, db):
     hand = ''
     try:
-        for item in get_last_screen(screen_area, db):
+        for item in db_query.get_last_screen(screen_area, db):
             path = item['image_path']
             img_rgb = cv2.imread(path, 0)
             for value in deck:
@@ -31,66 +31,16 @@ def search_cards(screen_area, deck, list_length, db):
     return hand
 
 
-def insert_image_path_into_db(image_path, screen_area, db):
-    try:
-        insert = db.prepare("insert into screenshots (image_path,screen_area) values($1,$2)")
-        insert(image_path, int(screen_area))
-    except Exception as e:
-        print('insertImagePathIntoDb ' + str(e))
-        error_log.error_log('insertImagePathIntoDb', str(e))
-
-
-def get_screen_data(db):
-    try:
-        data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse "
-                        "from screen_coordinates where active = 1 and alias = 'workspace'")
-        return data
-    except Exception as e:
-        error_log.error_log('getScreenData', str(e))
-
-
 def check_is_folder_exist():
     folder_name = os.path.join(IMAGES_FOLDER, str(datetime.datetime.now().date()))
     if not os.path.exists(str(folder_name)):
         os.makedirs(str(folder_name))
-    db = postgresql.open(db_conf.connection_string())
+    db = postgresql.open(db_query.connection_string())
     data = db.query("select screen_area from screen_coordinates "
                     "union select screen_area from opponent_screen_coordinates")
     for value in data:
         if not os.path.exists(str(folder_name) + "/" + str(value['screen_area'])):
             os.makedirs(str(folder_name) + "/" + str(value['screen_area']))
-
-
-def get_cards(db):
-    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards")
-    return data
-
-
-def get_stack_images(db):
-    data = db.query("select trim(image_path) as image_path, stack_value from stack where active = 1 order by id desc")
-    return data
-
-
-def get_allin_stack_images(db):
-    data = db.query("select trim(image_path) as image_path, stack_value from all_in_stack order by id desc")
-    return data
-
-
-def get_bank_stack_images(db):
-    data = db.query("select trim(image_path) as image_path, stack_value from bank_stack order by id desc")
-    return data
-
-
-def get_actions_buttons(db):
-    data = db.query("select trim(image_path) as image_path,trim(opponent_action) as opponent_action, "
-                    "trim(alias) as alias from opponent_last_action")
-    return data
-
-
-def get_last_screen(screen_area, db, limit=1):
-    sql = "select trim(image_path)as image_path from screenshots where screen_area = $1 order by id desc limit $2"
-    data = db.query(sql, int(screen_area), limit)
-    return data
 
 
 def made_screenshot(x_coordinate, y_coordinate, width, height):
@@ -101,12 +51,12 @@ def made_screenshot(x_coordinate, y_coordinate, width, height):
 def imaging(x_coordinate, y_coordinate, width, height, image_path, screen_area, db):
     image = made_screenshot(x_coordinate, y_coordinate, width, height)
     image.save(image_path, "PNG")
-    insert_image_path_into_db(image_path, screen_area, db)
+    db_query.insert_image_path_into_db(image_path, screen_area, db)
 
 
 def search_element(screen_area, elements, folder, db):
     for item in elements:
-        path = get_last_screen(screen_area, db)
+        path = db_query.get_last_screen(screen_area, db)
         path = path[0]['image_path']
         img_rgb = cv2.imread(path, 0)
         template_path = folder + item + '.png'
@@ -117,10 +67,10 @@ def search_element(screen_area, elements, folder, db):
 
 def search_last_opponent_action(screen_area, db):
     element_area = introduction.save_element(screen_area, 'limp_area', db)
-    path = get_last_screen(element_area, db)
+    path = db_query.get_last_screen(element_area, db)
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
-    for item in get_actions_buttons(db):
+    for item in db_query.get_actions_buttons(db):
         if cv_data_template(item['image_path'], img_rgb) > 0:
             return item
     return 'push'
@@ -128,18 +78,12 @@ def search_last_opponent_action(screen_area, db):
 
 def check_is_cbet_available(screen_area, db):
     element_area = introduction.save_element(screen_area, 'limp_area', db)
-    path = get_last_screen(element_area, db)
+    path = db_query.get_last_screen(element_area, db)
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
     template_path = 'action_buttons/check.png'
     if cv_data_template(template_path, img_rgb) > 0:
         return True
-
-
-def get_current_cards(condition, db):
-    sql = "select trim(image_path) as image_path, trim(alias) as alias from cards where alias in ($1)"
-    data = db.query.first(sql, condition)
-    return data
 
 
 def convert_hand(hand):
@@ -149,7 +93,7 @@ def convert_hand(hand):
 
 def check_current_hand(screen_area, hand, db):
     current_hand = convert_hand(hand)
-    deck = get_current_cards(current_hand, db)
+    deck = db_query.get_current_cards(current_hand, db)
     if len(search_cards(screen_area, deck, 4, db)) == 4:
         return True
     else:

@@ -1,12 +1,6 @@
 import current_stack
 import image_processing
-
-
-def get_pot_odds(hand_value, element, db):
-    element = element + '_odds'
-    sql = "select " + element + " from pot_odds where hand_value = $1"
-    data = db.query.first(sql, str(hand_value))
-    return data
+import db_query
 
 
 def check_is_call_valid(screen_area, hand_value, element, stack_collection, db):
@@ -20,7 +14,7 @@ def check_is_call_valid(screen_area, hand_value, element, stack_collection, db):
     current_pot_odds = round(bank_size / int(call_size), 1)
     if cur_stack <= int(call_size):
         element = 'river'
-    necessary_pot_odds = get_pot_odds(hand_value, element, db)
+    necessary_pot_odds = db_query.get_pot_odds(hand_value, element, db)
     if int(current_pot_odds) >= int(necessary_pot_odds):
         print(hand_value + ' ' + str(call_size) + ' ' + str(bank_size))
         return True
