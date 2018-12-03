@@ -191,3 +191,9 @@ def get_valid_stack_value_to_push(hand, db):
     data = db.query(
         "select stack_value from sklansky_chubukov where hand = " + "'" + hand + "'")
     return data[0]['stack_value']
+
+
+def get_combination_value(element, hand_value, db):
+    sql = "select " + element + " from combination_value where hand_value = $1"
+    data = db.query.first(sql, str(hand_value))
+    return data

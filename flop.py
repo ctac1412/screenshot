@@ -130,7 +130,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                     return True
-                elif opponent_reaction in ('1', '2') and hand_value.find('.') != -1:
+                elif opponent_reaction in ('1', '2') and (hand_value.find('.') != -1 or hand_value == 'second_pair'):
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                 else:
