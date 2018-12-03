@@ -27,12 +27,7 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
     opponent_reaction = image_processing.search_last_opponent_action(screen_area, db)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    hand_value = flop.check_pair(hand, screen_area, db)
-    if hand_value != True:
-        hand_value = flop.check_flush_draw(hand, screen_area, hand_value, db)
-    if hand_value != True:
-        flop.check_straight_draw(hand, screen_area, hand_value, db)
-    hand_value = session_log.get_hand_value(screen_area, db)
+    hand_value = flop.get_hand_value(hand, screen_area, db)
     if check_is_board_danger(hand) and hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair'):
         if image_processing.check_is_cbet_available(screen_area, db):
             keyboard.press('h')
@@ -140,12 +135,7 @@ def river_action(screen_area, hand, stack, action, db):
     opponent_reaction = image_processing.search_last_opponent_action(screen_area, db)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
-    hand_value = flop.check_pair(hand, screen_area, db)
-    if hand_value != True:
-        hand_value = flop.check_flush_draw(hand, screen_area, hand_value, db)
-    if hand_value != True:
-        flop.check_straight_draw(hand, screen_area, hand_value, db)
-    hand_value = session_log.get_hand_value(screen_area, db)
+    hand_value = flop.get_hand_value(hand, screen_area, db)
     if check_is_board_danger(hand) and hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair'):
         if image_processing.check_is_cbet_available(screen_area, db):
             keyboard.press('h')
