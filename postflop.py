@@ -136,61 +136,46 @@ def river_action(screen_area, hand, stack, action, db):
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
     hand_value = flop.get_hand_value(hand, screen_area, db)
+    combination_value = db_query.get_combination_value('river', hand_value, db)
     if check_is_board_danger(hand) and hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair'):
         if image_processing.check_is_cbet_available(screen_area, db):
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-            return True
         elif opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-            return True
         else:
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
-            return True
-    elif hand_value == 'trash':
-        keyboard.press('f')
-        session_log.update_action_log_session('fold', str(screen_area), db)
-        return True
-    elif hand_value in ('top_pair', 'two_pairs', 'set', 'flush', 'straight', 'weak_top_pair', 'full_house'):
-        keyboard.press('v')
-        session_log.update_action_log_session('river_cbet', str(screen_area), db)
-        return True
-    elif opponent_reaction in ('1', '2', '3') and (
-            hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') or hand_value.find(
-        'middle_pair') != -1 or hand_value.find('low_two_pairs') or hand_value.find('second_pair')) \
-            and check_is_board_danger(hand) is False:
-        keyboard.press('c')
-        session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        return True
-    elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
-        keyboard.press('q')
-        session_log.update_action_log_session('push', str(screen_area), db)
-    elif (hand_value in ('second_pair', 'low_two_pairs') or hand_value.find('second_pair') != -1 or
-          hand_value.find('low_two_pairs') != -1) and image_processing.check_is_cbet_available(screen_area, db)\
-            and check_is_board_danger(hand) is False:
-        if current_stack.search_bank_stack(screen_area, db) <= 3:
-            keyboard.press('j')
-        else:
-            keyboard.press('k')
-        session_log.update_action_log_session('value_bet', str(screen_area), db)
-        return True
-    elif hand_value == 'weak_flush':
-        if image_processing.check_is_cbet_available(screen_area, db):
-            keyboard.press('h')
-            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-            return True
-        elif opponent_reaction in ('1', '2', '3'):
-            keyboard.press('c')
-            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+    elif image_processing.check_is_cbet_available(screen_area, db):
+        if combination_value == 'premium':
+            keyboard.press('v')
+            session_log.update_action_log_session('river_cbet', str(screen_area), db)
+        elif combination_value == 'value' and check_is_board_danger(hand) is False:
+            if current_stack.search_bank_stack(screen_area, db) <= 3:
+                keyboard.press('j')
+            else:
+                keyboard.press('k')
+            session_log.update_action_log_session('value_bet', str(screen_area), db)
+        elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
+            keyboard.press('q')
+            session_log.update_action_log_session('push', str(screen_area), db)
         else:
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
     else:
-        keyboard.press('f')
-        session_log.update_action_log_session('fold', str(screen_area), db)
-        return True
+        if combination_value == 'premium':
+            keyboard.press('v')
+            session_log.update_action_log_session('river_cbet', str(screen_area), db)
+        elif combination_value == 'value' and check_is_board_danger(hand) is False and opponent_reaction in ('1', '2', '3'):
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
+            keyboard.press('q')
+            session_log.update_action_log_session('push', str(screen_area), db)
+        else:
+            keyboard.press('f')
+            session_log.update_action_log_session('fold', str(screen_area), db)
 
 
 def check_is_raise_cbet(screen_area, stack_collection, db):
