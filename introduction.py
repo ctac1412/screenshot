@@ -30,8 +30,8 @@ def check_conditions_before_insert(hand, screen_area, stack_collection, image_na
             last_opponent_action = get_last_opponent_action(position, last_opponent_action)
         else:
             last_opponent_action = None
-            session_log.insert_into_log_session(screen_area, hand, db, position, str(stack), is_headsup=is_headsup,
-                                last_opponent_action=last_opponent_action)
+        session_log.insert_into_log_session(screen_area, hand, db, position, str(stack), is_headsup=is_headsup,
+                                            last_opponent_action=last_opponent_action)
     except Exception as e:
         error_log.error_log('checkConditionsBeforeInsert', str(e))
         print(e)
