@@ -259,12 +259,12 @@ def check_pair(hand, screen_area, db):
     elif len(doubles) == 2:
         maximum = max(doubles, key=doubles.get)
         double_element = list(doubles.keys())[0]
-        if double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(board_card):
+        if doubles[maximum] >= 3:
+            hand_value = 'full_house'
+        elif double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(board_card):
             hand_value = 'two_pairs'
         elif sorted(list(doubles.keys())) == sorted([hand[0], hand[1]]):
             hand_value = 'two_pairs'
-        elif doubles[maximum] >= 3:
-            hand_value = 'full_house'
         elif double_element in (hand[0], hand[1]):
             hand_value = 'low_two_pairs'
     elif len(doubles) == 3:
