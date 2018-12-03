@@ -29,7 +29,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                 if combination_value == 'premium':
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
-                elif combination_value in ('other', 'draw'):
+                elif combination_value in ('other', 'draw', 'composite'):
                     keyboard.press('b')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
                 elif hand_value == 'trash':
@@ -51,6 +51,9 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     elif hand_value in ('second_pair', 'middle_pair') and opponent_reaction in ('1', '2'):
                         keyboard.press('c')
                         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+                elif combination_value == 'composite' and opponent_reaction in ('1', '2', '3'):
+                    keyboard.press('q')
+                    session_log.update_action_log_session('push', str(screen_area), db)
                 else:
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)
@@ -68,7 +71,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                 if hand_value == 'trash':
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)
-                elif combination_value == 'premium' and opponent_reaction in ('1', '2'):
+                elif combination_value == 'premium' and opponent_reaction in ('1', '2', '3'):
                     keyboard.press('v')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
                 elif combination_value == 'premium':
@@ -83,6 +86,9 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                 elif hand_value in ('second_pair', 'middle_pair') and opponent_reaction in ('1', '2'):
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+                elif combination_value == 'composite' and opponent_reaction in ('1', '2', '3'):
+                    keyboard.press('q')
+                    session_log.update_action_log_session('push', str(screen_area), db)
                 else:
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)

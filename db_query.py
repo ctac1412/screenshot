@@ -196,4 +196,6 @@ def get_valid_stack_value_to_push(hand, db):
 def get_combination_value(element, hand_value, db):
     sql = "select trim(" + element + ") as " + element +" from combination_value where hand_value = $1"
     data = db.query.first(sql, str(hand_value))
+    if data is None and hand_value != 'trash':
+        print(hand_value)
     return data
