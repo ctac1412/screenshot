@@ -5,7 +5,6 @@ import math
 import postgresql
 import image_processing
 import session_log
-import logic
 import mouse
 import introduction
 import bar as metka
@@ -33,7 +32,7 @@ def start():
                                          image_path, item['screen_area'], DB)
                 hand = image_processing.search_cards(item['screen_area'], DECK, 4, DB)
                 introduction.check_conditions_before_insert(hand, item['screen_area'], STACK_COLLECTION, image_name, FOLDER_NAME, DB)
-                logic.get_decision(item['screen_area'], DB)
+                introduction.get_decision(item['screen_area'], DB)
             elif last_row_action in ('open', 'call', 'check'):
                 introduction.action_after_open(item['x_coordinate'], item['y_coordinate'], item['width'],
                                                item['height'],
@@ -56,7 +55,7 @@ def start():
             else:
                 hand = session_log.get_last_row_from_log_session(item['screen_area'], DB)
                 if image_processing.check_current_hand(item['screen_area'], hand[0]['hand'], DB):
-                    logic.get_decision(str(item['screen_area']), DB)
+                    introduction.get_decision(str(item['screen_area']), DB)
                 else:
                     print('else-end')
                     session_log.update_action_log_session('end', str(item['screen_area']), DB)

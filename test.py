@@ -3,7 +3,6 @@ import datetime
 import math
 import image_processing
 import session_log
-import logic
 import keyboard
 import mouse
 import determine_position
