@@ -100,6 +100,7 @@ def check_is_action_buttons(screen_area, db):
     else:
         keyboard.press('f')
     session_log.update_action_log_session(reaction_to_opponent, str(screen_area), db)
+    return True
 
 
 def check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db):

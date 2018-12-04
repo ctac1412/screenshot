@@ -16,8 +16,6 @@ def check_is_call_valid(screen_area, hand_value, element, stack_collection, db):
         element = 'river'
     necessary_pot_odds = db_query.get_pot_odds(hand_value, element, db)
     if int(current_pot_odds) >= int(necessary_pot_odds):
-        print(hand_value + ' ' + str(call_size) + ' ' + str(bank_size))
         return True
     else:
-        print(hand_value + ' ' + str(call_size) + ' ' + str(bank_size) + ' false')
         return False

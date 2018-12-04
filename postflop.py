@@ -29,19 +29,16 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
         opponent_reaction = opponent_reaction['alias']
     hand_value = flop.get_hand_value(hand, screen_area, db)
     combination_value = db_query.get_combination_value('turn', hand_value, db)
-    if check_is_board_danger(hand) and hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair'):
+    if hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair') and check_is_board_danger(hand):
         if image_processing.check_is_cbet_available(screen_area, db):
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-            return True
         elif opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-            return True
         else:
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
-            return True
     elif image_processing.check_is_cbet_available(screen_area, db):
         if combination_value == 'premium':
             keyboard.press('v')
@@ -70,6 +67,7 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
         else:
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
+    return True
 
 
 def action_after_cbet(x_coordinate, y_coordinate, width, height, image_path, screen_area, deck, stack_collection, db):
@@ -155,6 +153,7 @@ def river_action(screen_area, hand, stack, action, db):
         else:
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
+    return True
 
 
 def check_is_raise_cbet(screen_area, stack_collection, db):
@@ -179,6 +178,7 @@ def check_is_raise_cbet(screen_area, stack_collection, db):
     else:
         keyboard.press('f')
         session_log.update_action_log_session('fold', str(screen_area), db)
+    return True
 
 
 def action_after_cc_postflop(screen_area, deck, x_coordinate, y_coordinate, width, height, image_path, stack_collection,
@@ -216,6 +216,7 @@ def get_opponent_flop_reaction(screen_area, stack_collection, db):
     else:
         keyboard.press('f')
         session_log.update_action_log_session('fold', str(screen_area), db)
+    return True
 
 
 def check_is_raise_river_value_bet(screen_area, db):
@@ -223,11 +224,10 @@ def check_is_raise_river_value_bet(screen_area, db):
     if opponent_reaction in ('1', '2'):
         keyboard.press('c')
         session_log.update_action_log_session('end', str(screen_area), db)
-        return True
     else:
         keyboard.press('f')
         session_log.update_action_log_session('fold', str(screen_area), db)
-        return True
+    return True
 
 
 def action_after_value_bet(screen_area, x_coordinate, y_coordinate, width, height, image_path, db):
