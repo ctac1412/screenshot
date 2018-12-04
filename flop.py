@@ -8,7 +8,8 @@ import pot_odds
 import db_query
 
 
-def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup, flop_deck, stack_collection, db):
+def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup, flop_deck,
+                       stack_collection, db):
     try:
         save_flop_image(screen_area, image_name, folder_name, db)
         flop_area = db_query.get_flop_area(screen_area, db)
