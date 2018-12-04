@@ -27,12 +27,10 @@ DB = postgresql.open(db_query.connection_string())
 #     flop.check_straight_draw(hand, screen_area, hand_value, DB)
 # hand_value = session_log.get_hand_value(screen_area, DB)
 # print(hand_value)
-combination_value = db_query.get_combination_value('flop', 'trash', DB)
-print(combination_value)
-# if postflop.check_is_board_danger(hand) and hand_value not in ('straight', 'flush'):
-#     print(1)
+if postflop.check_is_board_danger('2cTd2hJdTh3hJh'):
+    print(1)
 # else:
 #     print(0)
 # print(hand_value)
 # row = session_log.get_last_row_from_log_session(3)
-# print(pot_odds.check_is_call_valid(2,'straight_draw','turn',current_stack.get_stack_images(DB),DB))
+# print(pot_odds.check_is_call_valid(3, 'flus_draw', 'turn', db_query.get_stack_images(DB), DB))
