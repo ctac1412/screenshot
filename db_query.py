@@ -125,7 +125,7 @@ def insert_image_path_into_db(image_path, screen_area, db):
 def get_screen_data(db):
     try:
         data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse "
-                        "from screen_coordinates where active = 1 and alias = 'workspace'")
+                        "from screen_coordinates where active = 1 and alias = 'workspace' order by screen_area")
         return data
     except Exception as e:
         error_log.error_log('getScreenData', str(e))
@@ -196,6 +196,6 @@ def get_valid_stack_value_to_push(hand, db):
 def get_combination_value(element, hand_value, db):
     sql = "select trim(" + element + ") as " + element +" from combination_value where hand_value = $1"
     data = db.query.first(sql, str(hand_value))
-    if data is None and hand_value != 'trash':
+    if data is None and hand_value not in ('trash', 'weak_flush', 'weak_top_pair'):
         print(hand_value)
     return data

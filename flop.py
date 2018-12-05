@@ -49,9 +49,13 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     if int(stack) <= 13 and opponent_reaction in ('1', '2', '3'):
                         keyboard.press('q')
                         session_log.update_action_log_session('push', str(screen_area), db)
-                    elif hand_value in ('second_pair', 'middle_pair') and opponent_reaction in ('1', '2'):
+                    elif (hand_value in ('second_pair', 'middle_pair') or hand_value.find('second_pair') != -1) \
+                            and opponent_reaction in ('1', '2'):
                         keyboard.press('c')
                         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+                    else:
+                        keyboard.press('f')
+                        session_log.update_action_log_session('fold', str(screen_area), db)
                 elif combination_value == 'composite' and opponent_reaction in ('1', '2', '3'):
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area), db)
@@ -276,7 +280,8 @@ def check_pair(hand, screen_area, db):
             hand_value = 'low_two_pairs'
     elif len(doubles) == 3:
         double_element = list(doubles.keys())[0]
-        if hand[0] in list(doubles.keys()) and hand[1] in list(doubles.keys()):
+        if hand[0] in list(doubles.keys()) and hand[1] in list(doubles.keys()) \
+                and (hand[0] == max(list(doubles.keys())) or hand[1] == max(list(doubles.keys()))):
             hand_value = 'two_pairs'
         elif double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(board_card):
             hand_value = 'two_pairs'

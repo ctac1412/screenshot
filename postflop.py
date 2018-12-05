@@ -121,7 +121,8 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
         return True
     hand_value = flop.get_hand_value(hand, screen_area, db)
     combination_value = db_query.get_combination_value('river', hand_value, db)
-    if check_is_board_danger(hand) and hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair', 'straight'):
+    if check_is_board_danger(hand) and hand_value in \
+            ('top_pair', 'two_pairs', 'set', 'weak_top_pair', 'straight', 'weak_flush'):
         if image_processing.check_is_cbet_available(screen_area, db):
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
@@ -144,6 +145,9 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
         elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
+        elif hand_value == 'weak_flush' and opponent_reaction in ('1', '2', '3'):
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         else:
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
@@ -151,8 +155,8 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
         if combination_value == 'premium':
             keyboard.press('v')
             session_log.update_action_log_session('river_cbet', str(screen_area), db)
-        elif combination_value == 'value' and check_is_board_danger(hand) is False and opponent_reaction in (
-                '1', '2', '3'):
+        elif (combination_value == 'value' or hand_value == 'weak_flush') and check_is_board_danger(
+                hand) is False and opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
