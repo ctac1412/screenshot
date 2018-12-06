@@ -17,16 +17,12 @@ import db_query
 import pot_odds
 import error_log
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
-DB = postgresql.open(db_query.connection_string())
-hand = '4h6h4cAs9h6c9s'
-screen_area = '1'
-hand_value = flop.check_pair(hand, screen_area, DB)
-if hand_value != True:
-    hand_value = flop.check_flush_draw(hand, screen_area, hand_value, DB)
-if hand_value != True:
-    flop.check_straight_draw(hand, screen_area, hand_value, DB)
-hand_value = session_log.get_hand_value(screen_area, DB)
-print(hand_value)
+db = postgresql.open(db_query.connection_string())
+hand = '3c6h3h4dKh5h2h'
+screen_area = '2'
+row = session_log.get_last_row_from_log_session(screen_area, db)
+print(row)
+print(introduction.get_reaction_to_opponent(row, db))
 # if postflop.check_is_board_danger('2cTd2hJdTh3hJh'):
 #     print(1)
 # else:

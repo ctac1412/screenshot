@@ -42,7 +42,6 @@ def action_after_open(x_coordinate, y_coordinate, width, height, image_path, scr
     if check_is_flop(screen_area, image_name, folder_name, flop_deck, stack_collection, db): return
     if action == 'open':
         if check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
-        current_stack.get_actual_game_data(screen_area, stack_collection, db)
     if check_is_action_buttons(screen_area, db): return
 
 

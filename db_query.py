@@ -125,7 +125,13 @@ def insert_image_path_into_db(image_path, screen_area, db):
 def get_screen_data(db):
     try:
         data = db.query("select x_coordinate,y_coordinate,width,height,screen_area,x_mouse,y_mouse "
-                        "from screen_coordinates where active = 1 and alias = 'workspace' order by screen_area")
+                        "from screen_coordinates where active = 1 and alias = 'workspace' order by "
+                        "CASE "
+                        "WHEN screen_area=1 THEN 1 "
+                        "WHEN screen_area=2 THEN 2 "
+                        "WHEN screen_area=4 THEN 3 "
+                        "WHEN screen_area=3 THEN 4 "
+                        "END")
         return data
     except Exception as e:
         error_log.error_log('getScreenData', str(e))
@@ -165,6 +171,10 @@ def get_current_cards(condition, db):
 
 
 def get_reaction_to_opponent(hand, position, is_headsup, last_opponent_action, stack, action, db):
+    print("select trim(reaction_to_opponent) as reaction_to_opponent from preflop_chart "
+                    "where hand = '" + hand + '\'' + " and position = '" + position + '\'' +
+                    " and is_headsup = '" + str(is_headsup) + '\'' + " and opponent_last_action" +
+                    last_opponent_action + ' and stack = ' + str(stack) + " and action = '" + action + '\'')
     data = db.query("select trim(reaction_to_opponent) as reaction_to_opponent from preflop_chart "
                     "where hand = '" + hand + '\'' + " and position = '" + position + '\'' +
                     " and is_headsup = '" + str(is_headsup) + '\'' + " and opponent_last_action" +
