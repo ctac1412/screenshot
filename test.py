@@ -19,10 +19,10 @@ import error_log
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 db = postgresql.open(db_query.connection_string())
 hand = '3c6h3h4dKh5h2h'
-screen_area = '2'
+screen_area = '3'
 row = session_log.get_last_row_from_log_session(screen_area, db)
-print(row)
-print(introduction.get_reaction_to_opponent(row, db))
+# print(row)
+print(introduction.get_reaction_to_opponent(row, db)[0]['reaction_to_opponent'])
 # if postflop.check_is_board_danger('2cTd2hJdTh3hJh'):
 #     print(1)
 # else:

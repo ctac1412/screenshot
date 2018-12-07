@@ -171,10 +171,6 @@ def get_current_cards(condition, db):
 
 
 def get_reaction_to_opponent(hand, position, is_headsup, last_opponent_action, stack, action, db):
-    print("select trim(reaction_to_opponent) as reaction_to_opponent from preflop_chart "
-                    "where hand = '" + hand + '\'' + " and position = '" + position + '\'' +
-                    " and is_headsup = '" + str(is_headsup) + '\'' + " and opponent_last_action" +
-                    last_opponent_action + ' and stack = ' + str(stack) + " and action = '" + action + '\'')
     data = db.query("select trim(reaction_to_opponent) as reaction_to_opponent from preflop_chart "
                     "where hand = '" + hand + '\'' + " and position = '" + position + '\'' +
                     " and is_headsup = '" + str(is_headsup) + '\'' + " and opponent_last_action" +
