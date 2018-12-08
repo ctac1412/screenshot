@@ -34,8 +34,12 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('b')
                     session_log.update_action_log_session('cbet', str(screen_area), db)
                 elif hand_value == 'trash':
-                    keyboard.press('k')
-                    session_log.update_action_log_session('cbet', str(screen_area), db)
+                    if is_headsup == 1:
+                        keyboard.press('k')
+                        session_log.update_action_log_session('cbet', str(screen_area), db)
+                    else:
+                        keyboard.press('h')
+                        session_log.update_action_log_session('cc_postflop', str(screen_area), db)
             # if cbet unavailable
             else:
                 if combination_value == 'premium':
@@ -45,7 +49,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                                                                                   stack_collection, db):
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-                elif combination_value == 'other':
+                elif combination_value in ('other', 'draw', 'composite'):
                     if int(stack) <= 13 and opponent_reaction in ('1', '2', '3'):
                         keyboard.press('q')
                         session_log.update_action_log_session('push', str(screen_area), db)
