@@ -88,10 +88,10 @@ def check_is_action_buttons(screen_area, stack_collection, db):
         reaction_to_opponent = 'fold'
     last_opponnet_action = image_processing.search_last_opponent_action(screen_area, db)
     if not isinstance(last_opponnet_action, str):
+        hand = row[0]['hand']
         bb_count = last_opponnet_action['alias']
-        if reaction_to_opponent == 'fold' and bb_count == '1' and int(row[0]['current_stack']) > 10:
-            reaction_to_opponent = 'call'
-        elif reaction_to_opponent == 'fold' and bb_count == '2' and int(row[0]['current_stack']) > 17:
+        if reaction_to_opponent == 'fold' and bb_count in ('1', '2') and \
+                int(row[0]['current_stack']) >= 17 and hand in available_hand_to_call_min3bet():
             reaction_to_opponent = 'call'
     if reaction_to_opponent == 'push':
         keyboard.press('q')
@@ -205,3 +205,11 @@ def hand_converting(hand):
     else:
         hand = hand[0] + hand[2] + 'o'
     return hand
+
+
+def available_hand_to_call_min3bet():
+    collection = ('KQs', 'QKs', 'KJs', 'JKs', 'KTs', 'TKs', 'KQo', 'QKo', 'KJo', 'JKo', 'KTo', 'TKo',
+                  'QJs', 'JQs', 'QTs', 'TQs', 'QJo', 'JQo', 'QTo', 'TQo', 'JTs', 'TJs', 'JTo', 'TJo',
+                  'J9s', '9Js', 'T9s', '9Ts', 'T9o', '9To', 'T8s', '8Ts', '98s', '89s', '98o', '89o',
+                  '97s', '79s', '87s', '78s', '87o', '78o', '86s', '68s', '76s', '67s')
+    return collection

@@ -180,7 +180,7 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
         elif hand_value == 'weak_flush' and opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        elif hand_value == 'trash':
+        elif combination_value == 'trash':
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
         else:
