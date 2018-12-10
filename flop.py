@@ -96,8 +96,8 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                 elif combination_value == 'composite' and opponent_reaction in ('1', '2', '3'):
-                    keyboard.press('q')
-                    session_log.update_action_log_session('push', str(screen_area), db)
+                    keyboard.press('c')
+                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                 else:
                     keyboard.press('f')
                     session_log.update_action_log_session('fold', str(screen_area), db)

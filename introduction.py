@@ -42,7 +42,7 @@ def action_after_open(x_coordinate, y_coordinate, width, height, image_path, scr
     if check_is_flop(screen_area, image_name, folder_name, flop_deck, stack_collection, db): return
     if action == 'open':
         if check_is_fold(screen_area, x_coordinate, y_coordinate, width, height, image_path, db): return
-    if check_is_action_buttons(screen_area, db): return
+    if check_is_action_buttons(screen_area, stack_collection, db): return
 
 
 def save_element(screen_area, element_name, db):
@@ -77,7 +77,8 @@ def check_is_flop(screen_area, image_name, folder_name, flop_deck, stack_collect
         return True
 
 
-def check_is_action_buttons(screen_area, db):
+def check_is_action_buttons(screen_area, stack_collection, db):
+    current_stack.get_actual_game_data(screen_area, stack_collection, db)
     row = session_log.get_last_row_from_log_session(screen_area, db)
     try:
         reaction_to_opponent = get_reaction_to_opponent(row, db)[0]['reaction_to_opponent']
@@ -179,7 +180,7 @@ def get_action_from_preflop_chart(screen_area, db):
     stack = int(row[0]['current_stack'])
     position = row[0]['current_position']
     is_headsup = row[0]['is_headsup']
-    if 0 < stack <= 6:
+    if 0 < stack <= 7:
         return sklansky_chubukov.get_action(hand, stack, last_opponent_action, position, db)
     elif stack == 0:
         data = ['push']

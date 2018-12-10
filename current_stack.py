@@ -140,29 +140,29 @@ def compare_bank_with_available_stack(screen_area, stack_collection, db):
 def convert_stack(stack):
     if stack >= 22:
         stack = 22
-    elif stack in range(17, 22):
+    elif stack in range(18, 22):
         stack = 21
-    elif stack in range(13, 17):
+    elif stack in range(14, 18):
         stack = 17
-    elif stack in range(10, 13):
+    elif stack in range(11, 14):
         stack = 13
-    elif stack in range(7, 10):
+    elif stack in range(8, 11):
         stack = 10
-    elif stack == 0:
-        stack = 0
     return stack
 
 
 def get_actual_game_data(screen_area, stack_collection, db):
     row = session_log.get_last_row_from_log_session(screen_area, db)
     position = row[0]['current_position']
+    hand = row[0]['hand']
     opponent_data = processing_opponent_data(screen_area, stack_collection, db)
     is_headsup = opponent_data[0]
     if position == 'button':
         is_headsup = 0
     stack = opponent_data[1]
     stack = convert_stack(stack)
-    session_log.update_is_headsup_postflop(str(screen_area), is_headsup, db)
+    if len(hand) > 4:
+        session_log.update_is_headsup_postflop(str(screen_area), is_headsup, db)
     session_log.update_current_stack_log_session(str(screen_area), str(stack), db)
     return stack
 

@@ -22,7 +22,7 @@ hand = '3c6h3h4dKh5h2h'
 screen_area = '3'
 row = session_log.get_last_row_from_log_session(screen_area, db)
 # print(row)
-print(introduction.get_reaction_to_opponent(row, db)[0]['reaction_to_opponent'])
+print(postflop.check_is_board_danger('TsKdQc9sThAhAd'))
 # if postflop.check_is_board_danger('2cTd2hJdTh3hJh'):
 #     print(1)
 # else:

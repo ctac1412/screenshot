@@ -29,11 +29,21 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
         opponent_reaction = opponent_reaction['alias']
     hand_value = flop.get_hand_value(hand, screen_area, db)
     combination_value = db_query.get_combination_value('turn', hand_value, db)
-    if hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair', 'straight') and check_is_board_danger(hand):
+    if hand_value in ('top_pair', 'two_pairs', 'set', 'weak_top_pair') and check_is_board_danger(hand):
         if image_processing.check_is_cbet_available(screen_area, db):
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         elif opponent_reaction in ('1', '2', '3'):
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        else:
+            keyboard.press('f')
+            session_log.update_action_log_session('fold', str(screen_area), db)
+    elif hand_value == 'straight' and check_is_four_flush_board(hand):
+        if image_processing.check_is_cbet_available(screen_area, db):
+            keyboard.press('h')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        elif opponent_reaction in ('1', '2'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         else:
@@ -111,12 +121,19 @@ def check_is_river(screen_area, deck, stack_collection, db):
 
 def river_action(screen_area, hand, stack, action, stack_collection, db):
     opponent_reaction = image_processing.search_last_opponent_action(screen_area, db)
+    hand_value = flop.get_hand_value(hand, screen_area, db)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
     if action in ('turn_cbet', 'river_cbet'):
-        if check_is_board_danger(hand) is False:
+        if check_is_board_danger(hand) is False or hand_value != 'flush':
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
+        elif hand_value == 'straight' and check_is_four_flush_board(hand) is False:
+            keyboard.press('q')
+            session_log.update_action_log_session('push', str(screen_area), db)
+        elif image_processing.check_is_cbet_available(screen_area, db):
+            keyboard.press('h')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         else:
             if opponent_reaction in ('1', '2', '3'):
                 keyboard.press('c')
@@ -125,14 +142,23 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
                 keyboard.press('f')
                 session_log.update_action_log_session('fold', str(screen_area), db)
         return True
-    hand_value = flop.get_hand_value(hand, screen_area, db)
     combination_value = db_query.get_combination_value('river', hand_value, db)
     if check_is_board_danger(hand) and hand_value in \
-            ('top_pair', 'two_pairs', 'set', 'weak_top_pair', 'straight', 'weak_flush'):
+            ('top_pair', 'two_pairs', 'set', 'weak_top_pair', 'weak_flush'):
         if image_processing.check_is_cbet_available(screen_area, db):
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         elif opponent_reaction in ('1', '2', '3'):
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        else:
+            keyboard.press('f')
+            session_log.update_action_log_session('fold', str(screen_area), db)
+    elif hand_value == 'straight' and check_is_four_flush_board(hand):
+        if image_processing.check_is_cbet_available(screen_area, db):
+            keyboard.press('h')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        elif opponent_reaction in ('1', '2'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         else:
@@ -154,9 +180,12 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
         elif hand_value == 'weak_flush' and opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        else:
+        elif hand_value == 'trash':
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
+        else:
+            keyboard.press('h')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
     else:
         if combination_value == 'premium' or hand_value == 'weak_top_pair':
             keyboard.press('v')
@@ -255,28 +284,40 @@ def action_after_value_bet(screen_area, x_coordinate, y_coordinate, width, heigh
 
 
 def check_is_board_danger(hand):
+    if check_is_four_flush_board(hand): return True
+    if check_is_four_straight_board(hand): return True
+    return False
+
+
+def check_is_four_flush_board(hand):
     if len(hand) == 12:
         flush_hand = hand[5] + hand[7] + hand[9] + hand[11]
-        straight_hand = hand[4] + hand[6] + hand[8] + hand[10]
-        straight_hand = flop.straight_collection(straight_hand)
         if len(set(flush_hand)) == 1:
             return True
-        elif list(map(int, straight_hand)) == list(range(min(straight_hand), max(straight_hand) + 1)) \
+        elif len(hand) == 14:
+            flush_hand = hand[5] + hand[7] + hand[9] + hand[11] + hand[13]
+            counter = {}
+            for item in flush_hand:
+                counter[item] = counter.get(item, 0) + 1
+            doubles = {element: count for element, count in counter.items() if count > 3}
+            if len(doubles) > 0:
+                return True
+    return False
+
+
+def check_is_four_straight_board(hand):
+    if len(hand) == 12:
+        straight_hand = hand[4] + hand[6] + hand[8] + hand[10]
+        straight_hand = flop.straight_collection(straight_hand)
+        if list(map(int, straight_hand)) == list(range(min(straight_hand), max(straight_hand) + 1)) \
                 and len(straight_hand) == 4:
             return True
     elif len(hand) == 14:
-        flush_hand = hand[5] + hand[7] + hand[9] + hand[11] + hand[13]
         straight_hand = hand[4] + hand[6] + hand[8] + hand[10] + hand[12]
         straight_hand = flop.straight_collection(straight_hand)
         first_straight_hand = straight_hand[:-1]
         second_straight_hand = straight_hand[1:]
-        counter = {}
-        for item in flush_hand:
-            counter[item] = counter.get(item, 0) + 1
-        doubles = {element: count for element, count in counter.items() if count > 3}
-        if len(doubles) > 0:
-            return True
-        elif first_straight_hand == list(range(min(first_straight_hand), max(first_straight_hand) + 1)) \
+        if first_straight_hand == list(range(min(first_straight_hand), max(first_straight_hand) + 1)) \
                 and len(first_straight_hand) == 4:
             return True
         elif second_straight_hand == list(range(min(second_straight_hand), max(second_straight_hand) + 1)) \
