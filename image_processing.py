@@ -102,6 +102,6 @@ def check_current_hand(screen_area, hand, db):
 
 def cv_data_template(image_path, img_rgb):
     template = cv2.imread(str(image_path), 0)
-    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
-    loc = np.where(res >= 0.98)
+    result = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+    loc = np.where(result >= 0.98)
     return len(loc[0])
