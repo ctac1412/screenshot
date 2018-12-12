@@ -53,7 +53,8 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
         if combination_value == 'premium':
             keyboard.press('v')
             session_log.update_action_log_session('turn_cbet', str(screen_area), db)
-        elif int(stack) <= 10 and combination_value in ('draw', 'other', 'composite'):
+        elif int(stack) <= 10 and combination_value in ('draw', 'other', 'composite') \
+                and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
         elif hand_value == 'weak_top_pair':
@@ -180,9 +181,6 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
         elif hand_value == 'weak_flush' and opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        elif combination_value == 'trash':
-            keyboard.press('f')
-            session_log.update_action_log_session('fold', str(screen_area), db)
         else:
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
@@ -197,6 +195,9 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
         elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
+        elif opponent_reaction in ('1', '2',) and (hand_value == 'middle_pair' or hand_value.find('middle_pair') != -1):
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         else:
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
@@ -250,7 +251,7 @@ def get_opponent_flop_reaction(screen_area, stack_collection, db):
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
     if opponent_reaction in ('1', '2', '3') and combination_value in ('draw', 'other', 'composite') \
-            and int(stack) <= 13:
+            and int(stack) <= 13 and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
     elif combination_value == 'draw' and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn', stack_collection,

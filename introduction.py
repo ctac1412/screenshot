@@ -81,7 +81,7 @@ def check_is_action_buttons(screen_area, stack_collection, db):
     current_stack.get_actual_game_data(screen_area, stack_collection, db)
     row = session_log.get_last_row_from_log_session(screen_area, db)
     try:
-        reaction_to_opponent = get_reaction_to_opponent(row, db)[0]['reaction_to_opponent']
+        reaction_to_opponent = get_reaction_to_opponent(row, db)
         if not isinstance(reaction_to_opponent, str):
             reaction_to_opponent = 'fold'
     except:
@@ -89,6 +89,7 @@ def check_is_action_buttons(screen_area, stack_collection, db):
     last_opponnet_action = image_processing.search_last_opponent_action(screen_area, db)
     if not isinstance(last_opponnet_action, str):
         hand = row[0]['hand']
+        hand = hand_converting(hand)
         bb_count = last_opponnet_action['alias']
         if reaction_to_opponent == 'fold' and bb_count in ('1', '2') and \
                 int(row[0]['current_stack']) >= 17 and hand in available_hand_to_call_min3bet():
@@ -123,6 +124,8 @@ def get_reaction_to_opponent(row, db):
     stack = current_stack.convert_stack(int(row[0]['current_stack']))
     last_opponent_action = row[0]['last_opponent_action']
     position = row[0]['current_position']
+    if stack <= 7:
+        return sklansky_chubukov.get_action(hand, stack, last_opponent_action, position, db)
     is_headsup = row[0]['is_headsup']
     action = row[0]['action']
     if last_opponent_action is None:

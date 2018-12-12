@@ -6,6 +6,7 @@ import error_log
 import postflop
 import pot_odds
 import db_query
+import current_stack
 
 
 def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action, is_headsup, flop_deck,
@@ -86,7 +87,8 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                 elif combination_value == 'premium':
                     keyboard.press('q')
                     session_log.update_action_log_session('push', str(screen_area), db)
-                elif int(stack) <= 13 and opponent_reaction in ('1', '2') and hand_value != 'trash':
+                elif int(stack) <= 13 and opponent_reaction in ('1', '2') and hand_value != 'trash' \
+                        and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
                     keyboard.press('q')
                 elif combination_value == 'draw' and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn',
                                                                                   stack_collection, db):

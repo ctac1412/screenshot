@@ -175,7 +175,7 @@ def get_reaction_to_opponent(hand, position, is_headsup, last_opponent_action, s
                     "where hand = '" + hand + '\'' + " and position = '" + position + '\'' +
                     " and is_headsup = '" + str(is_headsup) + '\'' + " and opponent_last_action" +
                     last_opponent_action + ' and stack = ' + str(stack) + " and action = '" + action + '\'')
-    return data
+    return data[0]['reaction_to_opponent']
 
 
 def get_action_from_preflop_chart(hand, position, is_headsup, last_opponent_action, stack, db):
