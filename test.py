@@ -19,7 +19,7 @@ import error_log
 from urllib.request import urlopen
 # print(flop.checkFlushDraw('7c8dJc2sAs', '1', 'trash'))
 db = postgresql.open(db_query.connection_string())
-# hand = '3c6h3h4dKh5h2h'
+hand = '5h8d6sTs4c2s3s'
 screen_area = '3'
 # row = session_log.get_last_row_from_log_session(screen_area, db)
 # # print(row)
@@ -31,7 +31,7 @@ screen_area = '3'
 # print(hand_value)
 # row = session_log.get_last_row_from_log_session(3)
 # print(pot_odds.check_is_call_valid(3, 'flus_draw', 'turn', db_query.get_stack_images(DB), DB))
-
+print(postflop.check_is_four_flush_board(hand))
 
 def internet_on():
     try:
@@ -42,4 +42,4 @@ def internet_on():
         print(1)
 
 
-internet_on()
+# internet_on()

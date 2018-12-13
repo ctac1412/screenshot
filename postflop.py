@@ -295,14 +295,14 @@ def check_is_four_flush_board(hand):
         flush_hand = hand[5] + hand[7] + hand[9] + hand[11]
         if len(set(flush_hand)) == 1:
             return True
-        elif len(hand) == 14:
-            flush_hand = hand[5] + hand[7] + hand[9] + hand[11] + hand[13]
-            counter = {}
-            for item in flush_hand:
-                counter[item] = counter.get(item, 0) + 1
-            doubles = {element: count for element, count in counter.items() if count > 3}
-            if len(doubles) > 0:
-                return True
+    elif len(hand) == 14:
+        flush_hand = hand[5] + hand[7] + hand[9] + hand[11] + hand[13]
+        counter = {}
+        for item in flush_hand:
+            counter[item] = counter.get(item, 0) + 1
+        doubles = {element: count for element, count in counter.items() if count > 3}
+        if len(doubles) > 0:
+            return True
     return False
 
 
