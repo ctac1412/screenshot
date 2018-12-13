@@ -51,7 +51,8 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                 elif combination_value in ('other', 'draw', 'composite'):
-                    if int(stack) <= 13 and opponent_reaction in ('1', '2', '3'):
+                    if int(stack) <= 13 and opponent_reaction in ('1', '2', '3') \
+                            and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
                         keyboard.press('q')
                         session_log.update_action_log_session('push', str(screen_area), db)
                     elif (hand_value in ('second_pair', 'middle_pair') or hand_value.find('second_pair') != -1) \

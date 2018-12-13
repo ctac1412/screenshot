@@ -54,7 +54,7 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
             keyboard.press('v')
             session_log.update_action_log_session('turn_cbet', str(screen_area), db)
         elif int(stack) <= 10 and combination_value in ('draw', 'other', 'composite') \
-                and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
+                and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
         elif hand_value == 'weak_top_pair':
@@ -67,7 +67,8 @@ def turn_action(screen_area, hand, stack, stack_collection, db):
         if combination_value == 'premium':
             keyboard.press('v')
             session_log.update_action_log_session('turn_cbet', str(screen_area), db)
-        elif int(stack) <= 10 and (combination_value in ('draw', 'other', 'composite') or hand_value == 'weak_flush'):
+        elif int(stack) <= 10 and (combination_value in ('draw', 'other', 'composite') or hand_value == 'weak_flush')\
+                and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
         elif combination_value == 'draw' and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn',
@@ -175,7 +176,8 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
             else:
                 keyboard.press('k')
             session_log.update_action_log_session('value_bet', str(screen_area), db)
-        elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
+        elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') \
+                and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
         elif hand_value == 'weak_flush' and opponent_reaction in ('1', '2', '3'):
@@ -192,7 +194,8 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
                 hand) is False and opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair'):
+        elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') \
+                and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
         elif opponent_reaction in ('1', '2',) and (hand_value == 'middle_pair' or hand_value.find('middle_pair') != -1):
@@ -214,8 +217,9 @@ def check_is_raise_cbet(screen_area, stack_collection, db):
     if combination_value == 'premium' or hand_value == 'weak_top_pair':
         keyboard.press('q')
         session_log.update_action_log_session('push', str(screen_area), db)
-    elif int(stack) <= 10 and hand_value != 'trash':
+    elif int(stack) <= 10 and hand_value != 'trash' and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
         keyboard.press('q')
+        session_log.update_action_log_session('push', str(screen_area), db)
     elif combination_value == 'draw' and pot_odds.check_is_call_valid(
             screen_area, hand_value, 'turn', stack_collection, db):
         keyboard.press('c')
