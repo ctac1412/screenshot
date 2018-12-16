@@ -364,5 +364,5 @@ def check_is_flush_weak(hand, suit, doubles):
         second_card = hand[2]
         if second_card and second_card in ('A', 'K', 'Q', 'J'):
             weak_flush = 0
-    if postflop.check_is_board_danger(hand) and weak_flush == 1:
+    if postflop.check_is_four_flush_board(hand) and weak_flush == 1:
         return True

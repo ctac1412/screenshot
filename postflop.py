@@ -183,9 +183,12 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
         elif hand_value == 'weak_flush' and opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        else:
+        elif combination_value == 'middle_pair':
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        else:
+            keyboard.press('f')
+            session_log.update_action_log_session('fold', str(screen_area), db)
     else:
         if combination_value == 'premium' or hand_value == 'weak_top_pair':
             keyboard.press('v')

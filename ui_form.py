@@ -118,7 +118,6 @@ class Window(tkinter.Tk, threading.Thread):
         image_processing.check_is_folder_exist()
         while not self.wait:
             screen.start()
-        print('выход')
 
 
 if __name__ == '__main__':
