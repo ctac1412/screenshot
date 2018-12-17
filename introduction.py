@@ -214,5 +214,6 @@ def available_hand_to_call_min3bet():
     collection = ('KQs', 'QKs', 'KJs', 'JKs', 'KTs', 'TKs', 'KQo', 'QKo', 'KJo', 'JKo', 'KTo', 'TKo',
                   'QJs', 'JQs', 'QTs', 'TQs', 'QJo', 'JQo', 'QTo', 'TQo', 'JTs', 'TJs', 'JTo', 'TJo',
                   'J9s', '9Js', 'T9s', '9Ts', 'T9o', '9To', 'T8s', '8Ts', '98s', '89s', '98o', '89o',
-                  '97s', '79s', '87s', '78s', '87o', '78o', '86s', '68s', '76s', '67s')
+                  '97s', '79s', '87s', '78s', '87o', '78o', '86s', '68s', '76s', '67s', 'K9s', '9Ks',
+                  'Q9s', '9Qs')
     return collection

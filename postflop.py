@@ -124,10 +124,14 @@ def check_is_river(screen_area, deck, stack_collection, db):
 def river_action(screen_area, hand, stack, action, stack_collection, db):
     opponent_reaction = image_processing.search_last_opponent_action(screen_area, db)
     hand_value = flop.get_hand_value(hand, screen_area, db)
+    combination_value = db_query.get_combination_value('river', hand_value, db)
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
     if action in ('turn_cbet', 'river_cbet'):
-        if check_is_board_danger(hand) is False or hand_value != 'flush':
+        if combination_value != 'premium' and stack > 13:
+            keyboard.press('h')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        elif check_is_board_danger(hand) is False or hand_value == 'flush':
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
         elif hand_value == 'straight' and check_is_four_flush_board(hand) is False:
@@ -144,7 +148,6 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
                 keyboard.press('f')
                 session_log.update_action_log_session('fold', str(screen_area), db)
         return True
-    combination_value = db_query.get_combination_value('river', hand_value, db)
     if check_is_board_danger(hand) and hand_value in \
             ('top_pair', 'two_pairs', 'set', 'weak_top_pair', 'weak_flush'):
         if image_processing.check_is_cbet_available(screen_area, db):
