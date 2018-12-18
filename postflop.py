@@ -128,9 +128,12 @@ def river_action(screen_area, hand, stack, action, stack_collection, db):
     if not isinstance(opponent_reaction, str):
         opponent_reaction = opponent_reaction['alias']
     if action in ('turn_cbet', 'river_cbet'):
-        if combination_value != 'premium' and stack > 13:
+        if combination_value != 'premium' and int(stack) >= 13:
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        elif combination_value != 'premium' and int(stack) < 13:
+            keyboard.press('q')
+            session_log.update_action_log_session('push', str(screen_area), db)
         elif check_is_board_danger(hand) is False or hand_value == 'flush':
             keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)

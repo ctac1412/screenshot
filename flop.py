@@ -55,7 +55,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                             and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
                         keyboard.press('q')
                         session_log.update_action_log_session('push', str(screen_area), db)
-                    elif (hand_value in ('second_pair', 'middle_pair') or hand_value.find('second_pair') != -1) \
+                    elif (hand_value in ('second_pair', 'middle_pair', 'low_two_pairs') or hand_value.find('second_pair') != -1) \
                             and opponent_reaction in ('1', '2'):
                         keyboard.press('c')
                         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
@@ -95,7 +95,7 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
                                                                                   stack_collection, db):
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-                elif hand_value in ('second_pair', 'middle_pair') and opponent_reaction in ('1', '2'):
+                elif hand_value in ('second_pair', 'middle_pair', 'low_two_pairs') and opponent_reaction in ('1', '2'):
                     keyboard.press('c')
                     session_log.update_action_log_session('cc_postflop', str(screen_area), db)
                 elif combination_value == 'composite' and opponent_reaction in ('1', '2', '3'):
