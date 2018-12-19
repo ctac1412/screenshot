@@ -22,88 +22,8 @@ def make_flop_decision(screen_area, hand, image_name, folder_name, stack, action
         session_log.update_hand_after_flop(str(screen_area), hand, db)
         hand_value = get_hand_value(hand, screen_area, db)
         combination_value = db_query.get_combination_value('flop', hand_value, db)
-        # if top_pair <= T
-        if hand_value == 'weak_top_pair':
-            keyboard.press('q')
-            session_log.update_action_log_session('push', str(screen_area), db)
-        elif action == 'open' and int(stack) > 12:
-            if image_processing.check_is_cbet_available(screen_area, db):
-                if combination_value == 'premium':
-                    keyboard.press('v')
-                    session_log.update_action_log_session('cbet', str(screen_area), db)
-                elif combination_value in ('other', 'draw', 'composite'):
-                    keyboard.press('b')
-                    session_log.update_action_log_session('cbet', str(screen_area), db)
-                elif hand_value == 'trash':
-                    if is_headsup == 1:
-                        keyboard.press('k')
-                        session_log.update_action_log_session('cbet', str(screen_area), db)
-                    else:
-                        keyboard.press('h')
-                        session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-            # if cbet unavailable
-            else:
-                if combination_value == 'premium':
-                    keyboard.press('v')
-                    session_log.update_action_log_session('cbet', str(screen_area), db)
-                elif combination_value == 'draw' and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn',
-                                                                                  stack_collection, db):
-                    keyboard.press('c')
-                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-                elif combination_value in ('other', 'draw', 'composite'):
-                    if int(stack) <= 13 and opponent_reaction in ('1', '2', '3') \
-                            and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
-                        keyboard.press('q')
-                        session_log.update_action_log_session('push', str(screen_area), db)
-                    elif (hand_value in ('second_pair', 'middle_pair', 'low_two_pairs') or hand_value.find('second_pair') != -1) \
-                            and opponent_reaction in ('1', '2'):
-                        keyboard.press('c')
-                        session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-                    else:
-                        keyboard.press('f')
-                        session_log.update_action_log_session('fold', str(screen_area), db)
-                elif combination_value == 'composite' and opponent_reaction in ('1', '2', '3'):
-                    keyboard.press('q')
-                    session_log.update_action_log_session('push', str(screen_area), db)
-                else:
-                    keyboard.press('f')
-                    session_log.update_action_log_session('fold', str(screen_area), db)
-        # if action <> open
-        else:
-            if image_processing.check_is_cbet_available(screen_area, db):
-                if combination_value == 'premium':
-                    keyboard.press('v')
-                    session_log.update_action_log_session('cbet', str(screen_area), db)
-                else:
-                    keyboard.press('h')
-                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-            # if action <> open and cbet unavailable
-            else:
-                if hand_value == 'trash':
-                    keyboard.press('f')
-                    session_log.update_action_log_session('fold', str(screen_area), db)
-                elif combination_value == 'premium' and opponent_reaction in ('1', '2', '3'):
-                    keyboard.press('v')
-                    session_log.update_action_log_session('cbet', str(screen_area), db)
-                elif combination_value == 'premium':
-                    keyboard.press('q')
-                    session_log.update_action_log_session('push', str(screen_area), db)
-                elif int(stack) <= 13 and opponent_reaction in ('1', '2') and hand_value != 'trash' \
-                        and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
-                    keyboard.press('q')
-                elif combination_value == 'draw' and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn',
-                                                                                  stack_collection, db):
-                    keyboard.press('c')
-                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-                elif hand_value in ('second_pair', 'middle_pair', 'low_two_pairs') and opponent_reaction in ('1', '2'):
-                    keyboard.press('c')
-                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-                elif combination_value == 'composite' and opponent_reaction in ('1', '2', '3'):
-                    keyboard.press('c')
-                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-                else:
-                    keyboard.press('f')
-                    session_log.update_action_log_session('fold', str(screen_area), db)
+        flop_action(screen_area, action, hand_value, combination_value, stack, is_headsup, opponent_reaction,
+                    stack_collection, db)
     except Exception as e:
         error_log.error_log('makeFlopDecision' + action, str(e))
         print(e)
@@ -366,3 +286,90 @@ def check_is_flush_weak(hand, suit, doubles):
             weak_flush = 0
     if postflop.check_is_four_flush_board(hand) and weak_flush == 1:
         return True
+
+
+def flop_action(screen_area, action, hand_value, combination_value, stack, is_headsup, opponent_reaction,
+                stack_collection, db):
+    # if top_pair <= T
+    if hand_value == 'weak_top_pair':
+        keyboard.press('q')
+        session_log.update_action_log_session('push', str(screen_area), db)
+    elif action == 'open' and int(stack) > 12:
+        if image_processing.check_is_cbet_available(screen_area, db):
+            if combination_value == 'premium':
+                keyboard.press('v')
+                session_log.update_action_log_session('cbet', str(screen_area), db)
+            elif combination_value in ('other', 'draw', 'composite'):
+                keyboard.press('b')
+                session_log.update_action_log_session('cbet', str(screen_area), db)
+            elif hand_value == 'trash':
+                if is_headsup == 1:
+                    keyboard.press('k')
+                    session_log.update_action_log_session('cbet', str(screen_area), db)
+                else:
+                    keyboard.press('h')
+                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        # if cbet unavailable
+        else:
+            if combination_value == 'premium':
+                keyboard.press('v')
+                session_log.update_action_log_session('cbet', str(screen_area), db)
+            elif combination_value == 'draw' and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn',
+                                                                              stack_collection, db):
+                keyboard.press('c')
+                session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+            elif combination_value in ('other', 'draw', 'composite'):
+                if int(stack) <= 13 and opponent_reaction in ('1', '2', '3') \
+                        and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
+                    keyboard.press('q')
+                    session_log.update_action_log_session('push', str(screen_area), db)
+                elif (hand_value in ('second_pair', 'middle_pair', 'low_two_pairs') or hand_value.find(
+                        'second_pair') != -1) \
+                        and opponent_reaction in ('1', '2'):
+                    keyboard.press('c')
+                    session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+                else:
+                    keyboard.press('f')
+                    session_log.update_action_log_session('fold', str(screen_area), db)
+            elif combination_value == 'composite' and opponent_reaction in ('1', '2', '3'):
+                keyboard.press('q')
+                session_log.update_action_log_session('push', str(screen_area), db)
+            else:
+                keyboard.press('f')
+                session_log.update_action_log_session('fold', str(screen_area), db)
+    # if action <> open
+    else:
+        if image_processing.check_is_cbet_available(screen_area, db):
+            if combination_value == 'premium':
+                keyboard.press('v')
+                session_log.update_action_log_session('cbet', str(screen_area), db)
+            else:
+                keyboard.press('h')
+                session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        # if action <> open and cbet unavailable
+        else:
+            if hand_value == 'trash':
+                keyboard.press('f')
+                session_log.update_action_log_session('fold', str(screen_area), db)
+            elif combination_value == 'premium' and opponent_reaction in ('1', '2', '3'):
+                keyboard.press('v')
+                session_log.update_action_log_session('cbet', str(screen_area), db)
+            elif combination_value == 'premium':
+                keyboard.press('q')
+                session_log.update_action_log_session('push', str(screen_area), db)
+            elif int(stack) <= 13 and opponent_reaction in ('1', '2') and hand_value != 'trash' \
+                    and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
+                keyboard.press('q')
+            elif combination_value == 'draw' and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn',
+                                                                              stack_collection, db):
+                keyboard.press('c')
+                session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+            elif hand_value in ('second_pair', 'middle_pair', 'low_two_pairs') and opponent_reaction in ('1', '2'):
+                keyboard.press('c')
+                session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+            elif combination_value == 'composite' and opponent_reaction in ('1', '2', '3'):
+                keyboard.press('c')
+                session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+            else:
+                keyboard.press('f')
+                session_log.update_action_log_session('fold', str(screen_area), db)
