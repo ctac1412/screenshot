@@ -208,9 +208,10 @@ def check_pair(hand, screen_area, db):
     elif len(doubles) == 3:
         double_element = list(doubles.keys())[0]
         if hand[0] in list(doubles.keys()) and hand[1] in list(doubles.keys()) \
-                and (hand[0] == max(list(doubles.keys())) or hand[1] == max(list(doubles.keys()))):
+                and (ranks.index(hand[1]) >= max(board_card) or ranks.index(hand[0]) >= max(board_card)):
             hand_value = 'two_pairs'
-        elif double_element in (hand[0], hand[1]) and ranks.index(double_element) >= max(board_card):
+        elif double_element in (hand[0], hand[1]) and (
+                ranks.index(hand[1]) >= max(board_card) or ranks.index(hand[0]) >= max(board_card)):
             hand_value = 'two_pairs'
         else:
             hand_value = 'low_two_pairs'

@@ -120,6 +120,9 @@ def get_opponent_flop_reaction(screen_area, stack_collection, db):
             'trash', 'gutshot', 'bottom_pair', 'over_cards') and combination_value != 'draw':
         keyboard.press('c')
         session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+    elif opponent_reaction == 'check':
+        keyboard.press('h')
+        session_log.update_action_log_session('cc_postflop', str(screen_area), db)
     else:
         keyboard.press('f')
         session_log.update_action_log_session('fold', str(screen_area), db)

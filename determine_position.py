@@ -1,4 +1,5 @@
 import os
+import time
 import cv2
 import image_processing
 import db_query
@@ -7,13 +8,16 @@ import error_log
 
 def seacrh_blind_chips(screen_area, image_name, folder_name, db):
     save_blind_image(screen_area, image_name, folder_name, db)
-    blinds = ('big_blind', 'small_blind')
+    blinds = ('big_blind', 'small_blind', 'pop_up')
     path = db_query.get_last_screen(db_query.get_blind_area(screen_area, db), db)
     path = path[0]['image_path']
     img_rgb = cv2.imread(path, 0)
     for blind in blinds:
         template_path = 'blinds/' + blind + '.png'
         if image_processing.cv_data_template(template_path, img_rgb) > 0:
+            if blind == 'pop_up':
+                time.sleep(2)
+                seacrh_blind_chips(screen_area, image_name, folder_name, db)
             return blind
     return 'button'
 
