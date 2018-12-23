@@ -125,7 +125,7 @@ def get_reaction_to_opponent(row, db):
     last_opponent_action = row[0]['last_opponent_action']
     position = row[0]['current_position']
     if stack <= 7:
-        return sklansky_chubukov.get_action(hand, stack, last_opponent_action, position, db)
+        return sklansky_chubukov.get_action(hand, stack, last_opponent_action, position, db)[0]
     is_headsup = row[0]['is_headsup']
     action = row[0]['action']
     if last_opponent_action is None:
