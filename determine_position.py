@@ -17,7 +17,7 @@ def seacrh_blind_chips(screen_area, image_name, folder_name, db):
         if image_processing.cv_data_template(template_path, img_rgb) > 0:
             if blind == 'pop_up':
                 time.sleep(2)
-                seacrh_blind_chips(screen_area, image_name, folder_name, db)
+                return seacrh_blind_chips(screen_area, image_name, folder_name, db)
             return blind
     return 'button'
 
