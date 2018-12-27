@@ -361,6 +361,7 @@ def flop_action(screen_area, action, hand_value, combination_value, stack, is_he
             elif int(stack) <= 13 and opponent_reaction in ('1', '2') and hand_value != 'trash' \
                     and current_stack.search_current_stack(screen_area, stack_collection, db) <= 13:
                 keyboard.press('q')
+                session_log.update_action_log_session('push', str(screen_area), db)
             elif combination_value == 'draw' and pot_odds.check_is_call_valid(screen_area, hand_value, 'turn',
                                                                               stack_collection, db):
                 keyboard.press('c')
