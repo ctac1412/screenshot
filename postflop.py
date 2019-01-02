@@ -251,12 +251,19 @@ def turn_action(screen_area, hand_value, combination_value, stack, opponent_reac
 def river_action(screen_area, hand_value, combination_value, stack, action, opponent_reaction, hand, stack_collection,
                  db):
     if action in ('turn_cbet', 'river_cbet'):
+        is_call_river_agression = pot_odds.check_is_call_after_opponent_river_agression(screen_area, hand_value, stack_collection, action, db)
         if combination_value != 'premium' and int(stack) >= 13:
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         elif combination_value != 'premium' and int(stack) < 13:
             keyboard.press('v')
             session_log.update_action_log_session('river_cbet', str(screen_area), db)
+        elif action == 'river_cbet' and is_call_river_agression is True:
+            keyboard.press('c')
+            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        elif action == 'river_cbet' and is_call_river_agression is False:
+            keyboard.press('f')
+            session_log.update_action_log_session('fold', str(screen_area), db)
         elif check_is_board_danger(hand) is False or hand_value == 'flush':
             keyboard.press('v')
             session_log.update_action_log_session('river_cbet', str(screen_area), db)
