@@ -262,6 +262,7 @@ def river_action(screen_area, hand_value, combination_value, stack, action, oppo
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         elif action == 'river_cbet' and is_call_river_agression is False:
+            print('is_call_river_agression  - false')
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
         elif check_is_board_danger(hand) is False or hand_value == 'flush':
