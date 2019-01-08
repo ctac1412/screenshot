@@ -16,7 +16,7 @@ def check_is_call_valid(screen_area, hand_value, element, stack_collection, db):
         if call_size == '0.5':
             call_size = float(call_size)
         elif call_size == 'check':
-            call_size = 0
+            call_size = 0.1
         else:
             call_size = int(call_size)
         current_pot_odds = round(bank_size / call_size, 1)
