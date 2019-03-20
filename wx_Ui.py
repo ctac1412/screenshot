@@ -1,142 +1,152 @@
+# -*- coding: utf-8 -*-
 
-import os
+###########################################################################
+## Python code generated with wxFormBuilder (version Mar 13 2019)
+## http://www.wxformbuilder.org/
+##
+## PLEASE DO *NOT* EDIT THIS FILE!
+###########################################################################
+
+import wx
+import wx_form_UI
+import win32con
+import test
 import time
-import datetime
-import math
 import postgresql
+import screen
 import image_processing
-import session_log
-import mouse
-import introduction
-import bar as metka
-import postflop
 import db_query
-import image_processing
-import win32gui, win32con
+import datetime
+ # first line below is necessary only in wxPython 2.8.11.0 since default 
+# API in this wxPython is pubsub version 1 (expect later versions 
+# of wxPython to use the kwargs API by default)
+from wx.lib.pubsub import setupkwargs
+from threading import Thread
+# regular pubsub import
+from wx.lib.pubsub import pub
 
-IMAGES_FOLDER = "images/"
-FOLDER_NAME = IMAGES_FOLDER + str(datetime.datetime.now().date())
-DB = postgresql.open(db_query.connection_string())
-SCREEN_DATA = db_query.get_screen_data(DB)
-DECK = db_query.get_cards(DB)
-STACK_COLLECTION = db_query.get_stack_images(DB)
+#######################################################################
+class TestThread(Thread):
+    """Test Worker Thread Class."""
+ 
+    #----------------------------------------------------------------------
+    def __init__(self):
+        """Init Worker Thread Class."""
+        Thread.__init__(self)
+        self.start()    # start the thread
+ 
+    #----------------------------------------------------------------------
+    def run(self):
+        """Run Worker Thread."""
+        # This is the code executing in the new thread.
+        screen.start()
+        wx.CallAfter(lambda: pub.sendMessage('screen.end', msg="Thread finished!"))
 
-screen_area = SCREEN_DATA[0]
-# image_path = os.path.join(r'C:\Users\Stas\Desktop\github\screenshot\cards', 'ace_clubs.png')
-image_path = os.path.join(r'C:\Users\Stas\Desktop\github\screenshot\images\2019-03-17\1', 'test.png')
+class Calculator ( wx_form_UI.Calculator ):
+    
+    def __init__(self, parent):
+        super(Calculator, self).__init__(parent)
+        
+        self.regHotKey()
+        self.Bind(wx.EVT_HOTKEY, self.handleHotKeyF1, id=100)
+        self.Bind(wx.EVT_HOTKEY, self.handleHotKeyF2, id=200)
+        
+        self.wait = 1
 
-def get_location_and_size(hwnd):
-    rect = win32gui.GetWindowRect(hwnd)
-    x = rect[0]
-    y = rect[1]
-    w = rect[2] - x
-    h = rect[3] - y
-    print("Window %s:" % win32gui.GetWindowText(hwnd))
-    print("\tLocation: (x:%d, y:%d)" % (x, y))
-    print("\t    Size: (w:%d, h:%d)" % (w, h))
-    return x, y, w, h
+        self.is_slot_1.SetValue(self.get_curren_value(1)) # Устанавливаем значение переменной
+        self.is_slot_2.SetValue(self.get_curren_value(2))
+        self.is_slot_3.SetValue(self.get_curren_value(3))
+        self.is_slot_4.SetValue(self.get_curren_value(4))
+        
+        image_processing.check_is_folder_exist()
 
-# Location: (135, 0)
-#             Size: (517, )
+        pub.subscribe(self._screen_message_getter, 'screen.end')
+
+    def _screen_message_getter(self, msg):
+        # no longer need to access data through message.data.
+        self.stateLabel.SetLabel(("Last itteration on: %s" % datetime.datetime.now()))
+        if not self.wait:
+            self.on_buttonStart(None)
+
+    # def updateDisplay(self, msg):
+    #     """
+    #     Receives data from thread and updates the display
+    #     """
+    #     print(msg)
+    #     t = msg
+    #     if isinstance(t, int):
+    #         label_msg =  ("Time since thread started: %s seconds" % t)
+    #     else:
+    #         label_msg = ("Time since thread started: %s seconds" % t)
+    #     self.stateLabel.SetLabel(label_msg)
+
+    def get_curren_value(self, screen_area):
+        db = postgresql.open(db_query.connection_string())
+        data = db.query("select active from screen_coordinates where screen_area = " + str(screen_area))
+        return data[0]['active']
+
+    def update_current_stack_log_session(self, screen_area):
+        if len(screen_area) > 0:
+            for item in screen_area:
+                db = postgresql.open(db_query.connection_string())
+                db.query(
+                    "UPDATE screen_coordinates SET active = CASE active WHEN 0 THEN 1 WHEN 1 THEN 0 ELSE active END "
+                    "where screen_area = " + str(item))
+
+    def truncate_screenshot_table(self):
+        db = postgresql.open(db_query.connection_string())
+        db.query("truncate screenshots restart identity")
 
 
-# def get_hwnds(pid):
-#     """return a list of window handlers based on it process id"""
-#     def callback(hwnd, hwnds):
-#         if win32gui.IsWindowVisible(hwnd) and win32gui.IsWindowEnabled(hwnd):
-#             _, found_pid = win32process.GetWindowThreadProcessId(hwnd)
-#             if found_pid == pid:
-#                 hwnds.append(hwnd)
-#         return True
-#     hwnds = []
-#     win32gui.EnumWindows(callback, hwnds)
-#     return hwn
-# hwnds = get_hwnds()
+    def on_buttonStart( self, event ):
+        self.wait = 0
+        TestThread()
 
+    def on_buttonStop( self, event ):
+        self.wait = 1
 
-hwnd = win32gui.GetForegroundWindow()
-print(win32gui.GetWindowText(hwnd))
-hwnd = win32gui.FindWindow(None, win32gui.GetWindowText(hwnd))
+    def on_buttonUpdate( self, event ):
+        event.Skip()
 
-x, y, w, h = get_location_and_size(hwnd)
-# 363	244	61	27
-x += 363 - x
-y += 232 - y
-rect = win32gui.GetWindowRect(hwnd)
-w = 60
-h = 37
-# w = 423
-# h = 271
-print("\tNew RECT")
-print("\tLocation: (x:%d, y:%d)" % (x, y))
-print("\t    Size: (w:%d, h:%d)" % (w, h))
+    def on_buttonTruncate( self, event ):
+        event.Skip()
 
-# image_processing.imaging(x, y, w, h, image_path, None, DB )
-# x_coordinate, y_coordinate, width, height, image_path, screen_area, db
-hand = image_processing.search_cards(screen_area, DECK, 4, DB)
-print(hand)
-# import wx
-# # import wx
-# import win32con #for the VK keycodes
-# class ExampleFrame(wx.Frame):
-#     def __init__(self, parent):
-#         wx.Frame.__init__(self, parent)
+    def resetShot( self, event ):
+        image_path = u"C:\\Users\\Stas\\Desktop\\github\\screenshot\\images\\2019-03-17\\1\\test.png"
+        hwnd = test.get_active_window()
+        workspace_area = test.registarte_coordinate_and_size(228, 232, 60, 39)
+        test.make_relative_screen(hwnd,image_path,workspace_area)
+        # self.LastShot = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
+        self.LastShot.Bitmap  = wx.Bitmap( u"C:\\Users\\Stas\\Desktop\\github\\screenshot\\images\\2019-03-17\\1\\test.png", wx.BITMAP_TYPE_ANY )
 
-#         self.panel = wx.Panel(self)     
-#         self.quote = wx.StaticText(self.panel, label="Your quote:")
-#         self.result = wx.StaticText(self.panel, label="")
-#         self.result.SetForegroundColour(wx.RED)
-#         self.button = wx.Button(self.panel, label="Save")
-#         self.lblname = wx.StaticText(self.panel, label="Your name:")
-#         self.editname = wx.TextCtrl(self.panel, size=(140, -1))
+    def regHotKey(self):
+        """
+        This function registers the hotkey Alt+F1 with id=100
+        """
+        self.RegisterHotKey(
+            100, #a unique ID for this hotkey
+            win32con.MOD_ALT, #the modifier key
+            win32con.VK_F1) #the key to watch for
+        self.RegisterHotKey(
+            200, #a unique ID for this hotkey
+            win32con.MOD_ALT, #the modifier key
+            win32con.VK_F2) #the key to watch for
 
-#         # Set sizer for the frame, so we can change frame size to match widgets
-#         self.windowSizer = wx.BoxSizer()
-#         self.windowSizer.Add(self.panel, 1, wx.ALL | wx.EXPAND)        
+    def handleHotKeyF1(self, evt):
+        """
+        Prints a simple message when a hotkey event is received.
+        """
+        print("alt + F1")
+        self.resetShot(None)
 
-#         # Set sizer for the panel content
-#         self.sizer = wx.GridBagSizer(5, 5)
-#         self.sizer.Add(self.quote, (0, 0))
-#         self.sizer.Add(self.result, (0, 1))
-#         self.sizer.Add(self.lblname, (1, 0))
-#         self.sizer.Add(self.editname, (1, 1))
-#         self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
+    def handleHotKeyF2(self, evt):
+        """
+        Prints a simple message when a hotkey event is received.
+        """
+        self.wait = 1
+        print("alt + F2")
 
-#         # Set simple sizer for a nice border
-#         self.border = wx.BoxSizer()
-#         self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
-
-#         # Use the sizers
-#         self.panel.SetSizerAndFit(self.border)  
-#         self.SetSizerAndFit(self.windowSizer)  
-
-#         # Set event handlers
-#         self.button.Bind(wx.EVT_BUTTON, self.OnButton)
-
-#         self.regHotKey()
-#         self.Bind(wx.EVT_HOTKEY, self.handleHotKey, id=self.hotKeyId)
-
-#     def regHotKey(self):
-#         """
-#         This function registers the hotkey Alt+F1 with id=100
-#         """
-#         self.hotKeyId = 100
-#         self.RegisterHotKey(
-#             self.hotKeyId, #a unique ID for this hotkey
-#             win32con.MOD_ALT, #the modifier key
-#             win32con.VK_F1) #the key to watch for
-#         print ("do hot 2222222222")
-
-#     def handleHotKey(self, evt):
-#         """
-#         Prints a simple message when a hotkey event is received.
-#         """
-#         print ("do hot key actions")
-
-#     def OnButton(self, e):
-#         self.result.SetLabel(self.editname.GetValue())
-
-# app = wx.App(False)
-# frame = ExampleFrame(None)
-# frame.Show()
-# app.MainLoop()
+app = wx.App(False)
+frame = Calculator(None)
+frame.Show()
+app.MainLoop()
