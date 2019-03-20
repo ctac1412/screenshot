@@ -2,7 +2,7 @@ import error_log
 
 
 def connection_string():
-    return 'pq://postgres:postgres@localhost:5432/postgres'
+    return 'pq://openpg:openpgpwd@localhost:5432/postgres'
 
 
 def get_element_area(screen_area, element, db):
@@ -137,10 +137,16 @@ def get_screen_data(db):
         error_log.error_log('getScreenData', str(e))
 
 
-def get_cards(db):
-    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards")
+def get_cards(db, is_short = False):
+    if not is_short:
+        data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards")
+    else:
+        data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards where id > 52")
     return data
 
+def get_cards_suit(db):
+    data = db.query("select trim(image_path) as image_path, trim(alias) as alias from cards where suit ='root_suit'")
+    return data
 
 def get_allin_stack_images(db):
     data = db.query("select trim(image_path) as image_path, stack_value from all_in_stack order by id desc")

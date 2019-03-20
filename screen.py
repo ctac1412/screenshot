@@ -21,6 +21,7 @@ STACK_COLLECTION = db_query.get_stack_images(DB)
 
 def start():
     for item in SCREEN_DATA:
+        # 1 стол
         mouse.move_mouse(item['x_mouse'], item['y_mouse'])
         if metka.search_bar(item['screen_area'], DB):
             image_name = str(math.floor(time.time())) + ".png"
@@ -28,9 +29,12 @@ def start():
                                       image_name)
             last_row_action = session_log.get_last_row_action_from_log_session(item['screen_area'], DB)
             if last_row_action in ('push', 'fold', 'end'):
+                
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'], DB)
                 hand = image_processing.search_cards(item['screen_area'], DECK, 4, DB)
+
+
                 introduction.check_conditions_before_insert(hand, item['screen_area'], STACK_COLLECTION, image_name, FOLDER_NAME, DB)
                 introduction.get_decision(item['screen_area'], DB)
             elif last_row_action in ('open', 'call', 'check'):

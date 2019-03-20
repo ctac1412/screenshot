@@ -10,24 +10,24 @@ import introduction
 
 IMAGES_FOLDER = "images"
 
-
-def search_cards(screen_area, deck, list_length, db):
+def search_cards(screen_area, deck, list_length, db, path = False, is_default=True):
     hand = ''
     try:
-        for item in db_query.get_last_screen(screen_area, db):
-            path = item['image_path']
-            img_rgb = cv2.imread(path, 0)
-            for value in deck:
-                if cv_data_template(value['image_path'], img_rgb) > 0:
-                    hand += value['alias']
-                if len(hand) == list_length:
-                    return hand
+        # for item in db_query.get_last_screen(screen_area, db):
+        # os.path.join(r'', '')
+        # path = r'C:\Users\Stas\Desktop\github\screenshot\cards\ace_clubs.png'
+        img_rgb = cv2.imread(path, 0)
+        for value in deck:
+            if cv_data_template(value['image_path'], img_rgb) > 0:
+                hand = value['alias'] + hand
+            if len(hand) == list_length:
+                return hand
     except Exception as e:
         error_log.error_log('searchCards', str(e))
         print(e)
     if len(hand) < 4 and list_length > 2:
         print(hand)
-        hand = '7h2d'
+        return '7h2d' if is_default else  hand
     return hand
 
 
@@ -49,9 +49,21 @@ def made_screenshot(x_coordinate, y_coordinate, width, height):
 
 
 def imaging(x_coordinate, y_coordinate, width, height, image_path, screen_area, db):
-    image = made_screenshot(x_coordinate, y_coordinate, width, height)
-    image.save(image_path, "PNG")
-    db_query.insert_image_path_into_db(image_path, screen_area, db)
+    import mss
+    import mss.tools
+    with mss.mss() as sct:
+        # The screen part to capture
+        monitor = {"top": y_coordinate, "left": x_coordinate, "width": width, "height": height}
+
+        # Grab the data
+        sct_img = sct.grab(monitor)
+
+        # Save to the picture file
+        mss.tools.to_png(sct_img.rgb, sct_img.size, output=image_path)
+    
+    # image = made_screenshot(x_coordinate, y_coordinate, width, height)
+    # image.save(image_path, "PNG")
+    # db_query.insert_image_path_into_db(image_path, screen_area, db)
 
 
 def search_element(screen_area, elements, folder, db):
@@ -101,7 +113,7 @@ def check_current_hand(screen_area, hand, db):
 
 
 def cv_data_template(image_path, img_rgb):
-    template = cv2.imread(str(image_path), 0)
+    template = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
     result = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
     loc = np.where(result >= 0.98)
     return len(loc[0])

@@ -6,7 +6,6 @@ import screen
 import image_processing
 import db_query
 
-
 class Window(tkinter.Tk, threading.Thread):
     def __init__(self):
         # Инициализируем графический интерфейс
@@ -121,8 +120,14 @@ class Window(tkinter.Tk, threading.Thread):
 
 
 if __name__ == '__main__':
+    print('ds')
     Window().mainloop()
-
+    # import wx
+    # app = wx.App()
+    # # frame = wx.Frame(None, -1, "Title here")
+    # # frame.Show()
+    # # app.MainLoop()
+    # FrameWithHotKey()
 
 def keydown(e):
     print('down', e.char)
